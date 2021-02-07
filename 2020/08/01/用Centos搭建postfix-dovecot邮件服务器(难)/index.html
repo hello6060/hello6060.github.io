@@ -1,220 +1,308 @@
-
-
 <!DOCTYPE html>
-<html lang="zh-CN" data-default-color-scheme=&#34;light&#34;>
 
 
 
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
-  <link rel="icon" type="image/png" href="/img/%E7%82%B9%E8%B5%9E.png">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   
-  <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="">
-  <meta name="author" content="John Doe">
-  <meta name="keywords" content="">
-  <title>用Centos搭建邮件服务器 - Hello</title>
-
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
-
-
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
-  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
-
   
-    
-    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/gradient-dark.min.css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="云计算中级,Linux,Centos," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="用Centos搭建邮件服务器知识扫盲 postfix管邮件收发，也就是SMTP服务器dovecot负责邮件管理，上传，下载，删除等。也就是POP3&#x2F;IMAP服务器amsmtp则是基于web的Postfix 邮件发送服务器的管理工具，可以直接管理Postfix 的虚拟域名和用户(本文未使用    )三者是完全不冲突的不同的东西，配合使用才能形成完整的邮件系统！  使用工具 postfix(发送) d">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用Centos搭建邮件服务器">
+<meta property="og:url" content="http://www.ljh.xyz/2020/08/01/%E7%94%A8Centos%E6%90%AD%E5%BB%BApostfix-dovecot%E9%82%AE%E4%BB%B6%E6%9C%8D%E5%8A%A1%E5%99%A8(%E9%9A%BE)/index.html">
+<meta property="og:site_name" content="Hello">
+<meta property="og:description" content="用Centos搭建邮件服务器知识扫盲 postfix管邮件收发，也就是SMTP服务器dovecot负责邮件管理，上传，下载，删除等。也就是POP3&#x2F;IMAP服务器amsmtp则是基于web的Postfix 邮件发送服务器的管理工具，可以直接管理Postfix 的虚拟域名和用户(本文未使用    )三者是完全不冲突的不同的东西，配合使用才能形成完整的邮件系统！  使用工具 postfix(发送) d">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-08-01T15:24:18.000Z">
+<meta property="article:modified_time" content="2020-08-17T09:00:28.000Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="云计算中级">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Centos">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.ljh.xyz/2020/08/01/用Centos搭建postfix-dovecot邮件服务器(难)/"/>
+
+
+
+
+
+  <title>用Centos搭建邮件服务器 | Hello</title>
   
 
-  
-
-
-<!-- 主题依赖的图标库，不要自行修改 -->
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_6peoq002giu.css">
 
 
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
 
 
-<link  rel="stylesheet" href="/css/main.css" />
-
-<!-- 自定义样式保持在最底部 -->
 
 
-  <script  src="/js/utils.js" ></script>
-  <script  src="/js/color-schema.js" ></script>
 <meta name="generator" content="Hexo 5.0.2"></head>
 
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
 
-<body>
-  <header style="height: 70vh;">
-    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
-  <div class="container">
-    <a class="navbar-brand"
-       href="/">&nbsp;<strong>LJH'S BLOG</strong>&nbsp;</a>
+  
+  
+    
+  
 
-    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <div class="animated-icon"><span></span><span></span><span></span></div>
-    </button>
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
 
-    <!-- Collapsible content -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ml-auto text-center">
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/">
-                <i class="iconfont icon-home-fill"></i>
-                首页
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/archives/">
-                <i class="iconfont icon-archive-fill"></i>
-                归档
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/categories/">
-                <i class="iconfont icon-category-fill"></i>
-                分类
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/tags/">
-                <i class="iconfont icon-tags-fill"></i>
-                标签
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/about/">
-                <i class="iconfont icon-user-fill"></i>
-                关于
-              </a>
-            </li>
-          
-        
-        
-          <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;</a>
-          </li>
-        
-        
-          <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" href="javascript:">&nbsp;<i
-                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
-          </li>
-        
-      </ul>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hello</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
     </div>
-  </div>
-</nav>
-
-    <div class="banner intro-2" id="background" parallax=true
-         style="background: url('http://img.ljh666.xyz/img/wrench-fan-art-zn-2560x1600.jpg') no-repeat center center;
-           background-size: cover;">
-      <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="container page-header text-center fade-in-up">
-            <span class="h2" id="subtitle">
-              
-            </span>
-
-            
-              
-  <div class="mt-3 post-meta">
-    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-    <time datetime="2020-08-01 23:24" pubdate>
-      2020年8月1日 晚上
-    </time>
+      
+        <p class="site-subtitle">LJH</p>
+      
   </div>
 
-
-<div class="mt-1">
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-chart"></i>
-      1.7k 字
-    </span>
-  
-
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-clock-fill"></i>
-      
-      
-      29
-       分钟
-    </span>
-  
-
-  
-  
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
 </div>
 
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
             
-          </div>
-
-          
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
       
 
-<div class="container-fluid">
-  <div class="row">
-    <div class="d-none d-lg-block col-lg-2"></div>
-    <div class="col-lg-8 nopadding-md">
-      <div class="container nopadding-md" id="board-ctn">
-        <div class="py-5" id="board">
-          <article class="post-content mx-auto" id="post">
-            <!-- SEO header -->
-            <h1 style="display: none">用Centos搭建邮件服务器</h1>
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
             
-            <div class="markdown-body" id="post-body">
-              <h1 id="用Centos搭建邮件服务器"><a href="#用Centos搭建邮件服务器" class="headerlink" title="用Centos搭建邮件服务器"></a>用Centos搭建邮件服务器</h1><h2 id="知识扫盲"><a href="#知识扫盲" class="headerlink" title="知识扫盲"></a>知识扫盲</h2><blockquote>
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.ljh.xyz/2020/08/01/%E7%94%A8Centos%E6%90%AD%E5%BB%BApostfix-dovecot%E9%82%AE%E4%BB%B6%E6%9C%8D%E5%8A%A1%E5%99%A8(%E9%9A%BE)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">用Centos搭建邮件服务器</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-08-01T23:24:18+08:00">
+                2020-08-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="用Centos搭建邮件服务器"><a href="#用Centos搭建邮件服务器" class="headerlink" title="用Centos搭建邮件服务器"></a>用Centos搭建邮件服务器</h1><h2 id="知识扫盲"><a href="#知识扫盲" class="headerlink" title="知识扫盲"></a>知识扫盲</h2><blockquote>
 <p>postfix管邮件收发，也就是SMTP服务器<br>dovecot负责邮件管理，上传，下载，删除等。也就是POP3/IMAP服务器<br>amsmtp则是基于web的Postfix 邮件发送服务器的管理工具，可以直接管理Postfix 的虚拟域名和用户(本文未使用    )<br>三者是完全不冲突的不同的东西，配合使用才能形成<strong>完整的邮件系统</strong>！</p>
 </blockquote>
 <h2 id="使用工具"><a href="#使用工具" class="headerlink" title="使用工具"></a>使用工具</h2><ul>
@@ -224,575 +312,309 @@
 </ul>
 <h2 id="搭建DNS服务器"><a href="#搭建DNS服务器" class="headerlink" title="搭建DNS服务器"></a>搭建DNS服务器</h2><p>目的:给邮件服务器提供域名系解析服务</p>
 <p>搭建DNS服务器具体教程:  <a href="%5Bhttp://www.ljh666.xyz/2020/07/31/%E6%90%AD%E5%BB%BADNS%E6%9C%8D%E5%8A%A1%E5%99%A8/%5D(http://www.ljh666.xyz/2020/07/31/%E6%90%AD%E5%BB%BADNS%E6%9C%8D%E5%8A%A1%E5%99%A8/)">搭建DNS服务器</a></p>
-<div class="hljs"><pre><code class="hljs perl">yum -<span class="hljs-keyword">y</span> install <span class="hljs-keyword">bind</span>-<span class="hljs-keyword">chroot</span> <span class="hljs-keyword">bind</span>-utils</code></pre></div>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install bind-chroot bind-utils</span><br></pre></td></tr></table></figure>
 
 <p>修改DNS配置文件前记得备份</p>
-<div class="hljs"><pre><code class="hljs gradle">[root@pxe yum.repos.d]# cat <span class="hljs-regexp">/etc/</span>named.conf
-<span class="hljs-comment">//</span>
-<span class="hljs-comment">// named.conf</span>
-<span class="hljs-comment">//</span>
-<span class="hljs-comment">// Provided by Red Hat bind package to configure the ISC BIND named(8) DNS</span>
-<span class="hljs-comment">// server as a caching only nameserver (as a localhost DNS resolver only).</span>
-<span class="hljs-comment">//</span>
-<span class="hljs-comment">// See /usr/share/doc/bind*/sample/ for example named configuration files.</span>
-<span class="hljs-comment">//</span>
-<span class="hljs-comment">// See the BIND Administrator&#x27;s Reference Manual (ARM) for details about the</span>
-<span class="hljs-comment">// configuration located in /usr/share/doc/bind-&#123;version&#125;/Bv9ARM.html</span>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">[root@pxe yum.repos.d]# cat &#x2F;etc&#x2F;named.conf</span><br><span class="line">&#x2F;&#x2F;</span><br><span class="line">&#x2F;&#x2F; named.conf</span><br><span class="line">&#x2F;&#x2F;</span><br><span class="line">&#x2F;&#x2F; Provided by Red Hat bind package to configure the ISC BIND named(8) DNS</span><br><span class="line">&#x2F;&#x2F; server as a caching only nameserver (as a localhost DNS resolver only).</span><br><span class="line">&#x2F;&#x2F;</span><br><span class="line">&#x2F;&#x2F; See &#x2F;usr&#x2F;share&#x2F;doc&#x2F;bind*&#x2F;sample&#x2F; for example named configuration files.</span><br><span class="line">&#x2F;&#x2F;</span><br><span class="line">&#x2F;&#x2F; See the BIND Administrator&#39;s Reference Manual (ARM) for details about the</span><br><span class="line">&#x2F;&#x2F; configuration located in &#x2F;usr&#x2F;share&#x2F;doc&#x2F;bind-&#123;version&#125;&#x2F;Bv9ARM.html</span><br><span class="line"></span><br><span class="line">options &#123;</span><br><span class="line">        listen-on port 53 &#123; any; &#125;;</span><br><span class="line">        listen-on-v6 port 53 &#123; ::1; &#125;;</span><br><span class="line">        directory       &quot;&#x2F;var&#x2F;named&quot;;</span><br><span class="line">        dump-file       &quot;&#x2F;var&#x2F;named&#x2F;data&#x2F;cache_dump.db&quot;;</span><br><span class="line">        statistics-file &quot;&#x2F;var&#x2F;named&#x2F;data&#x2F;named_stats.txt&quot;;</span><br><span class="line">        memstatistics-file &quot;&#x2F;var&#x2F;named&#x2F;data&#x2F;named_mem_stats.txt&quot;;</span><br><span class="line">        recursing-file  &quot;&#x2F;var&#x2F;named&#x2F;data&#x2F;named.recursing&quot;;</span><br><span class="line">        secroots-file   &quot;&#x2F;var&#x2F;named&#x2F;data&#x2F;named.secroots&quot;;</span><br><span class="line">        allow-query     &#123; any; &#125;;</span><br><span class="line"></span><br><span class="line">        &#x2F;* </span><br><span class="line">         - If you are building an AUTHORITATIVE DNS server, do NOT enable recursion.</span><br><span class="line">         - If you are building a RECURSIVE (caching) DNS server, you need to enable </span><br><span class="line">           recursion. </span><br><span class="line">         - If your recursive DNS server has a public IP address, you MUST enable access </span><br><span class="line">           control to limit queries to your legitimate users. Failing to do so will</span><br><span class="line">           cause your server to become part of large scale DNS amplification </span><br><span class="line">           attacks. Implementing BCP38 within your network would greatly</span><br><span class="line">           reduce such attack surface </span><br><span class="line">        *&#x2F;</span><br><span class="line">        recursion yes;</span><br><span class="line"></span><br><span class="line">        dnssec-enable yes;</span><br><span class="line">        dnssec-validation yes;</span><br><span class="line"></span><br><span class="line">        &#x2F;* Path to ISC DLV key *&#x2F;</span><br><span class="line">        bindkeys-file &quot;&#x2F;etc&#x2F;named.root.key&quot;;</span><br><span class="line"></span><br><span class="line">        managed-keys-directory &quot;&#x2F;var&#x2F;named&#x2F;dynamic&quot;;</span><br><span class="line"></span><br><span class="line">        pid-file &quot;&#x2F;run&#x2F;named&#x2F;named.pid&quot;;</span><br><span class="line">        session-keyfile &quot;&#x2F;run&#x2F;named&#x2F;session.key&quot;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">logging &#123;</span><br><span class="line">        channel default_debug &#123;</span><br><span class="line">                file &quot;data&#x2F;named.run&quot;;</span><br><span class="line">                severity dynamic;</span><br><span class="line">        &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">zone &quot;.&quot; IN &#123;</span><br><span class="line">        type hint;</span><br><span class="line">        file &quot;named.ca&quot;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">include &quot;&#x2F;etc&#x2F;named.rfc1912.zones&quot;;</span><br><span class="line">include &quot;&#x2F;etc&#x2F;named.root.key&quot;;</span><br></pre></td></tr></table></figure>
 
-<span class="hljs-keyword">options</span> &#123;
-        listen-on port <span class="hljs-number">53</span> &#123; <span class="hljs-keyword">any</span>; &#125;;
-        listen-on-v6 port <span class="hljs-number">53</span> &#123; ::<span class="hljs-number">1</span>; &#125;;
-        directory       <span class="hljs-string">&quot;/var/named&quot;</span>;
-        <span class="hljs-keyword">dump</span>-<span class="hljs-keyword">file</span>       <span class="hljs-string">&quot;/var/named/data/cache_dump.db&quot;</span>;
-        statistics-<span class="hljs-keyword">file</span> <span class="hljs-string">&quot;/var/named/data/named_stats.txt&quot;</span>;
-        memstatistics-<span class="hljs-keyword">file</span> <span class="hljs-string">&quot;/var/named/data/named_mem_stats.txt&quot;</span>;
-        recursing-<span class="hljs-keyword">file</span>  <span class="hljs-string">&quot;/var/named/data/named.recursing&quot;</span>;
-        secroots-<span class="hljs-keyword">file</span>   <span class="hljs-string">&quot;/var/named/data/named.secroots&quot;</span>;
-        allow-query     &#123; <span class="hljs-keyword">any</span>; &#125;;
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">[root@pxe yum.repos.d]# cat &#x2F;etc&#x2F;named.rfc1912.zones</span><br><span class="line">&#x2F;&#x2F; named.rfc1912.zones:</span><br><span class="line">&#x2F;&#x2F;</span><br><span class="line">&#x2F;&#x2F; Provided by Red Hat caching-nameserver package </span><br><span class="line">&#x2F;&#x2F;</span><br><span class="line">&#x2F;&#x2F; ISC BIND named zone configuration for zones recommended by</span><br><span class="line">&#x2F;&#x2F; RFC 1912 section 4.1 : localhost TLDs and address zones</span><br><span class="line">&#x2F;&#x2F; and http:&#x2F;&#x2F;www.ietf.org&#x2F;internet-drafts&#x2F;draft-ietf-dnsop-default-local-zones-02.txt</span><br><span class="line">&#x2F;&#x2F; (c)2007 R W Franks</span><br><span class="line">&#x2F;&#x2F; </span><br><span class="line">&#x2F;&#x2F; See &#x2F;usr&#x2F;share&#x2F;doc&#x2F;bind*&#x2F;sample&#x2F; for example named configuration files.</span><br><span class="line">&#x2F;&#x2F;</span><br><span class="line"></span><br><span class="line">zone &quot;ljh.com&quot; IN &#123;</span><br><span class="line">        type master;</span><br><span class="line">        file &quot;named.localhost&quot;;</span><br><span class="line">        allow-update &#123; none; &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">zone &quot;10.10.10.in-addr.arpa&quot; IN &#123;</span><br><span class="line">        type master;</span><br><span class="line">        file &quot;named.loopback&quot;;</span><br><span class="line">        allow-update &#123; none; &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
-        <span class="hljs-comment">/* </span>
-<span class="hljs-comment">         - If you are building an AUTHORITATIVE DNS server, do NOT enable recursion.</span>
-<span class="hljs-comment">         - If you are building a RECURSIVE (caching) DNS server, you need to enable </span>
-<span class="hljs-comment">           recursion. </span>
-<span class="hljs-comment">         - If your recursive DNS server has a public IP address, you MUST enable access </span>
-<span class="hljs-comment">           control to limit queries to your legitimate users. Failing to do so will</span>
-<span class="hljs-comment">           cause your server to become part of large scale DNS amplification </span>
-<span class="hljs-comment">           attacks. Implementing BCP38 within your network would greatly</span>
-<span class="hljs-comment">           reduce such attack surface </span>
-<span class="hljs-comment">        */</span>
-        recursion yes;
-
-        dnssec-enable yes;
-        dnssec-validation yes;
-
-        <span class="hljs-comment">/* Path to ISC DLV key */</span>
-        bindkeys-<span class="hljs-keyword">file</span> <span class="hljs-string">&quot;/etc/named.root.key&quot;</span>;
-
-        managed-keys-directory <span class="hljs-string">&quot;/var/named/dynamic&quot;</span>;
-
-        pid-<span class="hljs-keyword">file</span> <span class="hljs-string">&quot;/run/named/named.pid&quot;</span>;
-        session-keyfile <span class="hljs-string">&quot;/run/named/session.key&quot;</span>;
-&#125;;
-
-logging &#123;
-        channel default_debug &#123;
-                <span class="hljs-keyword">file</span> <span class="hljs-string">&quot;data/named.run&quot;</span>;
-                severity dynamic;
-        &#125;;
-&#125;;
-
-zone <span class="hljs-string">&quot;.&quot;</span> IN &#123;
-        type hint;
-        <span class="hljs-keyword">file</span> <span class="hljs-string">&quot;named.ca&quot;</span>;
-&#125;;
-
-<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;/etc/named.rfc1912.zones&quot;</span>;
-<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;/etc/named.root.key&quot;</span>;</code></pre></div>
-
-<div class="hljs"><pre><code class="hljs awk">[root@pxe yum.repos.d]<span class="hljs-comment"># cat /etc/named.rfc1912.zones</span>
-<span class="hljs-regexp">//</span> named.rfc1912.zones:
-<span class="hljs-regexp">//</span>
-<span class="hljs-regexp">//</span> Provided by Red Hat caching-nameserver package 
-<span class="hljs-regexp">//</span>
-<span class="hljs-regexp">//</span> ISC BIND named zone configuration <span class="hljs-keyword">for</span> zones recommended by
-<span class="hljs-regexp">//</span> RFC <span class="hljs-number">1912</span> section <span class="hljs-number">4.1</span> : localhost TLDs and address zones
-<span class="hljs-regexp">//</span> and http:<span class="hljs-regexp">//</span>www.ietf.org<span class="hljs-regexp">/internet-drafts/</span>draft-ietf-dnsop-default-local-zones-<span class="hljs-number">02</span>.txt
-<span class="hljs-regexp">//</span> (c)<span class="hljs-number">2007</span> R W Franks
-<span class="hljs-regexp">//</span> 
-<span class="hljs-regexp">//</span> See <span class="hljs-regexp">/usr/</span>share<span class="hljs-regexp">/doc/</span>bind*<span class="hljs-regexp">/sample/</span> <span class="hljs-keyword">for</span> example named configuration files.
-<span class="hljs-regexp">//</span>
-
-zone <span class="hljs-string">&quot;ljh.com&quot;</span> IN &#123;
-        type master;
-        file <span class="hljs-string">&quot;named.localhost&quot;</span>;
-        allow-update &#123; none; &#125;;
-&#125;;
-
-zone <span class="hljs-string">&quot;10.10.10.in-addr.arpa&quot;</span> IN &#123;
-        type master;
-        file <span class="hljs-string">&quot;named.loopback&quot;</span>;
-        allow-update &#123; none; &#125;;
-&#125;;</code></pre></div>
-
-<div class="hljs"><pre><code class="hljs angelscript">[<span class="hljs-symbol">root@</span>pxe yum.repos.d]# cat /var/named/named.localhost  
-$TTL <span class="hljs-number">1</span>D
-@       IN SOA  @ mail.qq.com. (
-                                        <span class="hljs-number">0</span>       ; serial
-                                        <span class="hljs-number">1</span>D      ; <span class="hljs-built_in">ref</span>resh
-                                        <span class="hljs-number">1</span>H      ; retry
-                                        <span class="hljs-number">1</span>W      ; expire
-                                        <span class="hljs-number">3</span>H )    ; minimum
-        NS      ns.ljh.com.
-ns      A       <span class="hljs-number">10.10</span><span class="hljs-number">.10</span><span class="hljs-number">.12</span>
-mail    A       <span class="hljs-number">10.10</span><span class="hljs-number">.10</span><span class="hljs-number">.12</span>
-[<span class="hljs-symbol">root@</span>pxe yum.repos.d]# cat /var/named/named.loopback
-$TTL <span class="hljs-number">1</span>D
-@       IN SOA  @ mail.qq.com. (
-                                        <span class="hljs-number">0</span>       ; serial
-                                        <span class="hljs-number">1</span>D      ; <span class="hljs-built_in">ref</span>resh
-                                        <span class="hljs-number">1</span>H      ; retry
-                                        <span class="hljs-number">1</span>W      ; expire
-                                        <span class="hljs-number">3</span>H )    ; minimum
-        NS      ns.ljh.com.
-ns      A       <span class="hljs-number">10.10</span><span class="hljs-number">.10</span><span class="hljs-number">.12</span>
-<span class="hljs-number">12</span>      PTR     mail.ljh.com.</code></pre></div>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@pxe yum.repos.d]# cat &#x2F;var&#x2F;named&#x2F;named.localhost  </span><br><span class="line">$TTL 1D</span><br><span class="line">@       IN SOA  @ mail.qq.com. (</span><br><span class="line">                                        0       ; serial</span><br><span class="line">                                        1D      ; refresh</span><br><span class="line">                                        1H      ; retry</span><br><span class="line">                                        1W      ; expire</span><br><span class="line">                                        3H )    ; minimum</span><br><span class="line">        NS      ns.ljh.com.</span><br><span class="line">ns      A       10.10.10.12</span><br><span class="line">mail    A       10.10.10.12</span><br><span class="line">[root@pxe yum.repos.d]# cat &#x2F;var&#x2F;named&#x2F;named.loopback</span><br><span class="line">$TTL 1D</span><br><span class="line">@       IN SOA  @ mail.qq.com. (</span><br><span class="line">                                        0       ; serial</span><br><span class="line">                                        1D      ; refresh</span><br><span class="line">                                        1H      ; retry</span><br><span class="line">                                        1W      ; expire</span><br><span class="line">                                        3H )    ; minimum</span><br><span class="line">        NS      ns.ljh.com.</span><br><span class="line">ns      A       10.10.10.12</span><br><span class="line">12      PTR     mail.ljh.com.</span><br></pre></td></tr></table></figure>
 
 <h3 id="验证DNS搭建结果"><a href="#验证DNS搭建结果" class="headerlink" title="验证DNS搭建结果"></a>验证DNS搭建结果</h3><p>配置测试机</p>
-<div class="hljs"><pre><code class="hljs yaml">[<span class="hljs-string">root@pxe</span> <span class="hljs-string">yum.repos.d</span>]<span class="hljs-comment"># cat /etc/resolv.conf</span>
-<span class="hljs-comment"># Generated by NetworkManager</span>
-<span class="hljs-string">search</span> <span class="hljs-string">localdomain</span>
-<span class="hljs-string">nameserver</span> <span class="hljs-number">10.10</span><span class="hljs-number">.10</span><span class="hljs-number">.12</span>
-<span class="hljs-string">nameserver</span> <span class="hljs-number">100.100</span><span class="hljs-number">.100</span><span class="hljs-number">.240</span>    <span class="hljs-comment">#用于连接外网的, 与验证实验无关</span></code></pre></div>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@pxe yum.repos.d]# cat &#x2F;etc&#x2F;resolv.conf</span><br><span class="line"># Generated by NetworkManager</span><br><span class="line">search localdomain</span><br><span class="line">nameserver 10.10.10.12</span><br><span class="line">nameserver 100.100.100.240    #用于连接外网的, 与验证实验无关</span><br></pre></td></tr></table></figure>
 
 <p>验证</p>
-<div class="hljs"><pre><code class="hljs yaml">[<span class="hljs-string">root@pxe</span> <span class="hljs-string">yum.repos.d</span>]<span class="hljs-comment"># dig -t A mail.ljh.com</span>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[root@pxe yum.repos.d]# dig -t A mail.ljh.com</span><br><span class="line"></span><br><span class="line">; &lt;&lt;&gt;&gt; DiG 9.11.4-P2-RedHat-9.11.4-16.P2.el7_8.6 &lt;&lt;&gt;&gt; -t A mail.ljh.com</span><br><span class="line">;; global options: +cmd</span><br><span class="line">;; Got answer:</span><br><span class="line">;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 64759</span><br><span class="line">;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 1, ADDITIONAL: 2</span><br><span class="line"></span><br><span class="line">;; OPT PSEUDOSECTION:</span><br><span class="line">; EDNS: version: 0, flags:; udp: 4096</span><br><span class="line">;; QUESTION SECTION:</span><br><span class="line">;mail.ljh.com.                  IN      A</span><br><span class="line"></span><br><span class="line">;; ANSWER SECTION:</span><br><span class="line">mail.ljh.com.           86400   IN      A       10.10.10.12</span><br><span class="line"></span><br><span class="line">;; AUTHORITY SECTION:</span><br><span class="line">ljh.com.                86400   IN      NS      ns.ljh.com.</span><br><span class="line"></span><br><span class="line">;; ADDITIONAL SECTION:</span><br><span class="line">ns.ljh.com.             86400   IN      A       10.10.10.12</span><br><span class="line"></span><br><span class="line">;; Query time: 0 msec</span><br><span class="line">;; SERVER: 10.10.10.12#53(10.10.10.12)</span><br><span class="line">;; WHEN: 六 8月 01 16:20:34 CST 2020</span><br><span class="line">;; MSG SIZE  rcvd: 90</span><br></pre></td></tr></table></figure>
 
-<span class="hljs-string">;</span> <span class="hljs-string">&lt;&lt;&gt;&gt;</span> <span class="hljs-string">DiG</span> <span class="hljs-number">9.11</span><span class="hljs-number">.4</span><span class="hljs-string">-P2-RedHat-9.11.4-16.P2.el7_8.6</span> <span class="hljs-string">&lt;&lt;&gt;&gt;</span> <span class="hljs-string">-t</span> <span class="hljs-string">A</span> <span class="hljs-string">mail.ljh.com</span>
-<span class="hljs-string">;;</span> <span class="hljs-attr">global options:</span> <span class="hljs-string">+cmd</span>
-<span class="hljs-string">;;</span> <span class="hljs-attr">Got answer:</span>
-<span class="hljs-string">;;</span> <span class="hljs-string">-&gt;&gt;HEADER&lt;&lt;-</span> <span class="hljs-attr">opcode:</span> <span class="hljs-string">QUERY,</span> <span class="hljs-attr">status:</span> <span class="hljs-string">NOERROR,</span> <span class="hljs-attr">id:</span> <span class="hljs-number">64759</span>
-<span class="hljs-string">;;</span> <span class="hljs-attr">flags:</span> <span class="hljs-string">qr</span> <span class="hljs-string">aa</span> <span class="hljs-string">rd</span> <span class="hljs-string">ra;</span> <span class="hljs-attr">QUERY:</span> <span class="hljs-number">1</span><span class="hljs-string">,</span> <span class="hljs-attr">ANSWER:</span> <span class="hljs-number">1</span><span class="hljs-string">,</span> <span class="hljs-attr">AUTHORITY:</span> <span class="hljs-number">1</span><span class="hljs-string">,</span> <span class="hljs-attr">ADDITIONAL:</span> <span class="hljs-number">2</span>
-
-<span class="hljs-string">;;</span> <span class="hljs-attr">OPT PSEUDOSECTION:</span>
-<span class="hljs-string">;</span> <span class="hljs-attr">EDNS: version:</span> <span class="hljs-number">0</span><span class="hljs-string">,</span> <span class="hljs-string">flags:;</span> <span class="hljs-attr">udp:</span> <span class="hljs-number">4096</span>
-<span class="hljs-string">;;</span> <span class="hljs-attr">QUESTION SECTION:</span>
-<span class="hljs-string">;mail.ljh.com.</span>                  <span class="hljs-string">IN</span>      <span class="hljs-string">A</span>
-
-<span class="hljs-string">;;</span> <span class="hljs-attr">ANSWER SECTION:</span>
-<span class="hljs-string">mail.ljh.com.</span>           <span class="hljs-number">86400</span>   <span class="hljs-string">IN</span>      <span class="hljs-string">A</span>       <span class="hljs-number">10.10</span><span class="hljs-number">.10</span><span class="hljs-number">.12</span>
-
-<span class="hljs-string">;;</span> <span class="hljs-attr">AUTHORITY SECTION:</span>
-<span class="hljs-string">ljh.com.</span>                <span class="hljs-number">86400</span>   <span class="hljs-string">IN</span>      <span class="hljs-string">NS</span>      <span class="hljs-string">ns.ljh.com.</span>
-
-<span class="hljs-string">;;</span> <span class="hljs-attr">ADDITIONAL SECTION:</span>
-<span class="hljs-string">ns.ljh.com.</span>             <span class="hljs-number">86400</span>   <span class="hljs-string">IN</span>      <span class="hljs-string">A</span>       <span class="hljs-number">10.10</span><span class="hljs-number">.10</span><span class="hljs-number">.12</span>
-
-<span class="hljs-string">;;</span> <span class="hljs-attr">Query time:</span> <span class="hljs-number">0</span> <span class="hljs-string">msec</span>
-<span class="hljs-string">;;</span> <span class="hljs-attr">SERVER:</span> <span class="hljs-number">10.10</span><span class="hljs-number">.10</span><span class="hljs-number">.12</span><span class="hljs-comment">#53(10.10.10.12)</span>
-<span class="hljs-string">;;</span> <span class="hljs-attr">WHEN:</span> <span class="hljs-string">六</span> <span class="hljs-number">8</span><span class="hljs-string">月</span> <span class="hljs-number">01</span> <span class="hljs-number">16</span><span class="hljs-string">:20:34</span> <span class="hljs-string">CST</span> <span class="hljs-number">2020</span>
-<span class="hljs-string">;;</span> <span class="hljs-attr">MSG SIZE  rcvd:</span> <span class="hljs-number">90</span></code></pre></div>
-
-<h2 id="搭建邮件服务器"><a href="#搭建邮件服务器" class="headerlink" title="搭建邮件服务器"></a>搭建邮件服务器</h2><h3 id="安装postfix"><a href="#安装postfix" class="headerlink" title="安装postfix"></a>安装postfix</h3><div class="hljs"><pre><code class="hljs cmake">rpm -e postfix        <span class="hljs-comment"># 卸载系统自带版本</span>
-yum -y <span class="hljs-keyword">install</span> postfix</code></pre></div>
+<h2 id="搭建邮件服务器"><a href="#搭建邮件服务器" class="headerlink" title="搭建邮件服务器"></a>搭建邮件服务器</h2><h3 id="安装postfix"><a href="#安装postfix" class="headerlink" title="安装postfix"></a>安装postfix</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rpm -e postfix        # 卸载系统自带版本</span><br><span class="line">yum -y install postfix</span><br></pre></td></tr></table></figure>
 
 <h3 id="配置postfix的系统用户与用户组"><a href="#配置postfix的系统用户与用户组" class="headerlink" title="配置postfix的系统用户与用户组"></a>配置postfix的系统用户与用户组</h3><p>删除系统已有的postfix用户与postdrop用户组</p>
-<div class="hljs"><pre><code class="hljs properties"><span class="hljs-attr">userdel</span> <span class="hljs-string">postfix</span>
-<span class="hljs-attr">groupdel</span> <span class="hljs-string">postdrop</span></code></pre></div>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">userdel postfix</span><br><span class="line">groupdel postdrop</span><br></pre></td></tr></table></figure>
 
 <p>新建用户</p>
-<div class="hljs"><pre><code class="hljs angelscript">groupadd -g <span class="hljs-number">2525</span> postfix
-useradd -g <span class="hljs-number">2525</span> -u <span class="hljs-number">2525</span> -M -s /sbin/nologin postfix</code></pre></div>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">groupadd -g 2525 postfix</span><br><span class="line">useradd -g 2525 -u 2525 -M -s &#x2F;sbin&#x2F;nologin postfix</span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>-s, –shell SHELL             新账户的登录 shell</p>
 <p>-M, –no-create-home          不创建用户的主目录</p>
 </blockquote>
 <h3 id="配置postfix"><a href="#配置postfix" class="headerlink" title="配置postfix"></a>配置postfix</h3><p>修改内容</p>
-<div class="hljs"><pre><code class="hljs ini"><span class="hljs-section">[root@mail~]</span><span class="hljs-comment">#vi/etc/postfix/main.cf     </span>
-<span class="hljs-comment">#修改邮局主机名</span>
-<span class="hljs-attr">myhostname</span>=mail.testmail.com         
-<span class="hljs-comment">#修改邮局域名</span>
-<span class="hljs-attr">mydomain</span>=testmail.com         
-<span class="hljs-comment">#寄出邮件域名，删除注释</span>
-<span class="hljs-attr">myorigin</span>=<span class="hljs-variable">$mydomain</span>                
-<span class="hljs-comment">#修改监听所有网卡，删除注释</span>
-<span class="hljs-attr">inet_interfaces</span>=all            
-<span class="hljs-comment">#修改可接收邮件的主机名和域名，可被中继的域名mydestination=$myhostname,localhost.$mydomain,localhost,$mydomain            #修改可接收邮件的主机名和域名，可被中继的主机</span>
-<span class="hljs-comment">#按实际情况填写</span>
-<span class="hljs-attr">mynetworks</span>=<span class="hljs-number">10.10</span>.<span class="hljs-number">10.0</span>/<span class="hljs-number">24</span>,<span class="hljs-number">127.0</span>.<span class="hljs-number">0.0</span>/<span class="hljs-number">8</span>        
-<span class="hljs-comment">#取消注释</span>
-<span class="hljs-attr">home_mailbox</span>=Maildir/        
-<span class="hljs-comment">#指定信任网段类型</span>
-<span class="hljs-attr">mynetworks_style</span>=host            
-<span class="hljs-comment">#指定允许中转邮件的域名，取消注释</span>
-<span class="hljs-attr">relay_domains</span>=<span class="hljs-variable">$mydestination</span></code></pre></div>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@mail~]#vi&#x2F;etc&#x2F;postfix&#x2F;main.cf     </span><br><span class="line">#修改邮局主机名</span><br><span class="line">myhostname&#x3D;mail.testmail.com         </span><br><span class="line">#修改邮局域名</span><br><span class="line">mydomain&#x3D;testmail.com         </span><br><span class="line">#寄出邮件域名，删除注释</span><br><span class="line">myorigin&#x3D;$mydomain                </span><br><span class="line">#修改监听所有网卡，删除注释</span><br><span class="line">inet_interfaces&#x3D;all            </span><br><span class="line">#修改可接收邮件的主机名和域名，可被中继的域名mydestination&#x3D;$myhostname,localhost.$mydomain,localhost,$mydomain            #修改可接收邮件的主机名和域名，可被中继的主机</span><br><span class="line">#按实际情况填写</span><br><span class="line">mynetworks&#x3D;10.10.10.0&#x2F;24,127.0.0.0&#x2F;8        </span><br><span class="line">#取消注释</span><br><span class="line">home_mailbox&#x3D;Maildir&#x2F;        </span><br><span class="line">#指定信任网段类型</span><br><span class="line">mynetworks_style&#x3D;host            </span><br><span class="line">#指定允许中转邮件的域名，取消注释</span><br><span class="line">relay_domains&#x3D;$mydestination</span><br></pre></td></tr></table></figure>
 
 <p>修改权限, 设置开机自启</p>
-<div class="hljs"><pre><code class="hljs swift">[root@mail~]#chown <span class="hljs-keyword">postfix</span>.<span class="hljs-keyword">postfix</span> -<span class="hljs-type">R</span> /<span class="hljs-keyword">var</span>/lib/<span class="hljs-keyword">postfix</span>/
-[root@mail~]#chown <span class="hljs-keyword">postfix</span>.<span class="hljs-keyword">postfix</span> /<span class="hljs-keyword">var</span>/spool/ -<span class="hljs-type">R</span>
-[root@mail~]#systemctl enable <span class="hljs-keyword">postfix</span> [root@mail~]#systemctl restart <span class="hljs-keyword">postfix</span></code></pre></div>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@mail~]#chown postfix.postfix -R &#x2F;var&#x2F;lib&#x2F;postfix&#x2F;</span><br><span class="line">[root@mail~]#chown postfix.postfix &#x2F;var&#x2F;spool&#x2F; -R</span><br><span class="line">[root@mail~]#systemctl enable postfix [root@mail~]#systemctl restart postfix</span><br></pre></td></tr></table></figure>
 
 
 
 <h3 id="测试postfix"><a href="#测试postfix" class="headerlink" title="测试postfix"></a>测试postfix</h3><p>添加postfix邮件用户</p>
-<div class="hljs"><pre><code class="hljs autoit">[root<span class="hljs-symbol">@mail</span>~]<span class="hljs-meta">#useradd cwl</span>
-[root<span class="hljs-symbol">@mail</span>~]<span class="hljs-meta">#echo<span class="hljs-string">&quot;000&quot;</span>|passwd --stdin cwl</span></code></pre></div>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@mail~]#useradd cwl</span><br><span class="line">[root@mail~]#echo&quot;000&quot;|passwd --stdin cwl</span><br></pre></td></tr></table></figure>
 
 <p>安装telnet工具</p>
-<div class="hljs"><pre><code class="hljs cmake">yum -y <span class="hljs-keyword">install</span> telnet</code></pre></div>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install telnet</span><br></pre></td></tr></table></figure>
 
 <p>使用telnet工具连接到postfix服务器, 发送邮件</p>
-<div class="hljs"><pre><code class="hljs angelscript">[<span class="hljs-symbol">root@</span>localhost yum.repos.d]# telnet mail.ljh.com <span class="hljs-number">25</span>
-Trying <span class="hljs-number">10.10</span><span class="hljs-number">.10</span><span class="hljs-number">.12</span>...
-Connected to mail.ljh.com.
-Escape character <span class="hljs-keyword">is</span> <span class="hljs-string">&#x27;^]&#x27;</span>.
-<span class="hljs-number">220</span> mail.ljh.com ESMTP Postfix            #连接成功</code></pre></div>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost yum.repos.d]# telnet mail.ljh.com 25</span><br><span class="line">Trying 10.10.10.12...</span><br><span class="line">Connected to mail.ljh.com.</span><br><span class="line">Escape character is &#39;^]&#39;.</span><br><span class="line">220 mail.ljh.com ESMTP Postfix            #连接成功</span><br></pre></td></tr></table></figure>
 
-<div class="hljs"><pre><code class="hljs angelscript">[<span class="hljs-symbol">root@</span>localhost yum.repos.d]# telnet mail.ljh.com <span class="hljs-number">25</span>
-Trying <span class="hljs-number">10.10</span><span class="hljs-number">.10</span><span class="hljs-number">.12</span>...
-Connected to mail.ljh.com.
-Escape character <span class="hljs-keyword">is</span> <span class="hljs-string">&#x27;^]&#x27;</span>.
-<span class="hljs-number">220</span> mail.ljh.com ESMTP Postfix    <span class="hljs-comment">//在下面的终端中-输入-命令与内容</span>
-mail <span class="hljs-keyword">from</span>:<span class="hljs-symbol">root@</span>testmail.com        <span class="hljs-comment">//发件人</span>
-<span class="hljs-number">250</span> <span class="hljs-number">2.1</span><span class="hljs-number">.0</span> Ok
-rcpt to:cwl            <span class="hljs-comment">//收件人</span>
-<span class="hljs-number">250</span> <span class="hljs-number">2.1</span><span class="hljs-number">.5</span> Ok
-data        <span class="hljs-comment">//填写邮件</span>
-<span class="hljs-number">354</span> End data with &lt;CR&gt; &lt;LF&gt;.&lt;CR&gt;&lt;LF&gt;
-hello,<span class="hljs-keyword">this</span> <span class="hljs-keyword">is</span> test mail.    <span class="hljs-comment">//输入邮件内容</span>
-.        <span class="hljs-comment">//以“.”结束输入</span>
-<span class="hljs-number">250</span> <span class="hljs-number">2.0</span><span class="hljs-number">.0</span> Ok:queued as DC5693000085
-quit            <span class="hljs-comment">//退出</span>
-<span class="hljs-number">221</span> <span class="hljs-number">2.0</span><span class="hljs-number">.0</span> Bye 
-Connection closed by foreign host.</code></pre></div>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost yum.repos.d]# telnet mail.ljh.com 25</span><br><span class="line">Trying 10.10.10.12...</span><br><span class="line">Connected to mail.ljh.com.</span><br><span class="line">Escape character is &#39;^]&#39;.</span><br><span class="line">220 mail.ljh.com ESMTP Postfix    &#x2F;&#x2F;在下面的终端中-输入-命令与内容</span><br><span class="line">mail from:root@testmail.com        &#x2F;&#x2F;发件人</span><br><span class="line">250 2.1.0 Ok</span><br><span class="line">rcpt to:cwl            &#x2F;&#x2F;收件人</span><br><span class="line">250 2.1.5 Ok</span><br><span class="line">data        &#x2F;&#x2F;填写邮件</span><br><span class="line">354 End data with &lt;CR&gt; &lt;LF&gt;.&lt;CR&gt;&lt;LF&gt;</span><br><span class="line">hello,this is test mail.    &#x2F;&#x2F;输入邮件内容</span><br><span class="line">.        &#x2F;&#x2F;以“.”结束输入</span><br><span class="line">250 2.0.0 Ok:queued as DC5693000085</span><br><span class="line">quit            &#x2F;&#x2F;退出</span><br><span class="line">221 2.0.0 Bye </span><br><span class="line">Connection closed by foreign host.</span><br></pre></td></tr></table></figure>
 
 <p>查看发送状态</p>
-<div class="hljs"><pre><code class="hljs angelscript">[<span class="hljs-symbol">root@</span>mail~]#tail/var/log/maillog |grep sent 
-Oct <span class="hljs-number">607</span>:<span class="hljs-number">20</span>:<span class="hljs-number">12</span> localhost postfix/local[<span class="hljs-number">2755</span>]:DC5693000085:to=&lt;<span class="hljs-symbol">cwl@</span>testmail.com&gt;,orig_to=&lt;cwl&gt;,relay=local,delay=<span class="hljs-number">31</span>,delays=<span class="hljs-number">31</span>/<span class="hljs-number">0.01</span>/<span class="hljs-number">0</span>/<span class="hljs-number">0.02</span>,dsn=<span class="hljs-number">2.0</span><span class="hljs-number">.0</span>,status=sent(deliveredtomaildir)</code></pre></div>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@mail~]#tail&#x2F;var&#x2F;log&#x2F;maillog |grep sent </span><br><span class="line">Oct 607:20:12 localhost postfix&#x2F;local[2755]:DC5693000085:to&#x3D;&lt;cwl@testmail.com&gt;,orig_to&#x3D;&lt;cwl&gt;,relay&#x3D;local,delay&#x3D;31,delays&#x3D;31&#x2F;0.01&#x2F;0&#x2F;0.02,dsn&#x3D;2.0.0,status&#x3D;sent(deliveredtomaildir)</span><br></pre></td></tr></table></figure>
 
-<h3 id="安装dovecot"><a href="#安装dovecot" class="headerlink" title="安装dovecot"></a>安装dovecot</h3><div class="hljs"><pre><code class="hljs cmake">yum -y <span class="hljs-keyword">install</span> dovecot</code></pre></div>
+<h3 id="安装dovecot"><a href="#安装dovecot" class="headerlink" title="安装dovecot"></a>安装dovecot</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install dovecot</span><br></pre></td></tr></table></figure>
 
-<h3 id="配置dovecot"><a href="#配置dovecot" class="headerlink" title="配置dovecot"></a>配置dovecot</h3><div class="hljs"><pre><code class="hljs gradle">[root@mail~]# vi<span class="hljs-regexp">/etc/</span>dovecot/dovecot.conf
-#如果不使用IPv6，请修改为*
-listen=*
-[root@mail~]# vi<span class="hljs-regexp">/etc/</span>dovecot<span class="hljs-regexp">/conf.d/</span><span class="hljs-number">10</span>-auth.conf
-#<span class="hljs-number">9</span>行:取消注释并修改
-#是否允许在沒有SSL/TLS下以明码登录
-disable_plaintext_auth = no
-#<span class="hljs-number">97</span>行:添加
-auth_mechanisms = plain login
-[root@mail~]# vi<span class="hljs-regexp">/etc/</span>dovecot<span class="hljs-regexp">/conf.d/</span><span class="hljs-number">10</span>-mail.conf
-#<span class="hljs-number">30</span>行:取消注释并添加
-mail_location = maildir:~/Maildir
-[root@mail~]# vi<span class="hljs-regexp">/etc/</span>dovecot<span class="hljs-regexp">/conf.d/</span><span class="hljs-number">10</span>-master.conf
-#<span class="hljs-number">88</span>-<span class="hljs-number">90</span>行:取消注释并添加Postfix smtp验证
-unix_listener <span class="hljs-regexp">/var/</span>spool<span class="hljs-regexp">/postfix/</span><span class="hljs-keyword">private</span>/auth
-&#123;
-    mode=<span class="hljs-number">0666</span>
-    user=postfix
-    <span class="hljs-keyword">group</span>=postfix
-&#125;</code></pre></div>
+<h3 id="配置dovecot"><a href="#配置dovecot" class="headerlink" title="配置dovecot"></a>配置dovecot</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[root@mail~]# vi&#x2F;etc&#x2F;dovecot&#x2F;dovecot.conf</span><br><span class="line">#如果不使用IPv6，请修改为*</span><br><span class="line">listen&#x3D;*</span><br><span class="line">[root@mail~]# vi&#x2F;etc&#x2F;dovecot&#x2F;conf.d&#x2F;10-auth.conf</span><br><span class="line">#9行:取消注释并修改</span><br><span class="line">#是否允许在沒有SSL&#x2F;TLS下以明码登录</span><br><span class="line">disable_plaintext_auth &#x3D; no</span><br><span class="line">#97行:添加</span><br><span class="line">auth_mechanisms &#x3D; plain login</span><br><span class="line">[root@mail~]# vi&#x2F;etc&#x2F;dovecot&#x2F;conf.d&#x2F;10-mail.conf</span><br><span class="line">#30行:取消注释并添加</span><br><span class="line">mail_location &#x3D; maildir:~&#x2F;Maildir</span><br><span class="line">[root@mail~]# vi&#x2F;etc&#x2F;dovecot&#x2F;conf.d&#x2F;10-master.conf</span><br><span class="line">#88-90行:取消注释并添加Postfix smtp验证</span><br><span class="line">unix_listener &#x2F;var&#x2F;spool&#x2F;postfix&#x2F;private&#x2F;auth</span><br><span class="line">&#123;</span><br><span class="line">    mode&#x3D;0666</span><br><span class="line">    user&#x3D;postfix</span><br><span class="line">    group&#x3D;postfix</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>启动dovecot</p>
-<div class="hljs"><pre><code class="hljs crmsh">systemctl <span class="hljs-literal">start</span> dovecot</code></pre></div>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start dovecot</span><br></pre></td></tr></table></figure>
 
-<h3 id="测试dovecot接收邮件"><a href="#测试dovecot接收邮件" class="headerlink" title="测试dovecot接收邮件"></a>测试dovecot接收邮件</h3><div class="hljs"><pre><code class="hljs angelscript">[<span class="hljs-symbol">root@</span>localhost yum.repos.d]# telnet mail.ljh.com <span class="hljs-number">110</span>
-Trying <span class="hljs-number">10.10</span><span class="hljs-number">.10</span><span class="hljs-number">.12</span>...
-Connected to mail.ljh.com.
-Escape character <span class="hljs-keyword">is</span> <span class="hljs-string">&#x27;^]&#x27;</span>.
-+OK Dovecot ready.
-user cwl        <span class="hljs-comment">//登录</span>
-+OK
-pass <span class="hljs-number">000</span>        <span class="hljs-comment">//密码</span>
-+OK Logged <span class="hljs-keyword">in</span>.
-List            <span class="hljs-comment">//邮件列表</span>
-+OK <span class="hljs-number">1</span> messages:
-<span class="hljs-number">1</span> <span class="hljs-number">390</span>
-.    
-retr <span class="hljs-number">1</span>            <span class="hljs-comment">//输入邮件编号来查看邮件</span>
-+OK <span class="hljs-number">390</span> octets
-Return-Path: &lt;<span class="hljs-symbol">root@</span>ljh.com&gt;
-X-Original-To: cwl
-Delivered-To: <span class="hljs-symbol">cwl@</span>ljh.com
-Received: <span class="hljs-keyword">from</span> mail.ljh.com (mail.ljh.com [<span class="hljs-number">10.10</span><span class="hljs-number">.10</span><span class="hljs-number">.12</span>])
-        by mail.ljh.com (Postfix) with SMTP id <span class="hljs-number">3404840</span>AC5C9
-        <span class="hljs-keyword">for</span> &lt;cwl&gt;; Sat,  <span class="hljs-number">1</span> Aug <span class="hljs-number">2020</span> <span class="hljs-number">19</span>:<span class="hljs-number">25</span>:<span class="hljs-number">02</span> +<span class="hljs-number">0800</span> (CST)
-Message-Id: &lt;<span class="hljs-number">20200801112513.3404840</span><span class="hljs-symbol">AC5C9@</span>mail.ljh.com&gt;
-Date: Sat,  <span class="hljs-number">1</span> Aug <span class="hljs-number">2020</span> <span class="hljs-number">19</span>:<span class="hljs-number">25</span>:<span class="hljs-number">02</span> +<span class="hljs-number">0800</span> (CST)
-From: <span class="hljs-symbol">root@</span>ljh.com
-
-hello,<span class="hljs-keyword">this</span> <span class="hljs-keyword">is</span> a test mail.
-.
-quit        <span class="hljs-comment">//退出</span>
-+OK Logging <span class="hljs-keyword">out</span>.
-Connection closed by foreign host.</code></pre></div>
+<h3 id="测试dovecot接收邮件"><a href="#测试dovecot接收邮件" class="headerlink" title="测试dovecot接收邮件"></a>测试dovecot接收邮件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost yum.repos.d]# telnet mail.ljh.com 110</span><br><span class="line">Trying 10.10.10.12...</span><br><span class="line">Connected to mail.ljh.com.</span><br><span class="line">Escape character is &#39;^]&#39;.</span><br><span class="line">+OK Dovecot ready.</span><br><span class="line">user cwl        &#x2F;&#x2F;登录</span><br><span class="line">+OK</span><br><span class="line">pass 000        &#x2F;&#x2F;密码</span><br><span class="line">+OK Logged in.</span><br><span class="line">List            &#x2F;&#x2F;邮件列表</span><br><span class="line">+OK 1 messages:</span><br><span class="line">1 390</span><br><span class="line">.    </span><br><span class="line">retr 1            &#x2F;&#x2F;输入邮件编号来查看邮件</span><br><span class="line">+OK 390 octets</span><br><span class="line">Return-Path: &lt;root@ljh.com&gt;</span><br><span class="line">X-Original-To: cwl</span><br><span class="line">Delivered-To: cwl@ljh.com</span><br><span class="line">Received: from mail.ljh.com (mail.ljh.com [10.10.10.12])</span><br><span class="line">        by mail.ljh.com (Postfix) with SMTP id 3404840AC5C9</span><br><span class="line">        for &lt;cwl&gt;; Sat,  1 Aug 2020 19:25:02 +0800 (CST)</span><br><span class="line">Message-Id: &lt;20200801112513.3404840AC5C9@mail.ljh.com&gt;</span><br><span class="line">Date: Sat,  1 Aug 2020 19:25:02 +0800 (CST)</span><br><span class="line">From: root@ljh.com</span><br><span class="line"></span><br><span class="line">hello,this is a test mail.</span><br><span class="line">.</span><br><span class="line">quit        &#x2F;&#x2F;退出</span><br><span class="line">+OK Logging out.</span><br><span class="line">Connection closed by foreign host.</span><br></pre></td></tr></table></figure>
 
 
 
 
-            </div>
-            <hr>
-            <div>
-              <div class="post-metas mb-3">
-                
-                
-                  <div class="post-meta">
-                    <i class="iconfont icon-tags"></i>
-                    
-                      <a class="hover-with-bg" href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%AD%E7%BA%A7/">云计算中级</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Linux/">Linux</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Centos/">Centos</a>
-                    
-                  </div>
-                
-              </div>
-              
-                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
-              
-              
-                <div class="post-prevnext row">
-                  <article class="post-prev col-6">
-                    
-                    
-                      <a href="/2020/08/01/%E5%AE%89%E8%A3%85%20%20%E9%85%8D%E7%BD%AEDHCP%E6%9C%8D%E5%8A%A1%E5%99%A8/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">安装 | 配置DHCP服务器</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
-                  </article>
-                  <article class="post-next col-6">
-                    
-                    
-                      <a href="/2020/07/31/Nginx%20%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%87%8D%E5%90%AF%E4%B8%8E%E5%85%B3%E9%97%AD%E5%91%BD%E5%90%8D/">
-                        <span class="hidden-mobile">Nginx 服务器重启与关闭命令</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
-                    
-                  </article>
-                </div>
-              
-            </div>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%AD%E7%BA%A7/" rel="tag"># 云计算中级</a>
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+            <a href="/tags/Centos/" rel="tag"># Centos</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/07/31/Nginx%20%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%87%8D%E5%90%AF%E4%B8%8E%E5%85%B3%E9%97%AD%E5%91%BD%E5%90%8D/" rel="next" title="Nginx 服务器重启与关闭命令">
+                <i class="fa fa-chevron-left"></i> Nginx 服务器重启与关闭命令
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/08/01/%E5%AE%89%E8%A3%85%20%20%E9%85%8D%E7%BD%AEDHCP%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="prev" title="安装 | 配置DHCP服务器">
+                安装 | 配置DHCP服务器 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
 
             
-          </article>
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
         </div>
-      </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%A8Centos%E6%90%AD%E5%BB%BA%E9%82%AE%E4%BB%B6%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">1.</span> <span class="nav-text">用Centos搭建邮件服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9F%A5%E8%AF%86%E6%89%AB%E7%9B%B2"><span class="nav-number">1.1.</span> <span class="nav-text">知识扫盲</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%B7%A5%E5%85%B7"><span class="nav-number">1.2.</span> <span class="nav-text">使用工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%AD%E5%BB%BADNS%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">1.3.</span> <span class="nav-text">搭建DNS服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81DNS%E6%90%AD%E5%BB%BA%E7%BB%93%E6%9E%9C"><span class="nav-number">1.3.1.</span> <span class="nav-text">验证DNS搭建结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%AD%E5%BB%BA%E9%82%AE%E4%BB%B6%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">1.4.</span> <span class="nav-text">搭建邮件服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85postfix"><span class="nav-number">1.4.1.</span> <span class="nav-text">安装postfix</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEpostfix%E7%9A%84%E7%B3%BB%E7%BB%9F%E7%94%A8%E6%88%B7%E4%B8%8E%E7%94%A8%E6%88%B7%E7%BB%84"><span class="nav-number">1.4.2.</span> <span class="nav-text">配置postfix的系统用户与用户组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEpostfix"><span class="nav-number">1.4.3.</span> <span class="nav-text">配置postfix</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95postfix"><span class="nav-number">1.4.4.</span> <span class="nav-text">测试postfix</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85dovecot"><span class="nav-number">1.4.5.</span> <span class="nav-text">安装dovecot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEdovecot"><span class="nav-number">1.4.6.</span> <span class="nav-text">配置dovecot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95dovecot%E6%8E%A5%E6%94%B6%E9%82%AE%E4%BB%B6"><span class="nav-number">1.4.7.</span> <span class="nav-text">测试dovecot接收邮件</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
     </div>
-    
-      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
-        <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
-  <div id="tocbot"></div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
 </div>
 
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
       </div>
     
+
+    
+
   </div>
-</div>
-
-<!-- Custom -->
-
-
-    
-  </main>
 
   
-    <a id="scroll-top-button" href="#" role="button">
-      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-    </a>
-  
 
-  
-    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
-        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-          <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
-        </div>
-        <div class="list-group" id="local-search-result"></div>
-      </div>
-    </div>
-  </div>
-</div>
-  
-
-  
-    <!-- APlayer 音乐播放器 -->
-    <div id="aplayer"></div>
-    <script defer src="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.js" ></script>
-<link  rel="stylesheet" href="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.css" />
 <script type="text/javascript">
-  var oldLoadAp = window.onload;
-  window.onload = function () {
-    oldLoadAp && oldLoadAp();
-
-    new APlayer({
-      container: document.getElementById('aplayer'),
-      fixed: true,
-      autoplay: 'false' === 'true',
-      loop: 'all',
-      order: 'random',
-      theme: '#b7daff',
-      preload: 'none',
-      audio: [{"name":"万有引力","artist":"F_yy","url":"/song/万有引力-F_yy.mp3","cover":"/img/songbg.jpg"},{"name":" Dancin (Krono Remix).mp3","artist":"Aaron Smith _ Luvli ","url":"/song/Aaron Smith _ Luvli - Dancin (Krono Remix).mp3","cover":"/img/songbg.jpg"},{"name":" Ｋ.Ｉ.Ｓ.Ｓ (V0).mp3","artist":"bl00dwave ","url":"/song/bl00dwave - Ｋ.Ｉ.Ｓ.Ｓ (V0).mp3","cover":"/img/songbg.jpg"},{"name":" Asgard.mp3","artist":"Electus ","url":"/song/Electus - Asgard.mp3","cover":"/img/songbg.jpg"},{"name":" Love Story (V0).mp3","artist":"Taylor Swift ","url":"/song/Taylor Swift - Love Story (V0).mp3","cover":"/img/songbg.jpg"},{"name":" Seasons In The Sun (V0).mp3","artist":"Westlife ","url":"http://img.ljh666.xyz/Westlife%20-%20Seasons%20In%20The%20Sun%20%28V0%29.mp3","cover":"/img/songbg.jpg"},{"name":" 只要为你活一天 (V0).mp3","artist":"刘家昌 ","url":"/song/刘家昌 - 只要为你活一天 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 虐心 (V0).mp3","artist":"徐良 _ 孙羽幽 ","url":"/song/徐良 _ 孙羽幽 - 虐心 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 客官不可以 (V0).mp3","artist":"徐良 _ 小凌 ","url":"/song/徐良 _ 小凌 - 客官不可以 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 他的猫 (V0).mp3","artist":"徐良 _ 杨曦 ","url":"/song/徐良 _ 杨曦 - 他的猫 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 口是心非 (V0).mp3","artist":"杨小壮 _ 鹏鹏 ","url":"/song/杨小壮 _ 鹏鹏 - 口是心非 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 你走demo (V0).mp3","artist":"松紧先生（李宗锦） ","url":"/song/松紧先生（李宗锦） - 你走demo (V0).mp3","cover":"/img/songbg.jpg"}]
-    });
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
   }
 </script>
 
-  
-
-  
-
-  <footer class="mt-5">
-  <div class="text-center py-3">
-    <div>
-    </div>
-    
-  <div class="statistics">
-    
-    
-
-    
-      
-        <!-- 不蒜子统计PV -->
-        <span id="busuanzi_container_site_pv" style="display: none">
-            总访问量 
-            <span id="busuanzi_value_site_pv"></span>
-             次
-          </span>
-      
-      
-        <!-- 不蒜子统计UV -->
-        <span id="busuanzi_container_site_uv" style="display: none">
-            总访客数 
-            <span id="busuanzi_value_site_uv"></span>
-             人
-          </span>
-      
-    
-  </div>
-
-
-    
-  <!-- 备案信息 -->
-  <div class="beian">
-    <a href="http://beian.miit.gov.cn/" target="_blank"
-       rel="nofollow noopener">浙ICP备20007029号</a>
-    
-      <a
-        href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=123456"
-        rel="nofollow noopener"
-        class="beian-police"
-        target="_blank"
-      >
-        <span class="beian-police-sep">&nbsp;|&nbsp;</span>
-        
-          <img src="/img/police_beian.png" srcset="/img/loading.gif" alt="police-icon" />
-        
-        <span>浙公安ICP备</span>
-      </a>
-     
-  </div>
-
-
-    
-  </div>
-</footer>
-
-<!-- SCRIPTS -->
-<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
-<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
-<script  src="/js/debouncer.js" ></script>
-<script  src="/js/main.js" ></script>
-
-<!-- Plugins -->
-
-
-  
-    <script  src="/js/lazyload.js" ></script>
-  
-
-
-
-  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
-  <script  src="/js/clipboard-use.js" ></script>
-
-
-
-  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
-
-
-
-
-
-  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
-  <script>
-    $(document).ready(function () {
-      var boardCtn = $('#board-ctn');
-      var boardTop = boardCtn.offset().top;
-
-      tocbot.init({
-        tocSelector: '#tocbot',
-        contentSelector: '#post-body',
-        headingSelector: 'h1,h2,h3,h4,h5,h6',
-        linkClass: 'tocbot-link',
-        activeLinkClass: 'tocbot-active-link',
-        listClass: 'tocbot-list',
-        isCollapsedClass: 'tocbot-is-collapsed',
-        collapsibleClass: 'tocbot-is-collapsible',
-        collapseDepth: 0,
-        scrollSmooth: true,
-        headingsOffset: -boardTop
-      });
-      if ($('.toc-list-item').length > 0) {
-        $('#toc').css('visibility', 'visible');
-      }
-    });
-  </script>
-
-
-
-  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
-  <script>
-    var typed = new Typed('#subtitle', {
-      strings: [
-        '  ',
-        "用Centos搭建邮件服务器&nbsp;",
-      ],
-      cursorChar: "_",
-      typeSpeed: 70,
-      loop: false,
-    });
-    typed.stop();
-    $(document).ready(function () {
-      $(".typed-cursor").addClass("h2");
-      typed.start();
-    });
-  </script>
-
-
-
-
-
-  <script  src="/js/local-search.js" ></script>
-  <script>
-    var path = "/local-search.xml";
-    var inputArea = document.querySelector("#local-search-input");
-    inputArea.onclick = function () {
-      searchFunc(path, 'local-search-input', 'local-search-result');
-      this.onclick = null
-    }
-  </script>
-
-
-
-  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
-
-  <script>
-    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
-      function () {
-        var element = document.createElement('a');
-        $(element).attr('data-fancybox', 'images');
-        $(element).attr('href', $(this).attr('src'));
-        $(this).wrap(element);
-      }
-    );
-  </script>
 
 
 
@@ -800,55 +622,7 @@ Connection closed by foreign host.</code></pre></div>
 
 
 
-  
-  
-    <script>
-      !function (e, t, a) {
-        function r() {
-          for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
-          requestAnimationFrame(r)
-        }
 
-        function n() {
-          var t = "function" == typeof e.onclick && e.onclick;
-          e.onclick = function (e) {
-            t && t(), o(e)
-          }
-        }
-
-        function o(e) {
-          var a = t.createElement("div");
-          a.className = "heart", s.push({
-            el: a,
-            x: e.clientX - 5,
-            y: e.clientY - 5,
-            scale: 1,
-            alpha: 1,
-            color: c()
-          }), t.body.appendChild(a)
-        }
-
-        function i(e) {
-          var a = t.createElement("style");
-          a.type = "text/css";
-          try {
-            a.appendChild(t.createTextNode(e))
-          } catch (t) {
-            a.styleSheet.cssText = e
-          }
-          t.getElementsByTagName("head")[0].appendChild(a)
-        }
-
-        function c() {
-          return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
-        }
-
-        var s = [];
-        e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
-          setTimeout(e, 1e3 / 60)
-        }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
-      }(window, document);
-    </script>
   
 
 
@@ -862,7 +636,115 @@ Connection closed by foreign host.</code></pre></div>
 
 
 
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
 
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
 
 </body>
 </html>

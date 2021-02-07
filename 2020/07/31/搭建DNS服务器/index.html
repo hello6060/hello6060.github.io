@@ -1,220 +1,314 @@
-
-
 <!DOCTYPE html>
-<html lang="zh-CN" data-default-color-scheme=&#34;light&#34;>
 
 
 
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
-  <link rel="icon" type="image/png" href="/img/%E7%82%B9%E8%B5%9E.png">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   
-  <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="">
-  <meta name="author" content="John Doe">
-  <meta name="keywords" content="">
-  <title>搭建DNS服务器 - Hello</title>
-
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
-
-
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
-  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
-
   
-    
-    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/gradient-dark.min.css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="云计算中级,Linux,Centos," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="搭建DNS服务器知识扫盲 其中bind-chroot和bind-utils是bind的相关包。   bind-chroot是bind的一个功能,使bind可以在一个chroot的模式下运行.也就是说,bind运行时的&#x2F;(根)目录,并不是系统真正的&#x2F;(根)目录,只是系统中的一个子目录而已.这样做的目的是为了提高安全性.因为在chroot的模式下,bind可以访问的范围仅限于这个子目录的范围里,无法进">
+<meta property="og:type" content="article">
+<meta property="og:title" content="搭建DNS服务器">
+<meta property="og:url" content="http://www.ljh.xyz/2020/07/31/%E6%90%AD%E5%BB%BADNS%E6%9C%8D%E5%8A%A1%E5%99%A8/index.html">
+<meta property="og:site_name" content="Hello">
+<meta property="og:description" content="搭建DNS服务器知识扫盲 其中bind-chroot和bind-utils是bind的相关包。   bind-chroot是bind的一个功能,使bind可以在一个chroot的模式下运行.也就是说,bind运行时的&#x2F;(根)目录,并不是系统真正的&#x2F;(根)目录,只是系统中的一个子目录而已.这样做的目的是为了提高安全性.因为在chroot的模式下,bind可以访问的范围仅限于这个子目录的范围里,无法进">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://img.ljh666.xyz/img/20200731204826.png">
+<meta property="og:image" content="http://img.ljh666.xyz/img/20200731204935.png">
+<meta property="og:image" content="http://img.ljh666.xyz/img/20200731213647.png">
+<meta property="og:image" content="http://img.ljh666.xyz/img/20200731205001.png">
+<meta property="og:image" content="http://img.ljh666.xyz/img/20200731214505.png">
+<meta property="article:published_time" content="2020-07-31T15:24:18.000Z">
+<meta property="article:modified_time" content="2020-08-17T09:00:28.000Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="云计算中级">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Centos">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://img.ljh666.xyz/img/20200731204826.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.ljh.xyz/2020/07/31/搭建DNS服务器/"/>
+
+
+
+
+
+  <title>搭建DNS服务器 | Hello</title>
   
 
-  
-
-
-<!-- 主题依赖的图标库，不要自行修改 -->
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_6peoq002giu.css">
 
 
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
 
 
-<link  rel="stylesheet" href="/css/main.css" />
-
-<!-- 自定义样式保持在最底部 -->
 
 
-  <script  src="/js/utils.js" ></script>
-  <script  src="/js/color-schema.js" ></script>
 <meta name="generator" content="Hexo 5.0.2"></head>
 
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
 
-<body>
-  <header style="height: 70vh;">
-    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
-  <div class="container">
-    <a class="navbar-brand"
-       href="/">&nbsp;<strong>LJH'S BLOG</strong>&nbsp;</a>
+  
+  
+    
+  
 
-    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <div class="animated-icon"><span></span><span></span><span></span></div>
-    </button>
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
 
-    <!-- Collapsible content -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ml-auto text-center">
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/">
-                <i class="iconfont icon-home-fill"></i>
-                首页
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/archives/">
-                <i class="iconfont icon-archive-fill"></i>
-                归档
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/categories/">
-                <i class="iconfont icon-category-fill"></i>
-                分类
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/tags/">
-                <i class="iconfont icon-tags-fill"></i>
-                标签
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/about/">
-                <i class="iconfont icon-user-fill"></i>
-                关于
-              </a>
-            </li>
-          
-        
-        
-          <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;</a>
-          </li>
-        
-        
-          <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" href="javascript:">&nbsp;<i
-                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
-          </li>
-        
-      </ul>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hello</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
     </div>
-  </div>
-</nav>
-
-    <div class="banner intro-2" id="background" parallax=true
-         style="background: url('http://img.ljh666.xyz/img/wrench-fan-art-zn-2560x1600.jpg') no-repeat center center;
-           background-size: cover;">
-      <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="container page-header text-center fade-in-up">
-            <span class="h2" id="subtitle">
-              
-            </span>
-
-            
-              
-  <div class="mt-3 post-meta">
-    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-    <time datetime="2020-07-31 23:24" pubdate>
-      2020年7月31日 晚上
-    </time>
+      
+        <p class="site-subtitle">LJH</p>
+      
   </div>
 
-
-<div class="mt-1">
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-chart"></i>
-      1.2k 字
-    </span>
-  
-
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-clock-fill"></i>
-      
-      
-      17
-       分钟
-    </span>
-  
-
-  
-  
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
 </div>
 
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
             
-          </div>
-
-          
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
       
 
-<div class="container-fluid">
-  <div class="row">
-    <div class="d-none d-lg-block col-lg-2"></div>
-    <div class="col-lg-8 nopadding-md">
-      <div class="container nopadding-md" id="board-ctn">
-        <div class="py-5" id="board">
-          <article class="post-content mx-auto" id="post">
-            <!-- SEO header -->
-            <h1 style="display: none">搭建DNS服务器</h1>
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
             
-            <div class="markdown-body" id="post-body">
-              <h1 id="搭建DNS服务器"><a href="#搭建DNS服务器" class="headerlink" title="搭建DNS服务器"></a>搭建DNS服务器</h1><h2 id="知识扫盲"><a href="#知识扫盲" class="headerlink" title="知识扫盲"></a>知识扫盲</h2><blockquote>
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.ljh.xyz/2020/07/31/%E6%90%AD%E5%BB%BADNS%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">搭建DNS服务器</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-07-31T23:24:18+08:00">
+                2020-07-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="搭建DNS服务器"><a href="#搭建DNS服务器" class="headerlink" title="搭建DNS服务器"></a>搭建DNS服务器</h1><h2 id="知识扫盲"><a href="#知识扫盲" class="headerlink" title="知识扫盲"></a>知识扫盲</h2><blockquote>
 <p>其中bind-chroot和bind-utils是bind的相关包。</p>
 </blockquote>
 <blockquote>
@@ -233,415 +327,307 @@
 <li>检查端口是否占用</li>
 </ul>
 <h2 id="DNS各配置文件说明"><a href="#DNS各配置文件说明" class="headerlink" title="DNS各配置文件说明"></a>DNS各配置文件说明</h2><p>DNS相关的配置文件位置</p>
-<div class="hljs"><pre><code class="hljs fortran">[root@pxe yum<span class="hljs-number">.</span>repos<span class="hljs-number">.</span>d]# cat /etc/<span class="hljs-keyword">named</span>
-<span class="hljs-keyword">named</span>/               <span class="hljs-keyword">named</span>-chroot<span class="hljs-number">.</span>files   <span class="hljs-keyword">named</span><span class="hljs-number">.</span>conf           <span class="hljs-keyword">named</span><span class="hljs-number">.</span>iscdlv<span class="hljs-number">.</span>key     <span class="hljs-keyword">named</span><span class="hljs-number">.</span>rfc1912<span class="hljs-number">.</span>zones  <span class="hljs-keyword">named</span><span class="hljs-number">.</span>root<span class="hljs-number">.</span>key</code></pre></div>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@pxe yum.repos.d]# cat &#x2F;etc&#x2F;named</span><br><span class="line">named&#x2F;               named-chroot.files   named.conf           named.iscdlv.key     named.rfc1912.zones  named.root.key</span><br></pre></td></tr></table></figure>
 
 <p>模板文件位置(一般不用,直接使用主配置文件):/usr/share/doc/bind-9.11.4/named.conf.default或/usr/share/doc/bind-9.11.4/sample/里</p>
 <p>主配置文件：/etc/named.conf（服务器运行参数）*chroot模式下还可以写在/var/named/chroot/etc/named.conf</p>
-<p><img src="http://img.ljh666.xyz/img/20200731204826.png" srcset="/img/loading.gif"></p>
+<p><img src="http://img.ljh666.xyz/img/20200731204826.png"></p>
 <p>区域配置文件：/etc/named.rfc1912.zones（服务器解析的区域配置，正反向区域定义信息）</p>
-<p><img src="http://img.ljh666.xyz/img/20200731204935.png" srcset="/img/loading.gif"></p>
-<p><img src="http://img.ljh666.xyz/img/20200731213647.png" srcset="/img/loading.gif"></p>
+<p><img src="http://img.ljh666.xyz/img/20200731204935.png"></p>
+<p><img src="http://img.ljh666.xyz/img/20200731213647.png"></p>
 <p>数据配置文件：/var/named/xx.xx（主机名和IP地址的对应解析关系，及主从同步信息）</p>
-<p><img src="http://img.ljh666.xyz/img/20200731205001.png" srcset="/img/loading.gif"></p>
-<p><img src="http://img.ljh666.xyz/img/20200731214505.png" srcset="/img/loading.gif"></p>
-<h2 id="开始安装DNS"><a href="#开始安装DNS" class="headerlink" title="开始安装DNS"></a>开始安装DNS</h2><div class="hljs"><pre><code class="hljs perl">yum -<span class="hljs-keyword">y</span> install <span class="hljs-keyword">bind</span>-<span class="hljs-keyword">chroot</span> <span class="hljs-keyword">bind</span>-utils</code></pre></div>
+<p><img src="http://img.ljh666.xyz/img/20200731205001.png"></p>
+<p><img src="http://img.ljh666.xyz/img/20200731214505.png"></p>
+<h2 id="开始安装DNS"><a href="#开始安装DNS" class="headerlink" title="开始安装DNS"></a>开始安装DNS</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install bind-chroot bind-utils</span><br></pre></td></tr></table></figure>
 
 <p>此命令可以查询已安装的包的内容</p>
-<div class="hljs"><pre><code class="hljs perl">rpm -ql <span class="hljs-keyword">bind</span>-<span class="hljs-keyword">chroot</span></code></pre></div>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -ql bind-chroot</span><br></pre></td></tr></table></figure>
 
-<h3 id="修改主配置文件"><a href="#修改主配置文件" class="headerlink" title="修改主配置文件"></a>修改主配置文件</h3><div class="hljs"><pre><code class="hljs awk">vim <span class="hljs-regexp">/etc/</span>named.conf</code></pre></div>
+<h3 id="修改主配置文件"><a href="#修改主配置文件" class="headerlink" title="修改主配置文件"></a>修改主配置文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim &#x2F;etc&#x2F;named.conf</span><br></pre></td></tr></table></figure>
 
-<div class="hljs"><pre><code class="hljs routeros">12 options &#123;
- 13         listen-on<span class="hljs-built_in"> port </span>53 &#123; any; &#125;; #修改为any
- 14         listen-on-v6<span class="hljs-built_in"> port </span>53 &#123; ::1; &#125;;
- 15         directory       <span class="hljs-string">&quot;/var/named&quot;</span>;
- 16         dump-file       <span class="hljs-string">&quot;/var/named/data/cache_dump.db&quot;</span>;
- 17         statistics-file <span class="hljs-string">&quot;/var/named/data/named_stats.txt&quot;</span>;
- 18         memstatistics-file <span class="hljs-string">&quot;/var/named/data/named_mem_stats.txt&quot;</span>;
- 19         recursing-file  <span class="hljs-string">&quot;/var/named/data/named.recursing&quot;</span>;
- 20         secroots-file   <span class="hljs-string">&quot;/var/named/data/named.secroots&quot;</span>;
- 21         allow-query     &#123; any; &#125;;  #修改为any
- 22</code></pre></div>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">12 options &#123;</span><br><span class="line"> 13         listen-on port 53 &#123; any; &#125;; #修改为any</span><br><span class="line"> 14         listen-on-v6 port 53 &#123; ::1; &#125;;</span><br><span class="line"> 15         directory       &quot;&#x2F;var&#x2F;named&quot;;</span><br><span class="line"> 16         dump-file       &quot;&#x2F;var&#x2F;named&#x2F;data&#x2F;cache_dump.db&quot;;</span><br><span class="line"> 17         statistics-file &quot;&#x2F;var&#x2F;named&#x2F;data&#x2F;named_stats.txt&quot;;</span><br><span class="line"> 18         memstatistics-file &quot;&#x2F;var&#x2F;named&#x2F;data&#x2F;named_mem_stats.txt&quot;;</span><br><span class="line"> 19         recursing-file  &quot;&#x2F;var&#x2F;named&#x2F;data&#x2F;named.recursing&quot;;</span><br><span class="line"> 20         secroots-file   &quot;&#x2F;var&#x2F;named&#x2F;data&#x2F;named.secroots&quot;;</span><br><span class="line"> 21         allow-query     &#123; any; &#125;;  #修改为any</span><br><span class="line"> 22 </span><br></pre></td></tr></table></figure>
 
 <p>*如果配置的是chroot的主配置文件,记得给权限(本文配置不需要)</p>
-<div class="hljs"><pre><code class="hljs awk">chownnamed<span class="hljs-regexp">/var/</span>named<span class="hljs-regexp">/chroot/</span>etc/named.conf</code></pre></div>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chownnamed&#x2F;var&#x2F;named&#x2F;chroot&#x2F;etc&#x2F;named.conf</span><br></pre></td></tr></table></figure>
 
 <h3 id="配置区域文件"><a href="#配置区域文件" class="headerlink" title="配置区域文件"></a>配置区域文件</h3><p>先备份区域配置的模板文件</p>
-<div class="hljs"><pre><code class="hljs stylus">cp -<span class="hljs-selector-tag">p</span> /etc/named<span class="hljs-selector-class">.rfc1912</span><span class="hljs-selector-class">.zones</span> /etc/named<span class="hljs-selector-class">.rfc1912</span><span class="hljs-selector-class">.zones</span><span class="hljs-selector-class">.bak</span>        #-p参数可以保存文件原来的属性</code></pre></div>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp -p &#x2F;etc&#x2F;named.rfc1912.zones &#x2F;etc&#x2F;named.rfc1912.zones.bak        #-p参数可以保存文件原来的属性</span><br></pre></td></tr></table></figure>
 
 <p>删除其他区域,只留<strong>正向</strong>和<strong>反向</strong>的各一个模板</p>
 <p>配置如下</p>
-<div class="hljs"><pre><code class="hljs routeros">zone <span class="hljs-string">&quot;ljh.com&quot;</span> <span class="hljs-keyword">IN</span> &#123;
-       <span class="hljs-built_in"> type </span>master;
-        file <span class="hljs-string">&quot;named.localhost&quot;</span>;
-        allow-update &#123; none; &#125;;
-&#125;;
-
-zone <span class="hljs-string">&quot;10.10.10.in-addr.arpa&quot;</span> <span class="hljs-keyword">IN</span> &#123;     #表示10.10.10.0网段的反向解析区域
-       <span class="hljs-built_in"> type </span>master;
-        file <span class="hljs-string">&quot;named.loopback&quot;</span>;
-        allow-update &#123; none; &#125;;
-&#125;;</code></pre></div>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">zone &quot;ljh.com&quot; IN &#123;</span><br><span class="line">        type master;</span><br><span class="line">        file &quot;named.localhost&quot;;</span><br><span class="line">        allow-update &#123; none; &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">zone &quot;10.10.10.in-addr.arpa&quot; IN &#123;     #表示10.10.10.0网段的反向解析区域</span><br><span class="line">        type master;</span><br><span class="line">        file &quot;named.loopback&quot;;</span><br><span class="line">        allow-update &#123; none; &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
 <h3 id="配置数据文件"><a href="#配置数据文件" class="headerlink" title="配置数据文件"></a>配置数据文件</h3><p>同样也是要备份好模板文件</p>
-<div class="hljs"><pre><code class="hljs stylus">cp -<span class="hljs-selector-tag">p</span> named<span class="hljs-selector-class">.localhost</span> named<span class="hljs-selector-class">.localhost</span>.bak
-cp -<span class="hljs-selector-tag">p</span> named<span class="hljs-selector-class">.loopback</span> named<span class="hljs-selector-class">.loopback</span>.bak</code></pre></div>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp -p named.localhost named.localhost.bak</span><br><span class="line">cp -p named.loopback named.loopback.bak</span><br></pre></td></tr></table></figure>
 
 <p>正向解析数据文件</p>
-<div class="hljs"><pre><code class="hljs angelscript">$TTL <span class="hljs-number">1</span>D
-@       IN SOA  ljh.com. mail.qq.com. ( #前面为域, 后面为管理员邮箱(两个都要写上), 不要忘记域名后面的点
-                                        <span class="hljs-number">0</span>       ; serial
-                                        <span class="hljs-number">1</span>D      ; <span class="hljs-built_in">ref</span>resh
-                                        <span class="hljs-number">1</span>H      ; retry
-                                        <span class="hljs-number">1</span>W      ; expire
-                                        <span class="hljs-number">3</span>H )    ; minimum
-        NS      ns1.ljh.com.        #表示有该域有两个域名服务器, 其中一个不在该域内
-        NS      ns1.ljh.net.
-ns1     A       <span class="hljs-number">10.10</span><span class="hljs-number">.10</span><span class="hljs-number">.12</span>
-www     A       <span class="hljs-number">10.10</span><span class="hljs-number">.10</span><span class="hljs-number">.12</span>
-        AAAA    ::<span class="hljs-number">1</span></code></pre></div>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$TTL 1D</span><br><span class="line">@       IN SOA  ljh.com. mail.qq.com. ( #前面为域, 后面为管理员邮箱(两个都要写上), 不要忘记域名后面的点</span><br><span class="line">                                        0       ; serial</span><br><span class="line">                                        1D      ; refresh</span><br><span class="line">                                        1H      ; retry</span><br><span class="line">                                        1W      ; expire</span><br><span class="line">                                        3H )    ; minimum</span><br><span class="line">        NS      ns1.ljh.com.        #表示有该域有两个域名服务器, 其中一个不在该域内</span><br><span class="line">        NS      ns1.ljh.net.</span><br><span class="line">ns1     A       10.10.10.12</span><br><span class="line">www     A       10.10.10.12</span><br><span class="line">        AAAA    ::1</span><br></pre></td></tr></table></figure>
 
 <p>反向解析数据文件</p>
-<div class="hljs"><pre><code class="hljs angelscript">@       IN SOA  ljh.com. mail.qq.com. (
-                                        <span class="hljs-number">0</span>       ; serial
-                                        <span class="hljs-number">1</span>D      ; <span class="hljs-built_in">ref</span>resh
-                                        <span class="hljs-number">1</span>H      ; retry
-                                        <span class="hljs-number">1</span>W      ; expire
-                                        <span class="hljs-number">3</span>H )    ; minimum
-        NS      ns1.ljh.com.    # 同样也要写上域名服务器
-ns1     A       <span class="hljs-number">10.10</span><span class="hljs-number">.10</span><span class="hljs-number">.12</span>
-        AAAA    ::<span class="hljs-number">1</span>
-<span class="hljs-number">12</span>      PTR     www.ljh.com.    # 三条指针记录
-<span class="hljs-number">12</span>      PTR     ljh.com.
-<span class="hljs-number">20</span>      PTR     bbs.ljh.com.</code></pre></div>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@       IN SOA  ljh.com. mail.qq.com. (</span><br><span class="line">                                        0       ; serial</span><br><span class="line">                                        1D      ; refresh</span><br><span class="line">                                        1H      ; retry</span><br><span class="line">                                        1W      ; expire</span><br><span class="line">                                        3H )    ; minimum</span><br><span class="line">        NS      ns1.ljh.com.    # 同样也要写上域名服务器</span><br><span class="line">ns1     A       10.10.10.12</span><br><span class="line">        AAAA    ::1</span><br><span class="line">12      PTR     www.ljh.com.    # 三条指针记录</span><br><span class="line">12      PTR     ljh.com.</span><br><span class="line">20      PTR     bbs.ljh.com.</span><br></pre></td></tr></table></figure>
 
 <p>启动DNS服务器</p>
-<div class="hljs"><pre><code class="hljs angelscript">[<span class="hljs-symbol">root@</span>pxe named]# systemctl start named
-[<span class="hljs-symbol">root@</span>pxe named]# netstat -antp | grep <span class="hljs-number">53</span>
-tcp        <span class="hljs-number">0</span>      <span class="hljs-number">0</span> <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">953</span>           <span class="hljs-number">0.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span>:*               LISTEN      <span class="hljs-number">16444</span>/named         
-tcp        <span class="hljs-number">0</span>      <span class="hljs-number">0</span> <span class="hljs-number">100.100</span><span class="hljs-number">.100</span><span class="hljs-number">.111</span>:<span class="hljs-number">53</span>      <span class="hljs-number">0.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span>:*               LISTEN      <span class="hljs-number">16444</span>/named         
-tcp        <span class="hljs-number">0</span>      <span class="hljs-number">0</span> <span class="hljs-number">10.10</span><span class="hljs-number">.10</span><span class="hljs-number">.12</span>:<span class="hljs-number">53</span>          <span class="hljs-number">0.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span>:*               LISTEN      <span class="hljs-number">16444</span>/named         
-tcp        <span class="hljs-number">0</span>      <span class="hljs-number">0</span> <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">53</span>            <span class="hljs-number">0.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span>:*               LISTEN      <span class="hljs-number">16444</span>/named         
-tcp6       <span class="hljs-number">0</span>      <span class="hljs-number">0</span> ::<span class="hljs-number">1</span>:<span class="hljs-number">953</span>                 :::*                    LISTEN      <span class="hljs-number">16444</span>/named         
-tcp6       <span class="hljs-number">0</span>      <span class="hljs-number">0</span> ::<span class="hljs-number">1</span>:<span class="hljs-number">53</span>                  :::*                    LISTEN      <span class="hljs-number">16444</span>/named</code></pre></div>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@pxe named]# systemctl start named</span><br><span class="line">[root@pxe named]# netstat -antp | grep 53</span><br><span class="line">tcp        0      0 127.0.0.1:953           0.0.0.0:*               LISTEN      16444&#x2F;named         </span><br><span class="line">tcp        0      0 100.100.100.111:53      0.0.0.0:*               LISTEN      16444&#x2F;named         </span><br><span class="line">tcp        0      0 10.10.10.12:53          0.0.0.0:*               LISTEN      16444&#x2F;named         </span><br><span class="line">tcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN      16444&#x2F;named         </span><br><span class="line">tcp6       0      0 ::1:953                 :::*                    LISTEN      16444&#x2F;named         </span><br><span class="line">tcp6       0      0 ::1:53                  :::*                    LISTEN      16444&#x2F;named </span><br></pre></td></tr></table></figure>
 
 
 
 <p>*<strong>注意</strong> 数据文件写域名的时候不要忘记域名后面的点</p>
 <p>*可以使用bind基本命令重载主配置文件和区域解析库文件</p>
-<div class="hljs"><pre><code class="hljs css"><span class="hljs-selector-attr">[root@masternamed]</span><span class="hljs-selector-id">#rndc</span> <span class="hljs-selector-tag">reload</span>
-<span class="hljs-selector-attr">[root@masternamed]</span><span class="hljs-selector-id">#rndc</span> <span class="hljs-selector-tag">reload</span> <span class="hljs-selector-tag">ljh</span><span class="hljs-selector-class">.com</span>
-<span class="hljs-selector-attr">[root@masternamed]</span><span class="hljs-selector-id">#rndc</span> <span class="hljs-selector-tag">notify</span> <span class="hljs-selector-tag">ljh</span><span class="hljs-selector-class">.com</span>
-<span class="hljs-selector-attr">[root@masternamed]</span><span class="hljs-selector-id">#rndc</span> <span class="hljs-selector-tag">reconfig</span></code></pre></div>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@masternamed]#rndc reload</span><br><span class="line">[root@masternamed]#rndc reload ljh.com</span><br><span class="line">[root@masternamed]#rndc notify ljh.com</span><br><span class="line">[root@masternamed]#rndc reconfig</span><br></pre></td></tr></table></figure>
 
 
 
-<h2 id="测试DNS服务器"><a href="#测试DNS服务器" class="headerlink" title="测试DNS服务器"></a>测试DNS服务器</h2><h3 id="测试机配置"><a href="#测试机配置" class="headerlink" title="测试机配置"></a>测试机配置</h3><div class="hljs"><pre><code class="hljs awk">vim <span class="hljs-regexp">/etc/</span>resolv.conf</code></pre></div>
+<h2 id="测试DNS服务器"><a href="#测试DNS服务器" class="headerlink" title="测试DNS服务器"></a>测试DNS服务器</h2><h3 id="测试机配置"><a href="#测试机配置" class="headerlink" title="测试机配置"></a>测试机配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim &#x2F;etc&#x2F;resolv.conf</span><br></pre></td></tr></table></figure>
 
-<div class="hljs"><pre><code class="hljs yaml"><span class="hljs-comment"># Generated by NetworkManager</span>
-<span class="hljs-string">search</span> <span class="hljs-string">localdomain</span>
-<span class="hljs-string">nameserver</span> <span class="hljs-number">10.10</span><span class="hljs-number">.10</span><span class="hljs-number">.12</span>    <span class="hljs-comment">#修改为DNS服务器的地址</span></code></pre></div>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># Generated by NetworkManager</span><br><span class="line">search localdomain</span><br><span class="line">nameserver 10.10.10.12    #修改为DNS服务器的地址</span><br></pre></td></tr></table></figure>
 
-<h3 id="正反向验证"><a href="#正反向验证" class="headerlink" title="正反向验证"></a>正反向验证</h3><div class="hljs"><pre><code class="hljs yaml">[<span class="hljs-string">root@pxe</span> <span class="hljs-string">named</span>]<span class="hljs-comment"># nslookup www.ljh.com</span>
-<span class="hljs-attr">Server:</span>         <span class="hljs-number">10.10</span><span class="hljs-number">.10</span><span class="hljs-number">.12</span>
-<span class="hljs-attr">Address:</span>        <span class="hljs-number">10.10</span><span class="hljs-number">.10</span><span class="hljs-number">.12</span><span class="hljs-comment">#53</span>
-
-<span class="hljs-attr">Name:</span>   <span class="hljs-string">www.ljh.com</span>
-<span class="hljs-attr">Address:</span> <span class="hljs-number">10.10</span><span class="hljs-number">.10</span><span class="hljs-number">.12</span>
-<span class="hljs-attr">Name:</span>   <span class="hljs-string">www.ljh.com</span>
-<span class="hljs-attr">Address:</span> <span class="hljs-string">::1</span>
-
-[<span class="hljs-string">root@pxe</span> <span class="hljs-string">named</span>]<span class="hljs-comment"># nslookup 10.10.10.12</span>
-<span class="hljs-number">12.10</span><span class="hljs-number">.10</span><span class="hljs-number">.10</span><span class="hljs-string">.in-addr.arpa</span>        <span class="hljs-string">name</span> <span class="hljs-string">=</span> <span class="hljs-string">ljh.com.</span>
-<span class="hljs-number">12.10</span><span class="hljs-number">.10</span><span class="hljs-number">.10</span><span class="hljs-string">.in-addr.arpa</span>        <span class="hljs-string">name</span> <span class="hljs-string">=</span> <span class="hljs-string">www.ljh.com.</span></code></pre></div>
+<h3 id="正反向验证"><a href="#正反向验证" class="headerlink" title="正反向验证"></a>正反向验证</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@pxe named]# nslookup www.ljh.com</span><br><span class="line">Server:         10.10.10.12</span><br><span class="line">Address:        10.10.10.12#53</span><br><span class="line"></span><br><span class="line">Name:   www.ljh.com</span><br><span class="line">Address: 10.10.10.12</span><br><span class="line">Name:   www.ljh.com</span><br><span class="line">Address: ::1</span><br><span class="line"></span><br><span class="line">[root@pxe named]# nslookup 10.10.10.12</span><br><span class="line">12.10.10.10.in-addr.arpa        name &#x3D; ljh.com.</span><br><span class="line">12.10.10.10.in-addr.arpa        name &#x3D; www.ljh.com.</span><br></pre></td></tr></table></figure>
 
 <p>干杯~🍺</p>
 <h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/cobbliu/archive/2013/03/19/2970311.html">对数据文件配置的详解</a></p>
 
-            </div>
-            <hr>
-            <div>
-              <div class="post-metas mb-3">
-                
-                
-                  <div class="post-meta">
-                    <i class="iconfont icon-tags"></i>
-                    
-                      <a class="hover-with-bg" href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%AD%E7%BA%A7/">云计算中级</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Linux/">Linux</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Centos/">Centos</a>
-                    
-                  </div>
-                
-              </div>
-              
-                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
-              
-              
-                <div class="post-prevnext row">
-                  <article class="post-prev col-6">
-                    
-                    
-                      <a href="/2020/07/31/Nginx%20%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%87%8D%E5%90%AF%E4%B8%8E%E5%85%B3%E9%97%AD%E5%91%BD%E5%90%8D/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Nginx 服务器重启与关闭命令</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
-                  </article>
-                  <article class="post-next col-6">
-                    
-                    
-                      <a href="/2020/07/31/%E5%AE%89%E8%A3%85samba%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/">
-                        <span class="hidden-mobile">安装samba的注意事项</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
-                    
-                  </article>
-                </div>
-              
-            </div>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%AD%E7%BA%A7/" rel="tag"># 云计算中级</a>
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+            <a href="/tags/Centos/" rel="tag"># Centos</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/07/31/%E5%9B%BE%E5%BA%8A%E8%AE%BE%E7%BD%AE/" rel="next" title="图床测试">
+                <i class="fa fa-chevron-left"></i> 图床测试
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/07/31/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%88%B6%E4%BD%9CRAID%E7%A3%81%E7%9B%98%E9%98%B5%E5%88%97%E5%B9%B6%E7%AE%A1%E7%90%86/" rel="prev" title="服务器制作RAID磁盘阵列与管理">
+                服务器制作RAID磁盘阵列与管理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
 
             
-          </article>
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
         </div>
-      </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%90%AD%E5%BB%BADNS%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">1.</span> <span class="nav-text">搭建DNS服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9F%A5%E8%AF%86%E6%89%AB%E7%9B%B2"><span class="nav-number">1.1.</span> <span class="nav-text">知识扫盲</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E5%85%B7"><span class="nav-number">1.2.</span> <span class="nav-text">工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.3.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DNS%E5%90%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%B4%E6%98%8E"><span class="nav-number">1.4.</span> <span class="nav-text">DNS各配置文件说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E5%AE%89%E8%A3%85DNS"><span class="nav-number">1.5.</span> <span class="nav-text">开始安装DNS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E4%B8%BB%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">1.5.1.</span> <span class="nav-text">修改主配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%8C%BA%E5%9F%9F%E6%96%87%E4%BB%B6"><span class="nav-number">1.5.2.</span> <span class="nav-text">配置区域文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6"><span class="nav-number">1.5.3.</span> <span class="nav-text">配置数据文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95DNS%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">1.6.</span> <span class="nav-text">测试DNS服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E6%9C%BA%E9%85%8D%E7%BD%AE"><span class="nav-number">1.6.1.</span> <span class="nav-text">测试机配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E5%8F%8D%E5%90%91%E9%AA%8C%E8%AF%81"><span class="nav-number">1.6.2.</span> <span class="nav-text">正反向验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E"><span class="nav-number">1.7.</span> <span class="nav-text">写在最后</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
     </div>
-    
-      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
-        <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
-  <div id="tocbot"></div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
 </div>
 
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
       </div>
     
+
+    
+
   </div>
-</div>
-
-<!-- Custom -->
-
-
-    
-  </main>
 
   
-    <a id="scroll-top-button" href="#" role="button">
-      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-    </a>
-  
 
-  
-    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
-        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-          <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
-        </div>
-        <div class="list-group" id="local-search-result"></div>
-      </div>
-    </div>
-  </div>
-</div>
-  
-
-  
-    <!-- APlayer 音乐播放器 -->
-    <div id="aplayer"></div>
-    <script defer src="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.js" ></script>
-<link  rel="stylesheet" href="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.css" />
 <script type="text/javascript">
-  var oldLoadAp = window.onload;
-  window.onload = function () {
-    oldLoadAp && oldLoadAp();
-
-    new APlayer({
-      container: document.getElementById('aplayer'),
-      fixed: true,
-      autoplay: 'false' === 'true',
-      loop: 'all',
-      order: 'random',
-      theme: '#b7daff',
-      preload: 'none',
-      audio: [{"name":"万有引力","artist":"F_yy","url":"/song/万有引力-F_yy.mp3","cover":"/img/songbg.jpg"},{"name":" Dancin (Krono Remix).mp3","artist":"Aaron Smith _ Luvli ","url":"/song/Aaron Smith _ Luvli - Dancin (Krono Remix).mp3","cover":"/img/songbg.jpg"},{"name":" Ｋ.Ｉ.Ｓ.Ｓ (V0).mp3","artist":"bl00dwave ","url":"/song/bl00dwave - Ｋ.Ｉ.Ｓ.Ｓ (V0).mp3","cover":"/img/songbg.jpg"},{"name":" Asgard.mp3","artist":"Electus ","url":"/song/Electus - Asgard.mp3","cover":"/img/songbg.jpg"},{"name":" Love Story (V0).mp3","artist":"Taylor Swift ","url":"/song/Taylor Swift - Love Story (V0).mp3","cover":"/img/songbg.jpg"},{"name":" Seasons In The Sun (V0).mp3","artist":"Westlife ","url":"http://img.ljh666.xyz/Westlife%20-%20Seasons%20In%20The%20Sun%20%28V0%29.mp3","cover":"/img/songbg.jpg"},{"name":" 只要为你活一天 (V0).mp3","artist":"刘家昌 ","url":"/song/刘家昌 - 只要为你活一天 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 虐心 (V0).mp3","artist":"徐良 _ 孙羽幽 ","url":"/song/徐良 _ 孙羽幽 - 虐心 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 客官不可以 (V0).mp3","artist":"徐良 _ 小凌 ","url":"/song/徐良 _ 小凌 - 客官不可以 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 他的猫 (V0).mp3","artist":"徐良 _ 杨曦 ","url":"/song/徐良 _ 杨曦 - 他的猫 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 口是心非 (V0).mp3","artist":"杨小壮 _ 鹏鹏 ","url":"/song/杨小壮 _ 鹏鹏 - 口是心非 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 你走demo (V0).mp3","artist":"松紧先生（李宗锦） ","url":"/song/松紧先生（李宗锦） - 你走demo (V0).mp3","cover":"/img/songbg.jpg"}]
-    });
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
   }
 </script>
 
-  
-
-  
-
-  <footer class="mt-5">
-  <div class="text-center py-3">
-    <div>
-    </div>
-    
-  <div class="statistics">
-    
-    
-
-    
-      
-        <!-- 不蒜子统计PV -->
-        <span id="busuanzi_container_site_pv" style="display: none">
-            总访问量 
-            <span id="busuanzi_value_site_pv"></span>
-             次
-          </span>
-      
-      
-        <!-- 不蒜子统计UV -->
-        <span id="busuanzi_container_site_uv" style="display: none">
-            总访客数 
-            <span id="busuanzi_value_site_uv"></span>
-             人
-          </span>
-      
-    
-  </div>
-
-
-    
-  <!-- 备案信息 -->
-  <div class="beian">
-    <a href="http://beian.miit.gov.cn/" target="_blank"
-       rel="nofollow noopener">浙ICP备20007029号</a>
-    
-      <a
-        href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=123456"
-        rel="nofollow noopener"
-        class="beian-police"
-        target="_blank"
-      >
-        <span class="beian-police-sep">&nbsp;|&nbsp;</span>
-        
-          <img src="/img/police_beian.png" srcset="/img/loading.gif" alt="police-icon" />
-        
-        <span>浙公安ICP备</span>
-      </a>
-     
-  </div>
-
-
-    
-  </div>
-</footer>
-
-<!-- SCRIPTS -->
-<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
-<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
-<script  src="/js/debouncer.js" ></script>
-<script  src="/js/main.js" ></script>
-
-<!-- Plugins -->
-
-
-  
-    <script  src="/js/lazyload.js" ></script>
-  
-
-
-
-  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
-  <script  src="/js/clipboard-use.js" ></script>
-
-
-
-  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
-
-
-
-
-
-  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
-  <script>
-    $(document).ready(function () {
-      var boardCtn = $('#board-ctn');
-      var boardTop = boardCtn.offset().top;
-
-      tocbot.init({
-        tocSelector: '#tocbot',
-        contentSelector: '#post-body',
-        headingSelector: 'h1,h2,h3,h4,h5,h6',
-        linkClass: 'tocbot-link',
-        activeLinkClass: 'tocbot-active-link',
-        listClass: 'tocbot-list',
-        isCollapsedClass: 'tocbot-is-collapsed',
-        collapsibleClass: 'tocbot-is-collapsible',
-        collapseDepth: 0,
-        scrollSmooth: true,
-        headingsOffset: -boardTop
-      });
-      if ($('.toc-list-item').length > 0) {
-        $('#toc').css('visibility', 'visible');
-      }
-    });
-  </script>
-
-
-
-  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
-  <script>
-    var typed = new Typed('#subtitle', {
-      strings: [
-        '  ',
-        "搭建DNS服务器&nbsp;",
-      ],
-      cursorChar: "_",
-      typeSpeed: 70,
-      loop: false,
-    });
-    typed.stop();
-    $(document).ready(function () {
-      $(".typed-cursor").addClass("h2");
-      typed.start();
-    });
-  </script>
-
-
-
-
-
-  <script  src="/js/local-search.js" ></script>
-  <script>
-    var path = "/local-search.xml";
-    var inputArea = document.querySelector("#local-search-input");
-    inputArea.onclick = function () {
-      searchFunc(path, 'local-search-input', 'local-search-result');
-      this.onclick = null
-    }
-  </script>
-
-
-
-  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
-
-  <script>
-    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
-      function () {
-        var element = document.createElement('a');
-        $(element).attr('data-fancybox', 'images');
-        $(element).attr('href', $(this).attr('src'));
-        $(this).wrap(element);
-      }
-    );
-  </script>
 
 
 
@@ -649,55 +635,7 @@ tcp6       <span class="hljs-number">0</span>      <span class="hljs-number">0</
 
 
 
-  
-  
-    <script>
-      !function (e, t, a) {
-        function r() {
-          for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
-          requestAnimationFrame(r)
-        }
 
-        function n() {
-          var t = "function" == typeof e.onclick && e.onclick;
-          e.onclick = function (e) {
-            t && t(), o(e)
-          }
-        }
-
-        function o(e) {
-          var a = t.createElement("div");
-          a.className = "heart", s.push({
-            el: a,
-            x: e.clientX - 5,
-            y: e.clientY - 5,
-            scale: 1,
-            alpha: 1,
-            color: c()
-          }), t.body.appendChild(a)
-        }
-
-        function i(e) {
-          var a = t.createElement("style");
-          a.type = "text/css";
-          try {
-            a.appendChild(t.createTextNode(e))
-          } catch (t) {
-            a.styleSheet.cssText = e
-          }
-          t.getElementsByTagName("head")[0].appendChild(a)
-        }
-
-        function c() {
-          return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
-        }
-
-        var s = [];
-        e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
-          setTimeout(e, 1e3 / 60)
-        }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
-      }(window, document);
-    </script>
   
 
 
@@ -711,7 +649,115 @@ tcp6       <span class="hljs-number">0</span>      <span class="hljs-number">0</
 
 
 
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
 
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
 
 </body>
 </html>
