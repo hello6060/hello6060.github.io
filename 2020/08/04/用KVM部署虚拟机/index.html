@@ -1,0 +1,742 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;light&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/%E7%82%B9%E8%B5%9E.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <title>用KVM部署虚拟机 - Hello</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/gradient-dark.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_6peoq002giu.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.0.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>LJH'S BLOG</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('http://img.ljh666.xyz/img/wrench-fan-art-zn-2560x1600.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container page-header text-center fade-in-up">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-08-04 16:31" pubdate>
+      2020年8月4日 下午
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.6k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      23
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto" id="post">
+            <!-- SEO header -->
+            <h1 style="display: none">用KVM部署虚拟机</h1>
+            
+            <div class="markdown-body" id="post-body">
+              <h1 id="用KVM部署虚拟机"><a href="#用KVM部署虚拟机" class="headerlink" title="用KVM部署虚拟机"></a>用KVM部署虚拟机</h1><h2 id="知识扫盲"><a href="#知识扫盲" class="headerlink" title="知识扫盲"></a>知识扫盲</h2><blockquote>
+<p>KVM（Kernel-basedVirtualMachine）是一个开源软件，基于内核的虚拟化技术，实际是嵌入系统的一个虚拟化模块，通过优化内核来使用虚拟技术，该内核模块使得Linux变成了一个Hypervisor，虚拟机使用Linux自身的调度器进行管理。但是，KVM本身不执行任何硬件模拟，需要客户空间程序通过/dev/kvm接口设置一个客户机虚拟服务器的地址空间，向它提供模拟的I/O，并将它的视频显示映射回宿主的显示屏。目前这个应用程序是QEMU。</p>
+</blockquote>
+<blockquote>
+<p>${var:+string} 规则和${var:-string},${var:=string}的完全相反 即只有当var不是空的时候才替换成string,若var为空时则不替换或者说是替换成变量var的值,即空值</p>
+</blockquote>
+<blockquote>
+<p>Libvirt 是一组软件的汇集，提供了管理虚拟机和其它虚拟化功能（如：存储和网络接口等）的便利途径。这些软件包括：一个长期稳定的 C 语言 API、一个守护进程（libvirtd）和一个命令行工具（virsh）</p>
+</blockquote>
+<blockquote>
+<p>KVM内核模块本身只能提供CPU和内存的虚拟化，所以它必须结合QEMU才能构成一个完成的虚拟化技术，这就是下面要说的qemu-kvm。</p>
+</blockquote>
+<blockquote>
+<p>libvirt是目前使用最为广泛的对KVM虚拟机进行管理的工具和API。Libvirtd是一个daemon进程，可以被本地的virsh调用，也可以被远程的virsh调用，Libvirtd调用qemu-kvm操作虚拟机。</p>
+<p>virsh virt-manager virt-viewer virt-install other-tools是libvirt用户态的工具</p>
+</blockquote>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><a target="_blank" rel="noopener" href="https://blog.51cto.com/changfei/1672147">qemu-kvm-libvirtd三者关系</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/fang9045315/p/8966107.html">QEMU/KVM网络模式(二)——NAT-创建qemu-ifup-nat脚本</a></p>
+<p><a target="_blank" rel="noopener" href="https://handerfly.github.io/shell/2019/04/03/shell%E7%BC%96%E7%A8%8B%E5%86%92%E5%8F%B7%E5%8A%A0-%E7%AD%89%E5%8F%B7-%E5%8A%A0%E5%8F%B7-%E5%87%8F%E5%8F%B7-%E9%97%AE%E5%8F%B7/">*shell 编程：冒号 后面跟 等号，加号，减号，问号的意义</a></p>
+<p><a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Libvirt_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">libvirt 介绍(简体中文)</a></p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><ul>
+<li>配置yum源</li>
+<li>安装镜像(这里使用CentOS-7-x86_64-DVD-1511.iso镜像)</li>
+<li>关闭防火墙, 清空规则</li>
+</ul>
+<h2 id="配置部署环境"><a href="#配置部署环境" class="headerlink" title="配置部署环境"></a>配置部署环境</h2><p>开启CPU虚拟化</p>
+<p><img src="http://img.ljh666.xyz/img/20200804145837.png" srcset="/img/loading.gif"></p>
+<p>检查系统是否支持虚拟化：<br>Intel CPU：cat /proc/cpuinfo |grep –color vmx<br>AMD CPU：cat /proc/cpuinfo |grep –color smv</p>
+<p><img src="http://img.ljh666.xyz/img/20200804145932.png" srcset="/img/loading.gif"></p>
+<h2 id="安装工具"><a href="#安装工具" class="headerlink" title="安装工具"></a>安装工具</h2><div class="hljs"><pre><code class="hljs cmake">yum -y <span class="hljs-keyword">install</span> libvirt qemu-kvm virt-<span class="hljs-keyword">install</span> openssl</code></pre></div>
+
+<p>查看kvm安装</p>
+<div class="hljs"><pre><code class="hljs angelscript">[<span class="hljs-symbol">root@</span>localhost ~]# lsmod | grep kvm 
+kvm_intel             <span class="hljs-number">162153</span>  <span class="hljs-number">0</span> 
+kvm                   <span class="hljs-number">525259</span>  <span class="hljs-number">1</span> kvm_intel</code></pre></div>
+
+<h2 id="虚拟机环境"><a href="#虚拟机环境" class="headerlink" title="虚拟机环境"></a>虚拟机环境</h2><p>启用libvirtd</p>
+<div class="hljs"><pre><code class="hljs pgsql">systemctl <span class="hljs-keyword">start</span> libvirtd
+systemctl <span class="hljs-keyword">enable</span> libvirtd</code></pre></div>
+
+<p>配置网络环境</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/gsl371/article/details/78662258">KVM的四种网络模式</a></p>
+<p>NAT模式:</p>
+<p><img src="http://img.ljh666.xyz/img/20200804151151.png" srcset="/img/loading.gif"></p>
+<p>DNS和DHCP<br>IP地址可以通过DHCP分配给客户机。为此，可以将地址池分配给虚拟网络交换机。Libvirt使用这个dnsmasq程序。dnsmasq的一个实例是由libvirt为每个需要它的虚拟网络交换机自动配置和启动的。</p>
+<p><img src="http://img.ljh666.xyz/img/20200804151312.png" srcset="/img/loading.gif"></p>
+<p>桥接模式:</p>
+<p><img src="http://img.ljh666.xyz/img/20200804151417.png" srcset="/img/loading.gif"></p>
+<p>KVM默认启动虚拟机时候默认使用NAT模式, 这里我使用的是桥接模式</p>
+<h3 id="开始配置网桥"><a href="#开始配置网桥" class="headerlink" title="开始配置网桥"></a>开始配置网桥</h3><p>说明: 创建br0网桥并配置静态IP地址(但vmware中网卡模式为NAT时, 还可以通过dhcp获取到地址, 这里用的是仅主机模式且关闭了dhcp模式, 只能配置静态ip地址),  将原来主机的eno16777736文件指向br0网桥, 否则主机没有IP地址了. 利用上面的网桥, 就可以通过指向br0网桥, 从而使用宿主机的ip地址访问到kvm创建出来的虚拟机</p>
+<p>备份网卡配置文件</p>
+<div class="hljs"><pre><code class="hljs gradle">[root@localhost ~]# cd <span class="hljs-regexp">/etc/</span>sysconfig<span class="hljs-regexp">/network-scripts/</span>
+[root@localhost network-scripts]# cp ifcfg-eno16777736 <span class="hljs-regexp">/root/</span>bak/</code></pre></div>
+
+<p>创建br0网桥</p>
+<div class="hljs"><pre><code class="hljs apache"><span class="hljs-attribute">cp</span> ifcfg-eno<span class="hljs-number">16777736</span> ifcfg-br<span class="hljs-number">0</span></code></pre></div>
+
+<div class="hljs"><pre><code class="hljs ini"><span class="hljs-section">[root@localhost network-scripts]</span><span class="hljs-comment"># vim ifcfg-br0     </span>
+
+<span class="hljs-attr">BOOTPROTO</span>=static
+<span class="hljs-attr">DEVICE</span>=br0
+<span class="hljs-attr">TYPE</span>=Bridge
+<span class="hljs-attr">IPADDR</span>=<span class="hljs-number">10.10</span>.<span class="hljs-number">10.101</span>
+<span class="hljs-attr">NETMASK</span>=<span class="hljs-number">255.255</span>.<span class="hljs-number">255.0</span></code></pre></div>
+
+<p>配置原网卡配置文件eno16777736</p>
+<div class="hljs"><pre><code class="hljs ini"><span class="hljs-section">[root@localhost network-scripts]</span><span class="hljs-comment"># vim ifcfg-eno16777736 </span>
+
+<span class="hljs-attr">TYPE</span>=Ethernet
+<span class="hljs-attr">NAME</span>=eno16777736
+<span class="hljs-attr">DEVICE</span>=eno16777736
+<span class="hljs-attr">ONBOOT</span>=<span class="hljs-literal">yes</span>
+<span class="hljs-attr">NM_CONTROTO</span>=none
+<span class="hljs-attr">BRIDGE</span>=<span class="hljs-string">&quot;br0&quot;</span></code></pre></div>
+
+<div class="hljs"><pre><code class="hljs ebnf"><span class="hljs-attribute">systemctl restart network</span></code></pre></div>
+
+<p>检查</p>
+<div class="hljs"><pre><code class="hljs angelscript">[<span class="hljs-symbol">root@</span>localhost network-scripts]# ifconfig                                                
+br0: flags=<span class="hljs-number">4163</span>&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu <span class="hljs-number">1500</span>
+        inet <span class="hljs-number">10.10</span><span class="hljs-number">.10</span><span class="hljs-number">.101</span>  netmask <span class="hljs-number">255.255</span><span class="hljs-number">.255</span><span class="hljs-number">.0</span>  broadcast <span class="hljs-number">10.10</span><span class="hljs-number">.10</span><span class="hljs-number">.255</span>
+        inet6 fe80::<span class="hljs-number">20</span>c:<span class="hljs-number">29f</span>f:fe9d:<span class="hljs-number">7</span>ebc  prefixlen <span class="hljs-number">64</span>  scopeid <span class="hljs-number">0x20</span>&lt;link&gt;
+        ether <span class="hljs-number">00</span>:<span class="hljs-number">0</span>c:<span class="hljs-number">29</span>:<span class="hljs-number">9</span>d:<span class="hljs-number">7</span>e:bc  txqueuelen <span class="hljs-number">0</span>  (Ethernet)
+        RX packets <span class="hljs-number">10567</span>  bytes <span class="hljs-number">2241944</span> (<span class="hljs-number">2.1</span> MiB)
+        RX errors <span class="hljs-number">0</span>  dropped <span class="hljs-number">0</span>  overruns <span class="hljs-number">0</span>  frame <span class="hljs-number">0</span>
+        TX packets <span class="hljs-number">3821</span>  bytes <span class="hljs-number">597679</span> (<span class="hljs-number">583.6</span> KiB)
+        TX errors <span class="hljs-number">0</span>  dropped <span class="hljs-number">0</span> overruns <span class="hljs-number">0</span>  carrier <span class="hljs-number">0</span>  collisions <span class="hljs-number">0</span>
+
+eno16777736: flags=<span class="hljs-number">4163</span>&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu <span class="hljs-number">1500</span>
+        ether <span class="hljs-number">00</span>:<span class="hljs-number">0</span>c:<span class="hljs-number">29</span>:<span class="hljs-number">9</span>d:<span class="hljs-number">7</span>e:bc  txqueuelen <span class="hljs-number">1000</span>  (Ethernet)
+        RX packets <span class="hljs-number">16076</span>  bytes <span class="hljs-number">2807230</span> (<span class="hljs-number">2.6</span> MiB)
+        RX errors <span class="hljs-number">0</span>  dropped <span class="hljs-number">14</span>  overruns <span class="hljs-number">0</span>  frame <span class="hljs-number">0</span>
+        TX packets <span class="hljs-number">3850</span>  bytes <span class="hljs-number">632393</span> (<span class="hljs-number">617.5</span> KiB)
+        TX errors <span class="hljs-number">0</span>  dropped <span class="hljs-number">0</span> overruns <span class="hljs-number">0</span>  carrier <span class="hljs-number">0</span>  collisions <span class="hljs-number">0</span>
+
+eno33554960: flags=<span class="hljs-number">4163</span>&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu <span class="hljs-number">1500</span>
+        inet <span class="hljs-number">100.100</span><span class="hljs-number">.100</span><span class="hljs-number">.121</span>  netmask <span class="hljs-number">255.255</span><span class="hljs-number">.255</span><span class="hljs-number">.0</span>  broadcast <span class="hljs-number">100.100</span><span class="hljs-number">.100</span><span class="hljs-number">.255</span>
+        inet6 fe80::<span class="hljs-number">20</span>c:<span class="hljs-number">29f</span>f:fe9d:<span class="hljs-number">7</span>ec6  prefixlen <span class="hljs-number">64</span>  scopeid <span class="hljs-number">0x20</span>&lt;link&gt;
+        ether <span class="hljs-number">00</span>:<span class="hljs-number">0</span>c:<span class="hljs-number">29</span>:<span class="hljs-number">9</span>d:<span class="hljs-number">7</span>e:c6  txqueuelen <span class="hljs-number">1000</span>  (Ethernet)
+        RX packets <span class="hljs-number">2993</span>  bytes <span class="hljs-number">3933002</span> (<span class="hljs-number">3.7</span> MiB)
+        RX errors <span class="hljs-number">0</span>  dropped <span class="hljs-number">0</span>  overruns <span class="hljs-number">0</span>  frame <span class="hljs-number">0</span>
+        TX packets <span class="hljs-number">935</span>  bytes <span class="hljs-number">65604</span> (<span class="hljs-number">64.0</span> KiB)
+        TX errors <span class="hljs-number">0</span>  dropped <span class="hljs-number">0</span> overruns <span class="hljs-number">0</span>  carrier <span class="hljs-number">0</span>  collisions <span class="hljs-number">0</span>
+
+lo: flags=<span class="hljs-number">73</span>&lt;UP,LOOPBACK,RUNNING&gt;  mtu <span class="hljs-number">65536</span>
+        inet <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>  netmask <span class="hljs-number">255.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span>
+        inet6 ::<span class="hljs-number">1</span>  prefixlen <span class="hljs-number">128</span>  scopeid <span class="hljs-number">0x10</span>&lt;host&gt;
+        loop  txqueuelen <span class="hljs-number">0</span>  (Local Loopback)
+        RX packets <span class="hljs-number">87</span>  bytes <span class="hljs-number">9792</span> (<span class="hljs-number">9.5</span> KiB)
+        RX errors <span class="hljs-number">0</span>  dropped <span class="hljs-number">0</span>  overruns <span class="hljs-number">0</span>  frame <span class="hljs-number">0</span>
+        TX packets <span class="hljs-number">87</span>  bytes <span class="hljs-number">9792</span> (<span class="hljs-number">9.5</span> KiB)
+        TX errors <span class="hljs-number">0</span>  dropped <span class="hljs-number">0</span> overruns <span class="hljs-number">0</span>  carrier <span class="hljs-number">0</span>  collisions <span class="hljs-number">0</span>
+
+virbr0: flags=<span class="hljs-number">4099</span>&lt;UP,BROADCAST,MULTICAST&gt;  mtu <span class="hljs-number">1500</span>
+        inet <span class="hljs-number">192.168</span><span class="hljs-number">.122</span><span class="hljs-number">.1</span>  netmask <span class="hljs-number">255.255</span><span class="hljs-number">.255</span><span class="hljs-number">.0</span>  broadcast <span class="hljs-number">192.168</span><span class="hljs-number">.122</span><span class="hljs-number">.255</span>
+        ether <span class="hljs-number">00</span>:<span class="hljs-number">00</span>:<span class="hljs-number">00</span>:<span class="hljs-number">00</span>:<span class="hljs-number">00</span>:<span class="hljs-number">00</span>  txqueuelen <span class="hljs-number">0</span>  (Ethernet)
+        RX packets <span class="hljs-number">0</span>  bytes <span class="hljs-number">0</span> (<span class="hljs-number">0.0</span> B)
+        RX errors <span class="hljs-number">0</span>  dropped <span class="hljs-number">0</span>  overruns <span class="hljs-number">0</span>  frame <span class="hljs-number">0</span>
+        TX packets <span class="hljs-number">0</span>  bytes <span class="hljs-number">0</span> (<span class="hljs-number">0.0</span> B)
+        TX errors <span class="hljs-number">0</span>  dropped <span class="hljs-number">0</span> overruns <span class="hljs-number">0</span>  carrier <span class="hljs-number">0</span>  collisions <span class="hljs-number">0</span>
+</code></pre></div>
+
+<p>其中virbr0就是默认创建的虚拟机使用的网桥, 这和本实验无关, 用不到</p>
+<h3 id="准备虚拟机资源"><a href="#准备虚拟机资源" class="headerlink" title="准备虚拟机资源"></a>准备虚拟机资源</h3><p>创建存放kvm虚拟机的文件夹</p>
+<div class="hljs"><pre><code class="hljs awk">mkdir <span class="hljs-regexp">/opt/</span>kvmData</code></pre></div>
+
+<p>上传用于安装的镜像</p>
+<div class="hljs"><pre><code class="hljs angelscript">[<span class="hljs-symbol">root@</span>localhost opt]# ls
+CentOS<span class="hljs-number">-7</span>-x86_64-DVD<span class="hljs-number">-1511.</span>iso  kvmData</code></pre></div>
+
+<h2 id="创建-安装虚拟机"><a href="#创建-安装虚拟机" class="headerlink" title="创建|安装虚拟机"></a>创建|安装虚拟机</h2><h3 id="创建虚拟机"><a href="#创建虚拟机" class="headerlink" title="创建虚拟机"></a>创建虚拟机</h3><div class="hljs"><pre><code class="hljs apache"><span class="hljs-attribute">virt</span>-install -n kvmVirt-<span class="hljs-number">1</span> -r <span class="hljs-number">1024</span> --disk /opt/kvmData/kvmVirtData-<span class="hljs-number">1</span>.img,format=qcow<span class="hljs-number">2</span>,size=<span class="hljs-number">20</span> --network bridge=br<span class="hljs-number">0</span> --os-type=linux  --cdrom /opt/CentOS-<span class="hljs-number">7</span>-x<span class="hljs-number">86</span>_<span class="hljs-number">64</span>-DVD-<span class="hljs-number">1511</span>.iso --vnc --vncport=<span class="hljs-number">5910</span> --vnclisten=<span class="hljs-number">0.0.0.0</span> --check <span class="hljs-literal">all</span>=<span class="hljs-literal">off</span></code></pre></div>
+
+<div class="hljs"><pre><code class="hljs clean">--name Centos                    ###虚拟机名字
+--virt-type kvm                  ###虚拟机类型
+--ram <span class="hljs-number">1024</span>                       ###虚拟机内存
+--cdrom=/opt/CentOS<span class="hljs-number">-7.1</span>.iso      ###镜像地址
+--disk path=/kvmdir/test.img     ###虚拟机安装位置
+--network=default                ###默认网络配置
+--graphics vnc,listen=<span class="hljs-number">0.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span>    ###监听所有IP
+--vcpus <span class="hljs-number">5</span>                        ###可以使用cpu个数
+--vcpus <span class="hljs-number">5</span>,maxcpus=<span class="hljs-number">10</span>             ###可以使用<span class="hljs-number">5</span>颗cpu，最大支持<span class="hljs-number">10</span>颗cpu</code></pre></div>
+
+<h3 id="连接虚拟机"><a href="#连接虚拟机" class="headerlink" title="连接虚拟机"></a>连接虚拟机</h3><p>安装VNC Viewer</p>
+<p>通过VNC Viewer连接虚拟机</p>
+<p><img src="http://img.ljh666.xyz/img/20200804155821.png" srcset="/img/loading.gif"></p>
+<p>连接成功</p>
+<p><img src="http://img.ljh666.xyz/img/image-20200804155932078.png" srcset="/img/loading.gif"></p>
+<p>后面的安装略</p>
+<h2 id="虚拟机管理"><a href="#虚拟机管理" class="headerlink" title="虚拟机管理"></a>虚拟机管理</h2><p>查看虚拟机</p>
+<div class="hljs"><pre><code class="hljs asciidoc">[root@localhost ~]# virsh list
+<span class="hljs-code"> Id    Name                           State</span>
+----------------------------------------------------
+<span class="hljs-code"> 6     kvmVirt-1                      running</span></code></pre></div>
+
+<p>删除虚拟机</p>
+<div class="hljs"><pre><code class="hljs asciidoc">[root@localhost ~]# virsh destroy kvmVirt-1
+Domain kvmVirt-1 destroyed
+
+[root@localhost ~]# virsh undefine kvmVirt-1
+Domain kvmVirt-1 has been undefined
+
+[root@localhost ~]# virsh list
+<span class="hljs-code"> Id    Name                           State</span>
+----------------------------------------------------</code></pre></div>
+
+
+
+<p>至此, KVM的部署与虚拟机的配置已完成</p>
+<p>干杯~🍻</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%AD%E7%BA%A7/">云计算中级</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Linux/">Linux</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Centos/">Centos</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/08/06/ZooKeeper%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ZooKeeper集群部署</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/08/02/%E9%85%8D%E7%BD%AE%E4%B8%BB%E4%BB%8EDNS%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+                        <span class="hidden-mobile">配置主从DNS服务器</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+    <!-- APlayer 音乐播放器 -->
+    <div id="aplayer"></div>
+    <script defer src="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.js" ></script>
+<link  rel="stylesheet" href="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.css" />
+<script type="text/javascript">
+  var oldLoadAp = window.onload;
+  window.onload = function () {
+    oldLoadAp && oldLoadAp();
+
+    new APlayer({
+      container: document.getElementById('aplayer'),
+      fixed: true,
+      autoplay: 'false' === 'true',
+      loop: 'all',
+      order: 'random',
+      theme: '#b7daff',
+      preload: 'none',
+      audio: [{"name":"万有引力","artist":"F_yy","url":"/song/万有引力-F_yy.mp3","cover":"/img/songbg.jpg"},{"name":" Dancin (Krono Remix).mp3","artist":"Aaron Smith _ Luvli ","url":"/song/Aaron Smith _ Luvli - Dancin (Krono Remix).mp3","cover":"/img/songbg.jpg"},{"name":" Ｋ.Ｉ.Ｓ.Ｓ (V0).mp3","artist":"bl00dwave ","url":"/song/bl00dwave - Ｋ.Ｉ.Ｓ.Ｓ (V0).mp3","cover":"/img/songbg.jpg"},{"name":" Asgard.mp3","artist":"Electus ","url":"/song/Electus - Asgard.mp3","cover":"/img/songbg.jpg"},{"name":" Love Story (V0).mp3","artist":"Taylor Swift ","url":"/song/Taylor Swift - Love Story (V0).mp3","cover":"/img/songbg.jpg"},{"name":" Seasons In The Sun (V0).mp3","artist":"Westlife ","url":"http://img.ljh666.xyz/Westlife%20-%20Seasons%20In%20The%20Sun%20%28V0%29.mp3","cover":"/img/songbg.jpg"},{"name":" 只要为你活一天 (V0).mp3","artist":"刘家昌 ","url":"/song/刘家昌 - 只要为你活一天 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 虐心 (V0).mp3","artist":"徐良 _ 孙羽幽 ","url":"/song/徐良 _ 孙羽幽 - 虐心 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 客官不可以 (V0).mp3","artist":"徐良 _ 小凌 ","url":"/song/徐良 _ 小凌 - 客官不可以 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 他的猫 (V0).mp3","artist":"徐良 _ 杨曦 ","url":"/song/徐良 _ 杨曦 - 他的猫 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 口是心非 (V0).mp3","artist":"杨小壮 _ 鹏鹏 ","url":"/song/杨小壮 _ 鹏鹏 - 口是心非 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 你走demo (V0).mp3","artist":"松紧先生（李宗锦） ","url":"/song/松紧先生（李宗锦） - 你走demo (V0).mp3","cover":"/img/songbg.jpg"}]
+    });
+  }
+</script>
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+    </div>
+    
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+    
+  <!-- 备案信息 -->
+  <div class="beian">
+    <a href="http://beian.miit.gov.cn/" target="_blank"
+       rel="nofollow noopener">浙ICP备20007029号</a>
+    
+      <a
+        href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=123456"
+        rel="nofollow noopener"
+        class="beian-police"
+        target="_blank"
+      >
+        <span class="beian-police-sep">&nbsp;|&nbsp;</span>
+        
+          <img src="/img/police_beian.png" srcset="/img/loading.gif" alt="police-icon" />
+        
+        <span>浙公安ICP备</span>
+      </a>
+     
+  </div>
+
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '#post-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "用KVM部署虚拟机&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script>
+      !function (e, t, a) {
+        function r() {
+          for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+          requestAnimationFrame(r)
+        }
+
+        function n() {
+          var t = "function" == typeof e.onclick && e.onclick;
+          e.onclick = function (e) {
+            t && t(), o(e)
+          }
+        }
+
+        function o(e) {
+          var a = t.createElement("div");
+          a.className = "heart", s.push({
+            el: a,
+            x: e.clientX - 5,
+            y: e.clientY - 5,
+            scale: 1,
+            alpha: 1,
+            color: c()
+          }), t.body.appendChild(a)
+        }
+
+        function i(e) {
+          var a = t.createElement("style");
+          a.type = "text/css";
+          try {
+            a.appendChild(t.createTextNode(e))
+          } catch (t) {
+            a.styleSheet.cssText = e
+          }
+          t.getElementsByTagName("head")[0].appendChild(a)
+        }
+
+        function c() {
+          return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+        }
+
+        var s = [];
+        e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+          setTimeout(e, 1e3 / 60)
+        }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+      }(window, document);
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,857 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;light&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/%E7%82%B9%E8%B5%9E.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <title>在Centos上安装HEXO的详细教程 - Hello</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/gradient-dark.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_6peoq002giu.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.0.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>LJH'S BLOG</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('http://img.ljh666.xyz/img/wrench-fan-art-zn-2560x1600.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container page-header text-center fade-in-up">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-07-30 11:24" pubdate>
+      2020年7月30日 上午
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      26
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto" id="post">
+            <!-- SEO header -->
+            <h1 style="display: none">在Centos上安装HEXO的详细教程</h1>
+            
+            <div class="markdown-body" id="post-body">
+              <h1 id="在Centos上安装HEXO的超详细教程-小白也能用"><a href="#在Centos上安装HEXO的超详细教程-小白也能用" class="headerlink" title="在Centos上安装HEXO的超详细教程 小白也能用"></a>在Centos上安装HEXO的超详细教程 小白也能用</h1><h2 id="Hexo介绍"><a href="#Hexo介绍" class="headerlink" title="Hexo介绍"></a>Hexo介绍</h2><p>Hexo 是台湾国人开发, 具有Node.js带来的超快生成速度, 几秒内就可以完成百个页面的渲染, 同时支持Markdown文件, 适合写技术Blog</p>
+<h2 id="安装前提"><a href="#安装前提" class="headerlink" title="安装前提"></a>安装前提</h2><ol>
+<li>Node.js(建议12.0及以上)</li>
+<li>Git</li>
+<li>配置好yum的centos7服务器</li>
+</ol>
+<h3 id="安装Git-确保配置好了yum源"><a href="#安装Git-确保配置好了yum源" class="headerlink" title="安装Git(确保配置好了yum源)"></a>安装Git(确保配置好了yum源)</h3><p>使用yum安装<strong>git-core</strong> 会有点慢</p>
+<div class="hljs"><pre><code class="hljs shell">yum -y install git-core</code></pre></div>
+
+<p>顺带安装可能用到的工具</p>
+<div class="hljs"><pre><code class="hljs shell">yum -y install gcc gcc-c++ curl wget vim</code></pre></div>
+
+<p>为什么要首先要安装 git？ 因为 Hexo 开源且基于 Node.js 环境，所以大量主题和设置需要通过 git 完成</p>
+<h3 id="Git的clone下载过慢"><a href="#Git的clone下载过慢" class="headerlink" title="Git的clone下载过慢"></a>Git的clone下载过慢</h3><p>后面一下操作需要用到clone命令, 可以通过修改/etc/hosts文件来提高一点下载速度(也只有几十kb😩), 目前测试有效</p>
+<div class="hljs"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash"> Github</span>
+204.232.175.78 http://documentcloud.github.com
+207.97.227.239 http://github.com
+204.232.175.94 http://gist.github.com
+107.21.116.220 http://help.github.com
+207.97.227.252 http://nodeload.github.com
+199.27.76.130 http://raw.github.com
+107.22.3.110 http://status.github.com
+204.232.175.78 http://training.github.com
+207.97.227.243 http://www.github.com
+207.97.227.243 https://www.github.com</code></pre></div>
+
+<h3 id="安装Node-js-必装"><a href="#安装Node-js-必装" class="headerlink" title="安装Node.js(必装)"></a>安装Node.js(必装)</h3><h4 id="安装前的知识补充"><a href="#安装前的知识补充" class="headerlink" title="安装前的知识补充"></a>安装前的知识补充</h4><p>Node.js就是JavaScript的运行环境, 类似于java的运行环境jdk</p>
+<p>nvm是Node.js的版本控制工具</p>
+<p>npm是Node.js的包管理工具(你也可以使用开源的cnpm工具)</p>
+<p>附: 淘宝的Node.js下载库地址(本文不需要用到)</p>
+<div class="hljs"><pre><code class="hljs shell">https://npm.taobao.org/mirrors/node/</code></pre></div>
+
+<h4 id="开始安装"><a href="#开始安装" class="headerlink" title="开始安装"></a>开始安装</h4><p>这里我使用nvm来安装node.js</p>
+<p>第一步,下载nvm控制器</p>
+<div class="hljs"><pre><code class="hljs shell">git clone https://github.com/cnpm/nvm.git  # 克隆nvm库到本地
+cd nvm   # 进入nvm目录
+sh ./install.sh  # 安装nvm
+source $HOME/nvm/nvm.sh   # 加载nvm的运行环境, 如果不加载,后面的命令就无法使用,后面会教你怎么样不用每次都加载一遍</code></pre></div>
+
+<p>第二部, 用nvm下载node.js</p>
+<div class="hljs"><pre><code class="hljs shell">nvm ls-remote    # 查看可用版本的命令
+nvm install v12.0.0   #安装 12.0.0版本的node.js
+nvm use v12.0.0     #选择使用刚才安装的版本</code></pre></div>
+
+<h2 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h2><p>npm是随同NodeJS一起安装的, 我们可以直接使用</p>
+<div class="hljs"><pre><code class="hljs shell">npm install -g hexo --save  # 安装hexo模块</code></pre></div>
+
+
+
+<p>–save、-S参数意思是把模块的版本信息保存到dependencies（生产环境依赖）中，即你的package.json文件的dependencies字段中</p>
+<p>-g 全局安装</p>
+<p>本地安装</p>
+<ol>
+<li>将安装包放在 ./node_modules 下（运行 npm 命令时所在的目录），如果没有 node_modules 目录，会在当前执行 npm 命令的目录下生成 node_modules 目录。</li>
+<li>可以通过 require() 来引入本地安装的包。</li>
+</ol>
+<p>全局安装</p>
+<ol>
+<li>将安装包放在 /usr/local 下或者你 node 的安装目录。</li>
+<li>可以直接在命令行里使用。</li>
+</ol>
+<p>部署hexo</p>
+<div class="hljs"><pre><code class="hljs shell">mkdir /home/wwwroot    # 创建用来存储hexo生成的网站的文件夹
+hexo init /home/wwwroot  # 初始化文件夹</code></pre></div>
+
+<p>配置hexo</p>
+<div class="hljs"><pre><code class="hljs shell">cd /home/wwwroot
+ls</code></pre></div>
+
+<p>可以看到hexo产生的文件</p>
+<div class="hljs"><pre><code class="hljs shell">[root@localhost wwwroot]# ls
+_config.yml   package.json       scaffolds  themes
+node_modules  package-lock.json  source</code></pre></div>
+
+<p>几个重要文件:</p>
+<ul>
+<li>_config.yml配置文件</li>
+<li>themes主题文件夹</li>
+<li>source存放网站素材的地方</li>
+</ul>
+<div class="hljs"><pre><code class="hljs shell">vim _config.yml  #编辑配置文件</code></pre></div>
+
+<p>至于配置文件中每个配置项目的意思可以参考官方文档<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/configuration">https://hexo.io/zh-cn/docs/configuration</a></p>
+<blockquote>
+<p><strong>网站项</strong></p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>title</code></td>
+<td align="left">网站标题</td>
+</tr>
+<tr>
+<td align="left"><code>subtitle</code></td>
+<td align="left">网站副标题</td>
+</tr>
+<tr>
+<td align="left"><code>description</code></td>
+<td align="left">网站描述</td>
+</tr>
+<tr>
+<td align="left"><code>keywords</code></td>
+<td align="left">网站的关键词。支援多个关键词。</td>
+</tr>
+<tr>
+<td align="left"><code>author</code></td>
+<td align="left">您的名字</td>
+</tr>
+<tr>
+<td align="left"><code>language</code></td>
+<td align="left">网站使用的语言。对于简体中文用户来说，使用不同的主题可能需要设置成不同的值，请参考你的<strong>主题的文档</strong>自行设置，常见的有 <code>zh-Hans</code>和 <code>zh-CN</code>。</td>
+</tr>
+<tr>
+<td align="left"><code>timezone</code></td>
+<td align="left">网站时区。Hexo 默认使用您电脑的时区。请参考 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">时区列表</a> 进行设置，如 <code>America/New_York</code>, <code>Japan</code>, 和 <code>UTC</code> 。一般的，对于中国大陆地区可以使用 <code>Asia/Shanghai</code>。</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>网址项</strong></p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th align="left">描述</th>
+<th align="left">默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>url</code></td>
+<td align="left">网址</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><code>root</code></td>
+<td align="left">网站根目录</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><code>permalink</code></td>
+<td align="left">文章的 <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/permalinks">永久链接</a> 格式</td>
+<td align="left"><code>:year/:month/:day/:title/</code></td>
+</tr>
+<tr>
+<td align="left"><code>permalink_defaults</code></td>
+<td align="left">永久链接中各部分的默认值</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><code>pretty_urls</code></td>
+<td align="left">改写 <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/variables"><code>permalink</code></a> 的值来美化 URL</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><code>pretty_urls.trailing_index</code></td>
+<td align="left">是否在永久链接中保留尾部的 <code>index.html</code>，设置为 <code>false</code> 时去除</td>
+<td align="left"><code>true</code></td>
+</tr>
+<tr>
+<td align="left"><code>pretty_urls.trailing_html</code></td>
+<td align="left">是否在永久链接中保留尾部的 <code>.html</code>, 设置为 <code>false</code> 时去除 (<em>对尾部的 <code>index.html</code>无效</em>)</td>
+<td align="left"><code>true</code></td>
+</tr>
+</tbody></table>
+<h2 id="修改hexo主题"><a href="#修改hexo主题" class="headerlink" title="修改hexo主题"></a>修改hexo主题</h2><blockquote>
+<p>这里用fluid主题举例子</p>
+</blockquote>
+<p>fluid主题的git地址:<a target="_blank" rel="noopener" href="https://github.com/fluid-dev/hexo-theme-fluid">https://github.com/fluid-dev/hexo-theme-fluid</a></p>
+<p>下载主题(网络原因,这个时间可能会有点长⌛)</p>
+<div class="hljs"><pre><code class="hljs shell">cd /home/wwwroot/themes            # 进入主题目录
+git clone https://github.com/fluid-dev/hexo-theme-fluid fluid                                                               #  克隆主题库并且改名为fluid
+ls                              # 查看下载的主题</code></pre></div>
+
+<p>引用主题</p>
+<div class="hljs"><pre><code class="hljs shell">vim /home/wwwroot/_config.xml    #修改默认主题为fluid</code></pre></div>
+
+<div class="hljs"><pre><code class="hljs shell"> 85 updated_option: &#x27;mtime&#x27;
+ 86 
+ 87 # Pagination
+ 88 ## Set per_page to 0 to disable pagination
+ 89 per_page: 10
+ 90 pagination_dir: page
+ 91 
+ 92 # Include / Exclude file(s)
+ 93 ## include:/exclude: options only apply to the &#x27;source/&#x27; folder
+ 94 include:
+ 95 exclude:
+ 96 ignore:
+ 97 
+ 98 # Extensions
+ 99 ## Plugins: https://hexo.io/plugins/
+100 ## Themes: https://hexo.io/themes/
+101 theme: fluid    #修改为我们克隆的主题的文件夹名字
+102 
+103 # Deployment
+104 ## Docs: https://hexo.io/docs/deployment.html
+105 deploy:
+106   type: &#x27;&#x27;</code></pre></div>
+
+<p>按一下esc,在输入:后,输入wq,回车,即可保存并退出</p>
+<h2 id="启动Hexo"><a href="#启动Hexo" class="headerlink" title="启动Hexo"></a>启动Hexo</h2><div class="hljs"><pre><code class="hljs shell">hexo new &quot;This is a test page&quot; # 新建一个网页页面,会在/home/wwwroot/source/_posts/中生成对应md文件, 你可以自己在其中书写内容
+hexo g      #使用hexo生成网页
+hexo c      #清除hexo的配置(常用在修改主题,网站配置后, 修改网页内容一般不用)</code></pre></div>
+
+<p>我通常的通过上传md文件, 再用hexo g命令重新生成页面来实现文章的上传</p>
+<p>我们来看一下hexo new “This is a test page”生成的md文件内容</p>
+<div class="hljs"><pre><code class="hljs shell">[root@localhost themes]# cat /home/wwwroot/source/_posts/test.md
+---
+title: test
+date: 2020-07-30 18:52:31
+tags:
+---</code></pre></div>
+
+<p>所以, 我们只要在写md的时候加入上面的头部格式就可以了</p>
+<h2 id="使用nginx发布Hexo生成的网页"><a href="#使用nginx发布Hexo生成的网页" class="headerlink" title="使用nginx发布Hexo生成的网页"></a>使用nginx发布Hexo生成的网页</h2><p>前面我们已经使用Hexo生成了静态网页</p>
+<p>现在我们需要将它发布到网上,  这里我使用的是nginx服务器, 你也可以使用apache服务器</p>
+<div class="hljs"><pre><code class="hljs shell">yum -y install nginx</code></pre></div>
+
+<p>然后我们修改nginx服务器的网站根目录为/home/wwwroot/public</p>
+<div class="hljs"><pre><code class="hljs shell">vim /etc/nginx/nginx.conf    #不同版本的nignx主配置文件位置可能不同</code></pre></div>
+
+<div class="hljs"><pre><code class="hljs shell">31     default_type        application/octet-stream;
+32 
+33     # Load modular configuration files from the /etc/nginx/conf.d directory.
+34     # See http://nginx.org/en/docs/ngx_core_module.html#include
+35     # for more information.
+36     include /etc/nginx/conf.d/*.conf;
+37 
+38     server &#123;
+39         listen       80 default_server;
+40         listen       [::]:80 default_server;
+41         server_name  _;
+42         root         /home/wwwroot/public/;   #修改这里
+43 
+44         # Load configuration files for the default server block.
+45         include /etc/nginx/default.d/*.conf;
+46 
+47         location / &#123;
+48         &#125;
+49 
+50         error_page 404 /404.html;
+51             location = /40x.html &#123;
+52         &#125;
+53</code></pre></div>
+
+<p>按一下esc,在输入:后,输入wq,回车,即可保存并退出</p>
+<p><strong>下面是重点内容:</strong></p>
+<p>要想nginx被外网访问需要关闭firewalld防火墙, 关闭selinux(有些服务器厂商一般默认关闭), 如果你购买的是阿里云这些服务器, 需要设置阿里云自己的防火墙, 开放其中的80端口, 否则无法被访问到</p>
+<p>关闭firewalld并清空防火墙规则</p>
+<div class="hljs"><pre><code class="hljs shell">systemctl stop firewalld
+systemctl disable firewalld
+iptables -F
+iptables -X
+iptables -Z</code></pre></div>
+
+<p>关闭selinux</p>
+<div class="hljs"><pre><code class="hljs shell">setenforce 0</code></pre></div>
+
+<p>永久关闭要修改文件</p>
+<div class="hljs"><pre><code class="hljs shell">vim /etc/sysconfig/selinux</code></pre></div>
+
+<div class="hljs"><pre><code class="hljs shell"> 1 
+ 2 # This file controls the state of SELinux on the system.
+ 3 # SELINUX= can take one of these three values:
+ 4 #     enforcing - SELinux security policy is enforced.
+ 5 #     permissive - SELinux prints warnings instead of enforcing.
+ 6 #     disabled - No SELinux policy is loaded.
+ 7 SELINUX=disabled   #修改为disabled,重启有效
+ 8 # SELINUXTYPE= can take one of three values:
+ 9 #     targeted - Targeted processes are protected,
+10 #     minimum - Modification of targeted policy. Only selected processes are protected. 
+11 #     mls - Multi Level Security protection.
+12 SELINUXTYPE=targeted
+13 
+14</code></pre></div>
+
+<p>好了,现在启动nginx</p>
+<div class="hljs"><pre><code class="hljs shell">systemctl start nginx</code></pre></div>
+
+<p>通过ip地址或者域名就可以访问到你的Blog网站啦</p>
+<p><img src="https://i.loli.net/2020/07/30/Q4yT96aFzpYwrRs.png" srcset="/img/loading.gif" alt="hexo安装成功"></p>
+<h2 id="至此-Hexo已经安装完成-享受Hexo吧"><a href="#至此-Hexo已经安装完成-享受Hexo吧" class="headerlink" title="至此, Hexo已经安装完成,享受Hexo吧"></a>至此, Hexo已经安装完成,享受Hexo吧</h2>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Centos/">Centos</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Blog/">Blog</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/07/31/%E5%9B%BE%E5%BA%8A%E8%AE%BE%E7%BD%AE/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">图床测试</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/07/29/ASCCII%E8%A1%A8/">
+                        <span class="hidden-mobile">ASCCII表</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+    <!-- APlayer 音乐播放器 -->
+    <div id="aplayer"></div>
+    <script defer src="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.js" ></script>
+<link  rel="stylesheet" href="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.css" />
+<script type="text/javascript">
+  var oldLoadAp = window.onload;
+  window.onload = function () {
+    oldLoadAp && oldLoadAp();
+
+    new APlayer({
+      container: document.getElementById('aplayer'),
+      fixed: true,
+      autoplay: 'false' === 'true',
+      loop: 'all',
+      order: 'random',
+      theme: '#b7daff',
+      preload: 'none',
+      audio: [{"name":"万有引力","artist":"F_yy","url":"/song/万有引力-F_yy.mp3","cover":"/img/songbg.jpg"},{"name":" Dancin (Krono Remix).mp3","artist":"Aaron Smith _ Luvli ","url":"/song/Aaron Smith _ Luvli - Dancin (Krono Remix).mp3","cover":"/img/songbg.jpg"},{"name":" Ｋ.Ｉ.Ｓ.Ｓ (V0).mp3","artist":"bl00dwave ","url":"/song/bl00dwave - Ｋ.Ｉ.Ｓ.Ｓ (V0).mp3","cover":"/img/songbg.jpg"},{"name":" Asgard.mp3","artist":"Electus ","url":"/song/Electus - Asgard.mp3","cover":"/img/songbg.jpg"},{"name":" Love Story (V0).mp3","artist":"Taylor Swift ","url":"/song/Taylor Swift - Love Story (V0).mp3","cover":"/img/songbg.jpg"},{"name":" Seasons In The Sun (V0).mp3","artist":"Westlife ","url":"http://img.ljh666.xyz/Westlife%20-%20Seasons%20In%20The%20Sun%20%28V0%29.mp3","cover":"/img/songbg.jpg"},{"name":" 只要为你活一天 (V0).mp3","artist":"刘家昌 ","url":"/song/刘家昌 - 只要为你活一天 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 虐心 (V0).mp3","artist":"徐良 _ 孙羽幽 ","url":"/song/徐良 _ 孙羽幽 - 虐心 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 客官不可以 (V0).mp3","artist":"徐良 _ 小凌 ","url":"/song/徐良 _ 小凌 - 客官不可以 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 他的猫 (V0).mp3","artist":"徐良 _ 杨曦 ","url":"/song/徐良 _ 杨曦 - 他的猫 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 口是心非 (V0).mp3","artist":"杨小壮 _ 鹏鹏 ","url":"/song/杨小壮 _ 鹏鹏 - 口是心非 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 你走demo (V0).mp3","artist":"松紧先生（李宗锦） ","url":"/song/松紧先生（李宗锦） - 你走demo (V0).mp3","cover":"/img/songbg.jpg"}]
+    });
+  }
+</script>
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+    </div>
+    
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+    
+  <!-- 备案信息 -->
+  <div class="beian">
+    <a href="http://beian.miit.gov.cn/" target="_blank"
+       rel="nofollow noopener">浙ICP备20007029号</a>
+    
+      <a
+        href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=123456"
+        rel="nofollow noopener"
+        class="beian-police"
+        target="_blank"
+      >
+        <span class="beian-police-sep">&nbsp;|&nbsp;</span>
+        
+          <img src="/img/police_beian.png" srcset="/img/loading.gif" alt="police-icon" />
+        
+        <span>浙公安ICP备</span>
+      </a>
+     
+  </div>
+
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '#post-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "在Centos上安装HEXO的详细教程&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script>
+      !function (e, t, a) {
+        function r() {
+          for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+          requestAnimationFrame(r)
+        }
+
+        function n() {
+          var t = "function" == typeof e.onclick && e.onclick;
+          e.onclick = function (e) {
+            t && t(), o(e)
+          }
+        }
+
+        function o(e) {
+          var a = t.createElement("div");
+          a.className = "heart", s.push({
+            el: a,
+            x: e.clientX - 5,
+            y: e.clientY - 5,
+            scale: 1,
+            alpha: 1,
+            color: c()
+          }), t.body.appendChild(a)
+        }
+
+        function i(e) {
+          var a = t.createElement("style");
+          a.type = "text/css";
+          try {
+            a.appendChild(t.createTextNode(e))
+          } catch (t) {
+            a.styleSheet.cssText = e
+          }
+          t.getElementsByTagName("head")[0].appendChild(a)
+        }
+
+        function c() {
+          return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+        }
+
+        var s = [];
+        e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+          setTimeout(e, 1e3 / 60)
+        }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+      }(window, document);
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

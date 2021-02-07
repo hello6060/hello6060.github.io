@@ -1,0 +1,752 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;light&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/%E7%82%B9%E8%B5%9E.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <title>ZooKeeper集群部署 - Hello</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/gradient-dark.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_6peoq002giu.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.0.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>LJH'S BLOG</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('http://img.ljh666.xyz/img/wrench-fan-art-zn-2560x1600.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container page-header text-center fade-in-up">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-08-06 19:31" pubdate>
+      2020年8月6日 晚上
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.4k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      21
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto" id="post">
+            <!-- SEO header -->
+            <h1 style="display: none">ZooKeeper集群部署</h1>
+            
+            <div class="markdown-body" id="post-body">
+              <h1 id="ZooKeeper集群部署"><a href="#ZooKeeper集群部署" class="headerlink" title="ZooKeeper集群部署"></a>ZooKeeper集群部署</h1><h2 id="规划节点"><a href="#规划节点" class="headerlink" title="规划节点"></a>规划节点</h2><table>
+<thead>
+<tr>
+<th align="center">IP</th>
+<th align="center">主机名</th>
+<th align="center">节点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">10.10.10.101</td>
+<td align="center">ZooKeeper1</td>
+<td align="center">集群节点</td>
+</tr>
+<tr>
+<td align="center">10.10.10.11</td>
+<td align="center">ZooKeeper2</td>
+<td align="center">集群节点</td>
+</tr>
+<tr>
+<td align="center">10.10.10.12</td>
+<td align="center">ZooKeeper3</td>
+<td align="center">集群节点</td>
+</tr>
+</tbody></table>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/warking/p/7565526.html">zoo.cfg详解</a></p>
+<h2 id="安装JDK环境"><a href="#安装JDK环境" class="headerlink" title="安装JDK环境"></a>安装JDK环境</h2><p>在三个节点都安装JDK</p>
+<p><a target="_blank" rel="noopener" href="https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html">官网下载地址</a></p>
+<p>这里使用yum安装</p>
+<p>查看可用安装包</p>
+<div class="hljs"><pre><code class="hljs angelscript">[<span class="hljs-symbol">root@</span>mycat ~]# yum list | grep java<span class="hljs-number">-1.8</span><span class="hljs-number">.0</span>
+java<span class="hljs-number">-1.8</span><span class="hljs-number">.0</span>-openjdk.x86_64                 <span class="hljs-number">1</span>:<span class="hljs-number">1.8</span><span class="hljs-number">.0</span><span class="hljs-number">.252</span>.b09<span class="hljs-number">-2.</span>el7_8      @updates 
+java<span class="hljs-number">-1.8</span><span class="hljs-number">.0</span>-openjdk-devel.x86_64           <span class="hljs-number">1</span>:<span class="hljs-number">1.8</span><span class="hljs-number">.0</span><span class="hljs-number">.252</span>.b09<span class="hljs-number">-2.</span>el7_8      @updates 
+java<span class="hljs-number">-1.8</span><span class="hljs-number">.0</span>-openjdk-headless.x86_64        <span class="hljs-number">1</span>:<span class="hljs-number">1.8</span><span class="hljs-number">.0</span><span class="hljs-number">.252</span>.b09<span class="hljs-number">-2.</span>el7_8      @updates 
+java<span class="hljs-number">-1.8</span><span class="hljs-number">.0</span>-openjdk.i686                   <span class="hljs-number">1</span>:<span class="hljs-number">1.8</span><span class="hljs-number">.0</span><span class="hljs-number">.252</span>.b09<span class="hljs-number">-2.</span>el7_8      updates  
+java<span class="hljs-number">-1.8</span><span class="hljs-number">.0</span>-openjdk-accessibility.i686     <span class="hljs-number">1</span>:<span class="hljs-number">1.8</span><span class="hljs-number">.0</span><span class="hljs-number">.252</span>.b09<span class="hljs-number">-2.</span>el7_8      updates  
+java<span class="hljs-number">-1.8</span><span class="hljs-number">.0</span>-openjdk-accessibility.x86_64   <span class="hljs-number">1</span>:<span class="hljs-number">1.8</span><span class="hljs-number">.0</span><span class="hljs-number">.252</span>.b09<span class="hljs-number">-2.</span>el7_8      updates  
+java<span class="hljs-number">-1.8</span><span class="hljs-number">.0</span>-openjdk-demo.i686              <span class="hljs-number">1</span>:<span class="hljs-number">1.8</span><span class="hljs-number">.0</span><span class="hljs-number">.252</span>.b09<span class="hljs-number">-2.</span>el7_8      updates  
+java<span class="hljs-number">-1.8</span><span class="hljs-number">.0</span>-openjdk-demo.x86_64            <span class="hljs-number">1</span>:<span class="hljs-number">1.8</span><span class="hljs-number">.0</span><span class="hljs-number">.252</span>.b09<span class="hljs-number">-2.</span>el7_8      updates  
+java<span class="hljs-number">-1.8</span><span class="hljs-number">.0</span>-openjdk-devel.i686             <span class="hljs-number">1</span>:<span class="hljs-number">1.8</span><span class="hljs-number">.0</span><span class="hljs-number">.252</span>.b09<span class="hljs-number">-2.</span>el7_8      updates  
+java<span class="hljs-number">-1.8</span><span class="hljs-number">.0</span>-openjdk-headless.i686          <span class="hljs-number">1</span>:<span class="hljs-number">1.8</span><span class="hljs-number">.0</span><span class="hljs-number">.252</span>.b09<span class="hljs-number">-2.</span>el7_8      updates  
+java<span class="hljs-number">-1.8</span><span class="hljs-number">.0</span>-openjdk-javadoc.noarch         <span class="hljs-number">1</span>:<span class="hljs-number">1.8</span><span class="hljs-number">.0</span><span class="hljs-number">.252</span>.b09<span class="hljs-number">-2.</span>el7_8      updates  
+java<span class="hljs-number">-1.8</span><span class="hljs-number">.0</span>-openjdk-javadoc-zip.noarch     <span class="hljs-number">1</span>:<span class="hljs-number">1.8</span><span class="hljs-number">.0</span><span class="hljs-number">.252</span>.b09<span class="hljs-number">-2.</span>el7_8      updates  
+java<span class="hljs-number">-1.8</span><span class="hljs-number">.0</span>-openjdk-src.i686               <span class="hljs-number">1</span>:<span class="hljs-number">1.8</span><span class="hljs-number">.0</span><span class="hljs-number">.252</span>.b09<span class="hljs-number">-2.</span>el7_8      updates  
+java<span class="hljs-number">-1.8</span><span class="hljs-number">.0</span>-openjdk-src.x86_64             <span class="hljs-number">1</span>:<span class="hljs-number">1.8</span><span class="hljs-number">.0</span><span class="hljs-number">.252</span>.b09<span class="hljs-number">-2.</span>el7_8      updates</code></pre></div>
+
+
+
+<div class="hljs"><pre><code class="hljs apache"><span class="hljs-attribute">yum</span> -y install java-<span class="hljs-number">1</span>.<span class="hljs-number">8</span>.<span class="hljs-number">0</span>-openjdk.x<span class="hljs-number">86</span>_<span class="hljs-number">64</span> java-<span class="hljs-number">1</span>.<span class="hljs-number">8</span>.<span class="hljs-number">0</span>-openjdk-devel.x<span class="hljs-number">86</span>_<span class="hljs-number">64</span></code></pre></div>
+
+
+
+<h2 id="安装ZooKeeper"><a href="#安装ZooKeeper" class="headerlink" title="安装ZooKeeper"></a>安装ZooKeeper</h2><h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><p><a target="_blank" rel="noopener" href="https://zookeeper.apache.org/releases.html">官网下载地址</a></p>
+<p>编写下载的shell脚本(复制粘贴, 偷个懒😂)</p>
+<div class="hljs"><pre><code class="hljs vim"><span class="hljs-keyword">vim</span> download.<span class="hljs-keyword">sh</span></code></pre></div>
+
+<div class="hljs"><pre><code class="hljs apache"><span class="hljs-attribute">mkdir</span> -p /root/data/zookeeper
+<span class="hljs-attribute">cd</span> /root/data/zookeeper
+<span class="hljs-attribute">wget</span> https://downloads.apache.org/zookeeper/zookeeper-<span class="hljs-number">3</span>.<span class="hljs-number">4</span>.<span class="hljs-number">14</span>/zookeeper-<span class="hljs-number">3</span>.<span class="hljs-number">4</span>.<span class="hljs-number">14</span>.tar.gz
+<span class="hljs-attribute">tar</span> -xvf zookeeper-<span class="hljs-number">3</span>.<span class="hljs-number">4</span>.<span class="hljs-number">14</span>.tar.gz
+</code></pre></div>
+
+<p>使用source命令可用不需要执行权限</p>
+<div class="hljs"><pre><code class="hljs vim"><span class="hljs-keyword">source</span> download.<span class="hljs-keyword">sh</span></code></pre></div>
+
+<p>三个节点都下载好zookeeper</p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><h4 id="编辑配置文件zoo-conf"><a href="#编辑配置文件zoo-conf" class="headerlink" title="编辑配置文件zoo.conf"></a>编辑配置文件zoo.conf</h4><p>使用模板文件做配置(三个节点的该文件配置都相同)</p>
+<div class="hljs"><pre><code class="hljs apache"><span class="hljs-attribute">mv</span> zookeeper-<span class="hljs-number">3</span>.<span class="hljs-number">4</span>.<span class="hljs-number">14</span>/conf/zoo_sample.cfg zookeeper-<span class="hljs-number">3</span>.<span class="hljs-number">4</span>.<span class="hljs-number">14</span>/conf/zoo.cfg</code></pre></div>
+
+
+
+<div class="hljs"><pre><code class="hljs ini"><span class="hljs-section">[root@mycat zookeeper-3.4.14]</span><span class="hljs-comment"># vim ./conf/zoo.cfg</span>
+
+<span class="hljs-attr">server.2</span>=<span class="hljs-number">10.10</span>.<span class="hljs-number">10.1</span>
+<span class="hljs-comment"># The number of milliseconds of each tick</span>
+<span class="hljs-attr">tickTime</span>=<span class="hljs-number">2000</span>
+<span class="hljs-comment"># The number of ticks that the initial </span>
+<span class="hljs-comment"># synchronization phase can take</span>
+<span class="hljs-attr">initLimit</span>=<span class="hljs-number">10</span>
+<span class="hljs-comment"># The number of ticks that can pass between </span>
+<span class="hljs-comment"># sending a request and getting an acknowledgement</span>
+<span class="hljs-attr">syncLimit</span>=<span class="hljs-number">5</span>
+<span class="hljs-comment"># the directory where the snapshot is stored.</span>
+<span class="hljs-comment"># do not use /tmp for storage, /tmp here is just </span>
+<span class="hljs-comment"># example sakes.</span>
+<span class="hljs-attr">dataDir</span>=/tmp/zookeeper
+<span class="hljs-comment"># the port at which the clients will connect</span>
+<span class="hljs-attr">clientPort</span>=<span class="hljs-number">2181</span>
+<span class="hljs-comment"># the maximum number of client connections.</span>
+<span class="hljs-comment"># increase this if you need to handle more clients</span>
+<span class="hljs-comment">#maxClientCnxns=60</span>
+<span class="hljs-comment">#</span>
+<span class="hljs-comment"># Be sure to read the maintenance section of the </span>
+<span class="hljs-comment"># administrator guide before turning on autopurge.</span>
+<span class="hljs-comment">#</span>
+<span class="hljs-comment"># http://zookeeper.apache.org/doc/current/zookeeperAdmin.html#sc_maintenance</span>
+<span class="hljs-comment">#</span>
+<span class="hljs-comment"># The number of snapshots to retain in dataDir</span>
+<span class="hljs-comment">#autopurge.snapRetainCount=3</span>
+<span class="hljs-comment"># Purge task interval in hours</span>
+<span class="hljs-comment"># Set to &quot;0&quot; to disable auto purge feature</span>
+<span class="hljs-comment">#autopurge.purgeInterval=1</span>
+<span class="hljs-attr">server.1</span>=<span class="hljs-number">10.10</span>.<span class="hljs-number">10.11</span>:<span class="hljs-number">2888</span>:<span class="hljs-number">3888</span>
+<span class="hljs-attr">server.2</span>=<span class="hljs-number">10.10</span>.<span class="hljs-number">10.12</span>:<span class="hljs-number">2888</span>:<span class="hljs-number">3888</span>
+<span class="hljs-attr">server.3</span>=<span class="hljs-number">10.10</span>.<span class="hljs-number">10.101</span>:<span class="hljs-number">2888</span>:<span class="hljs-number">3888</span></code></pre></div>
+
+<p>说明</p>
+<ul>
+<li>initLimit：ZooKeeper集群模式下包含多个zk进程，其中一个进程为leader，余下的进程为follower。当follower最初与leader建立连接时，它们之间会传输相当多的数据，尤其是follower的数据落后leader很多。initLimit配置follower与leader之间建立连接后进行同步的最长时间。</li>
+<li>syncLimit：配置follower和leader之间发送消息，请求和应答的最大时间长度。</li>
+<li>tickTime：tickTime则是上述两个超时配置的基本单位，例如对于initLimit，其配置值为5，说明其超时时间为2000ms*5=10秒。</li>
+<li>server.id=host:port1:port2：其中id为一个数字，表示zk进程的id，这个id也是dataDir目录下myid文件的内容。host是该zk进程所在的IP地址，port1表示follower和leader交换消息所使用的端口，port2表示选举leader所使用的端口。</li>
+<li>dataDir：其配置的含义跟单机模式下的含义类似，不同的是集群模式下还有一个myid文件。myid文件的内容只有一行，且内容只能为1-255之间的数字，这个数字亦即上面介绍server.id中的id，表示zk进程的id。</li>
+<li>clientPort：这个端口就是<strong>客户端连接</strong> Zookeeper 服务器的端口，Zookeeper 会<strong>监听</strong>这个端口，<strong>接受客户端的访问</strong>请求。</li>
+</ul>
+<h4 id="创建myid文件"><a href="#创建myid文件" class="headerlink" title="创建myid文件"></a>创建myid文件</h4><p>ZooKeeper是根据该文件来决定ZooKeeper集群各个机器的身份分配。</p>
+<blockquote>
+<p> 主机10.10.10.11</p>
+</blockquote>
+<div class="hljs"><pre><code class="hljs awk">mkdir <span class="hljs-regexp">/tmp/</span>zookeeper
+vim <span class="hljs-regexp">/tmp/</span>zookeeper/myid</code></pre></div>
+
+<div class="hljs"><pre><code class="hljs angelscript">[<span class="hljs-symbol">root@</span>mycat zookeeper<span class="hljs-number">-3.4</span><span class="hljs-number">.14</span>]# cat /tmp/zookeeper/myid 
+<span class="hljs-number">1</span></code></pre></div>
+
+<blockquote>
+<p>主机10.10.10.12</p>
+</blockquote>
+<div class="hljs"><pre><code class="hljs awk">mkdir <span class="hljs-regexp">/tmp/</span>zookeeper
+vim <span class="hljs-regexp">/tmp/</span>zookeeper/myid</code></pre></div>
+
+<div class="hljs"><pre><code class="hljs angelscript">[<span class="hljs-symbol">root@</span>mycat zookeeper<span class="hljs-number">-3.4</span><span class="hljs-number">.14</span>]# cat /tmp/zookeeper/myid 
+<span class="hljs-number">2</span></code></pre></div>
+
+<blockquote>
+<p>主机10.10.10.101</p>
+</blockquote>
+<div class="hljs"><pre><code class="hljs awk">mkdir <span class="hljs-regexp">/tmp/</span>zookeeper
+vim <span class="hljs-regexp">/tmp/</span>zookeeper/myid</code></pre></div>
+
+<div class="hljs"><pre><code class="hljs angelscript">[<span class="hljs-symbol">root@</span>mycat zookeeper<span class="hljs-number">-3.4</span><span class="hljs-number">.14</span>]# cat /tmp/zookeeper/myid 
+<span class="hljs-number">3</span></code></pre></div>
+
+<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><p>进入zookeeper-3.4.14/bin目录</p>
+<div class="hljs"><pre><code class="hljs routeros">[root@mycat bin]# ./zkServer.sh start
+ZooKeeper JMX enabled by default
+Using config: /root/data/mall/zookeeper-3.4.14/bin/<span class="hljs-built_in">..</span>/conf/zoo.cfg
+Starting zookeeper <span class="hljs-built_in">..</span>. STARTED</code></pre></div>
+
+<p>*<strong>三个节点到启动成功</strong></p>
+<h3 id="查看状态"><a href="#查看状态" class="headerlink" title="查看状态"></a>查看状态</h3><p>三个节点状态</p>
+<blockquote>
+<p>10.10.10.12节点</p>
+</blockquote>
+<div class="hljs"><pre><code class="hljs routeros">[root@mycat bin]# ./zkServer.sh status
+ZooKeeper JMX enabled by default
+Using config: /root/data/mall/zookeeper-3.4.14/bin/<span class="hljs-built_in">..</span>/conf/zoo.cfg
+Mode: leader</code></pre></div>
+
+<blockquote>
+<p>10.10.10.101节点</p>
+</blockquote>
+<div class="hljs"><pre><code class="hljs routeros">[root@db2 zookeeper-3.4.14]# bin/zkServer.sh status
+ZooKeeper JMX enabled by default
+Using config: /root/zookeeper-3.4.14/bin/<span class="hljs-built_in">..</span>/conf/zoo.cfg
+Mode: follower</code></pre></div>
+
+<blockquote>
+<p>10.10.10.11节点</p>
+</blockquote>
+<div class="hljs"><pre><code class="hljs routeros">[root@xserver1 zookeeper-3.4.14]# bin/zkServer.sh status
+ZooKeeper JMX enabled by default
+Using config: /root/zookeeper-3.4.14/bin/<span class="hljs-built_in">..</span>/conf/zoo.cfg
+Mode: follwer</code></pre></div>
+
+
+
+<h2 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h2><p>记录其中遇到的一个网络问题:</p>
+<p>问题描述: 虚拟机能对域名进行解析, 但不能联网<br>表现状态为使用ping <a target="_blank" rel="noopener" href="http://www.baidu.com/">www.baidu.com</a> 后, 可以解析出IP地址, 但后续动作没有, 一直卡着</p>
+<p>解决方法为:  重新添加一次NAT模式的网卡, 重启网络 (还删掉了一张用来做其他实验的仅主机模式的网卡及其网卡配置文件, 不知道是不是它造成的)</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%AD%E7%BA%A7/">云计算中级</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Linux/">Linux</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Centos/">Centos</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/08/16/%E6%9E%84%E5%BB%BAceph%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">构建ceph分布式存储系统</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/08/04/%E7%94%A8KVM%E9%83%A8%E7%BD%B2%E8%99%9A%E6%8B%9F%E6%9C%BA/">
+                        <span class="hidden-mobile">用KVM部署虚拟机</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+    <!-- APlayer 音乐播放器 -->
+    <div id="aplayer"></div>
+    <script defer src="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.js" ></script>
+<link  rel="stylesheet" href="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.css" />
+<script type="text/javascript">
+  var oldLoadAp = window.onload;
+  window.onload = function () {
+    oldLoadAp && oldLoadAp();
+
+    new APlayer({
+      container: document.getElementById('aplayer'),
+      fixed: true,
+      autoplay: 'false' === 'true',
+      loop: 'all',
+      order: 'random',
+      theme: '#b7daff',
+      preload: 'none',
+      audio: [{"name":"万有引力","artist":"F_yy","url":"/song/万有引力-F_yy.mp3","cover":"/img/songbg.jpg"},{"name":" Dancin (Krono Remix).mp3","artist":"Aaron Smith _ Luvli ","url":"/song/Aaron Smith _ Luvli - Dancin (Krono Remix).mp3","cover":"/img/songbg.jpg"},{"name":" Ｋ.Ｉ.Ｓ.Ｓ (V0).mp3","artist":"bl00dwave ","url":"/song/bl00dwave - Ｋ.Ｉ.Ｓ.Ｓ (V0).mp3","cover":"/img/songbg.jpg"},{"name":" Asgard.mp3","artist":"Electus ","url":"/song/Electus - Asgard.mp3","cover":"/img/songbg.jpg"},{"name":" Love Story (V0).mp3","artist":"Taylor Swift ","url":"/song/Taylor Swift - Love Story (V0).mp3","cover":"/img/songbg.jpg"},{"name":" Seasons In The Sun (V0).mp3","artist":"Westlife ","url":"http://img.ljh666.xyz/Westlife%20-%20Seasons%20In%20The%20Sun%20%28V0%29.mp3","cover":"/img/songbg.jpg"},{"name":" 只要为你活一天 (V0).mp3","artist":"刘家昌 ","url":"/song/刘家昌 - 只要为你活一天 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 虐心 (V0).mp3","artist":"徐良 _ 孙羽幽 ","url":"/song/徐良 _ 孙羽幽 - 虐心 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 客官不可以 (V0).mp3","artist":"徐良 _ 小凌 ","url":"/song/徐良 _ 小凌 - 客官不可以 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 他的猫 (V0).mp3","artist":"徐良 _ 杨曦 ","url":"/song/徐良 _ 杨曦 - 他的猫 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 口是心非 (V0).mp3","artist":"杨小壮 _ 鹏鹏 ","url":"/song/杨小壮 _ 鹏鹏 - 口是心非 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 你走demo (V0).mp3","artist":"松紧先生（李宗锦） ","url":"/song/松紧先生（李宗锦） - 你走demo (V0).mp3","cover":"/img/songbg.jpg"}]
+    });
+  }
+</script>
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+    </div>
+    
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+    
+  <!-- 备案信息 -->
+  <div class="beian">
+    <a href="http://beian.miit.gov.cn/" target="_blank"
+       rel="nofollow noopener">浙ICP备20007029号</a>
+    
+      <a
+        href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=123456"
+        rel="nofollow noopener"
+        class="beian-police"
+        target="_blank"
+      >
+        <span class="beian-police-sep">&nbsp;|&nbsp;</span>
+        
+          <img src="/img/police_beian.png" srcset="/img/loading.gif" alt="police-icon" />
+        
+        <span>浙公安ICP备</span>
+      </a>
+     
+  </div>
+
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '#post-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "ZooKeeper集群部署&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script>
+      !function (e, t, a) {
+        function r() {
+          for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+          requestAnimationFrame(r)
+        }
+
+        function n() {
+          var t = "function" == typeof e.onclick && e.onclick;
+          e.onclick = function (e) {
+            t && t(), o(e)
+          }
+        }
+
+        function o(e) {
+          var a = t.createElement("div");
+          a.className = "heart", s.push({
+            el: a,
+            x: e.clientX - 5,
+            y: e.clientY - 5,
+            scale: 1,
+            alpha: 1,
+            color: c()
+          }), t.body.appendChild(a)
+        }
+
+        function i(e) {
+          var a = t.createElement("style");
+          a.type = "text/css";
+          try {
+            a.appendChild(t.createTextNode(e))
+          } catch (t) {
+            a.styleSheet.cssText = e
+          }
+          t.getElementsByTagName("head")[0].appendChild(a)
+        }
+
+        function c() {
+          return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+        }
+
+        var s = [];
+        e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+          setTimeout(e, 1e3 / 60)
+        }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+      }(window, document);
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

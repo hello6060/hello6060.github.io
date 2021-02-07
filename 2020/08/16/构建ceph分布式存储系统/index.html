@@ -1,0 +1,933 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;light&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/%E7%82%B9%E8%B5%9E.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <title>构建ceph分布式存储系统 - Hello</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/gradient-dark.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_6peoq002giu.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.0.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>LJH'S BLOG</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('http://img.ljh666.xyz/img/wrench-fan-art-zn-2560x1600.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container page-header text-center fade-in-up">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-08-16 00:01" pubdate>
+      2020年8月16日 凌晨
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.8k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      41
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto" id="post">
+            <!-- SEO header -->
+            <h1 style="display: none">构建ceph分布式存储系统</h1>
+            
+            <div class="markdown-body" id="post-body">
+              <h1 id="构建ceph分布式存储系统"><a href="#构建ceph分布式存储系统" class="headerlink" title="构建ceph分布式存储系统"></a>构建ceph分布式存储系统</h1><h2 id="查阅文献"><a href="#查阅文献" class="headerlink" title="查阅文献"></a>查阅文献</h2><p><a target="_blank" rel="noopener" href="http://www.ljh666.xyz/2020/08/16/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8%E7%9A%84%E4%B8%89%E7%A7%8D%E7%B1%BB%E5%9E%8B/">分布式存储的三种类型</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.51cto.com/haoyou168/83021">linux系统下的磁盘分区</a></p>
+<p><a target="_blank" rel="noopener" href="http://docs.ceph.org.cn/rbd/rados-rbd-cmds/">块设备命令rbd</a></p>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><blockquote>
+<p>Ceph与Swift另外一种最大的不同还在于客户端访问对象存储系统方式。 在Swift中，客户端必须联到Swift网关，这样有出现单点故障的可能。 为了解决这一问题，许多Swift环境为Swift网关实现了高可用性。</p>
+<p>Ceph的存储节点上运行着OSD，Ceph通过OSD能获得存储拓扑图，能通过OSD收集到二进制对象最后找到原始数据，别的部分都是访问运行在客户端上的对象的主要组件，Ceph访问存储的方式不只有单个入口，所以与Swift相比更加灵活。</p>
+</blockquote>
+<blockquote>
+<p>Swift是由Rackspace开发的用来为云计算提供可扩展存储的项目。它是为云而开发的，云原生的，所以它主要的访问方法RESTful API。应用程序绕开操作系统直接去Swif对接。这样做的好处是在云环境中使用时非常方便，但在访问云外的Swift存储时就比较麻烦了。</p>
+</blockquote>
+<h2 id="补充知识"><a href="#补充知识" class="headerlink" title="补充知识"></a>补充知识</h2><ul>
+<li>fdisk只能用于MBR分区，gdisk,parted可以用于GPT分区。</li>
+<li>fdisk大多数运维工作人员已经习惯这个交互模式。</li>
+<li>parted命令在创建删除分区使用命令比较方便，但是功能不是太完善，没有备份还原命令。</li>
+<li>gdisk在分区上命令和fdisk风格一样， 使用方便，学习难度低且功能强大，推荐使用。</li>
+</ul>
+<h2 id="环境介绍"><a href="#环境介绍" class="headerlink" title="环境介绍"></a>环境介绍</h2><table>
+<thead>
+<tr>
+<th align="center">IP地址</th>
+<th>主机名</th>
+<th>节点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">10.10.10.11</td>
+<td>node1</td>
+<td>Monitor/OSD</td>
+</tr>
+<tr>
+<td align="center">10.10.10.12</td>
+<td>node2</td>
+<td>OSD</td>
+</tr>
+<tr>
+<td align="center">10.10.10.13</td>
+<td>node3</td>
+<td>OSD/ceph-client</td>
+</tr>
+</tbody></table>
+<p>配置网易的yum源(或者用国内的提供的ceph官方源)</p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>三个节点都添加一块20G硬盘</p>
+<p>修改主机名</p>
+<div class="hljs"><pre><code class="hljs dsconfig"><span class="hljs-string">hostnamectl </span><span class="hljs-built_in">set-hostname</span> <span class="hljs-string">node1 </span><span class="hljs-comment">##三台都要设置</span></code></pre></div>
+
+
+
+<p>配置yum源(此实验使用本地的两个镜像源)</p>
+<div class="hljs"><pre><code class="hljs ini"><span class="hljs-section">[root@node1 images]</span><span class="hljs-comment"># vim /etc/yum.repos.d/local.repo </span>
+
+<span class="hljs-section">[xiandian]</span>
+<span class="hljs-attr">name</span>=xiandian
+<span class="hljs-attr">baseurl</span>=file:///media/cdrom/iaas-repo/
+<span class="hljs-attr">gpgcheck</span>=<span class="hljs-number">0</span>
+<span class="hljs-attr">enable</span>=<span class="hljs-number">1</span></code></pre></div>
+
+<div class="hljs"><pre><code class="hljs ini"><span class="hljs-section">[root@node2 images]</span><span class="hljs-comment"># vim /etc/yum.repos.d/local.repo</span>
+
+<span class="hljs-section">[xiandian]</span>
+<span class="hljs-attr">name</span>=xiandian
+<span class="hljs-attr">baseurl</span>=ftp://node1/
+<span class="hljs-attr">gpgcheck</span>=<span class="hljs-number">0</span>
+<span class="hljs-attr">enable</span>=<span class="hljs-number">1</span></code></pre></div>
+
+<div class="hljs"><pre><code class="hljs ini"><span class="hljs-section">[root@node3 images]</span><span class="hljs-comment"># vim /etc/yum.repos.d/local.repo</span>
+
+<span class="hljs-section">[xiandian]</span>
+<span class="hljs-attr">name</span>=xiandian
+<span class="hljs-attr">baseurl</span>=ftp://node1/
+<span class="hljs-attr">gpgcheck</span>=<span class="hljs-number">0</span>
+<span class="hljs-attr">enable</span>=<span class="hljs-number">1</span></code></pre></div>
+
+
+
+<p>修改/etc/hosts文件, 添加解析</p>
+<div class="hljs"><pre><code class="hljs accesslog">#ceph
+<span class="hljs-number">10.10.10.11</span> node1
+<span class="hljs-number">10.10.10.12</span> node2
+<span class="hljs-number">10.10.10.13</span> node3</code></pre></div>
+
+
+
+<h2 id="安装ceph"><a href="#安装ceph" class="headerlink" title="安装ceph"></a>安装ceph</h2><p>要部署Ceph集群，需要使用ceph-deploy工具在3台虚拟机上安装和配置Ceph。ceph-deploy是Ceph软件定义存储系统的一部分，用来方便地配置和管理Ceph存储集群。</p>
+<p>在node1节点安装ceph-deploy, 通过node1部署其他节点的ceph</p>
+<div class="hljs"><pre><code class="hljs cmake">yum -y <span class="hljs-keyword">install</span> ceph-deploy</code></pre></div>
+
+<p>创建用来存放ceph-deploy产生文件的目录</p>
+<div class="hljs"><pre><code class="hljs awk">mkdir <span class="hljs-regexp">/etc/</span>ceph
+cd <span class="hljs-regexp">/etc/</span>ceph</code></pre></div>
+
+<p>初始化生成ceph集群</p>
+<div class="hljs"><pre><code class="hljs actionscript">ceph-deploy <span class="hljs-keyword">new</span> node1</code></pre></div>
+
+<blockquote>
+<p>其中node1为主机名 </p>
+</blockquote>
+<div class="hljs"><pre><code class="hljs css"><span class="hljs-selector-attr">[root@node1 ceph]</span># <span class="hljs-selector-tag">ls</span>
+<span class="hljs-selector-tag">ceph</span><span class="hljs-selector-class">.conf</span>  <span class="hljs-selector-tag">ceph</span><span class="hljs-selector-class">.log</span>  <span class="hljs-selector-tag">ceph</span><span class="hljs-selector-class">.mon</span><span class="hljs-selector-class">.keyring</span></code></pre></div>
+
+<p>使用ceph-deploy工具在所有节点上安装ceph二进制软件包</p>
+<div class="hljs"><pre><code class="hljs apache"><span class="hljs-attribute">ceph</span>-deploy install node<span class="hljs-number">1</span> node<span class="hljs-number">2</span> node<span class="hljs-number">3</span></code></pre></div>
+
+<p>但这里报错了, 原因是找不到ceph-release的安装包</p>
+<p>使用网易的ceph源重新安装ceph-deploy(目前源为163源加网易ceph源)</p>
+<p>在各节点查看是否安装成功</p>
+<div class="hljs"><pre><code class="hljs ebnf"><span class="hljs-attribute">ceph -v</span></code></pre></div>
+
+<p>在node1节点创建一个monitor</p>
+<div class="hljs"><pre><code class="hljs autoit">[root<span class="hljs-symbol">@node1</span> ceph]<span class="hljs-meta"># ceph-deploy --overwrite-conf mon create-initial</span></code></pre></div>
+
+<blockquote>
+<p>–overwrite-conf</p>
+<p>覆盖远程主机上的现有conf文件（如果存在）。</p>
+</blockquote>
+<p>Monitor创建成功后，检查集群的状态，这个时候Ceph集群并不处于健康状态。</p>
+<div class="hljs"><pre><code class="hljs ebnf"><span class="hljs-attribute">ceph -s</span></code></pre></div>
+
+<h2 id="创建OSD"><a href="#创建OSD" class="headerlink" title="创建OSD"></a>创建OSD</h2><p>列出ceph-node1上所有的可用磁盘。(不看也没事, 用lsblk也一样)</p>
+<div class="hljs"><pre><code class="hljs apache"><span class="hljs-attribute">ceph</span>-deploy disk list node<span class="hljs-number">1</span></code></pre></div>
+
+<p>创建共享磁盘，3个节点都要执行。首先对系统上的空闲硬盘进行分区、格式化、挂载的操作。</p>
+<p>使用parted工具，对/dev/sdd进行分区，首先使用mklabel命令改变该盘的卷标为gpt，然后使用mkpart命令，将所有的空间都分给/dev/sdd</p>
+<p><strong>操作例子:</strong></p>
+<div class="hljs"><pre><code class="hljs routeros">[root@node1 ceph]# parted /dev/sdd
+GNU Parted 3.1
+使用 /dev/sdd
+Welcome <span class="hljs-keyword">to</span> GNU Parted!<span class="hljs-built_in"> Type </span><span class="hljs-string">&#x27;help&#x27;</span> <span class="hljs-keyword">to</span> view a list of commands.
+(parted) p                                                                
+Model: VMware, VMware Virtual S (scsi)
+Disk /dev/sdd: 21.5GB
+Sector size (logical/physical): 512B/512B
+Partition Table: unkown
+Disk Flags: 
+
+Number  Start  End  Size <span class="hljs-built_in"> Type </span> File<span class="hljs-built_in"> system </span> 标志
+
+(parted) mklabel   ####创建分区标志
+新的磁盘标签类型？ gpt                                                    
+警告: The existing disk label on /dev/sdd will be destroyed <span class="hljs-keyword">and</span> all data on this disk will
+be lost. <span class="hljs-keyword">Do</span> you want <span class="hljs-keyword">to</span> continue?
+是/<span class="hljs-literal">Yes</span>/否/<span class="hljs-literal">No</span>? <span class="hljs-literal">yes</span>                                                         
+(parted) p                                                                
+Model: VMware, VMware Virtual S (scsi)
+Disk /dev/sdd: 21.5GB
+Sector size (logical/physical): 512B/512B
+Partition Table: gpt
+Disk Flags: 
+
+Number  Start  End  Size  File<span class="hljs-built_in"> system </span> Name  标志
+
+(parted) mkpart          ####创建分区                                                 
+分区名称？  []?                                                           
+文件系统类型？  [ext2]?                                                   
+起始点？ 0%                                                               
+结束点？ 100%                                                             
+(parted) p                                                                
+Model: VMware, VMware Virtual S (scsi)
+Disk /dev/sdd: 21.5GB
+Sector size (logical/physical): 512B/512B
+Partition Table: gpt
+Disk Flags: 
+
+Number  Start   End     Size    File<span class="hljs-built_in"> system </span> Name  标志
+ 1      1049kB  21.5GB  21.5GB
+
+(parted) q                                                                
+信息: You may need <span class="hljs-keyword">to</span> update /etc/fstab.</code></pre></div>
+
+<p>可以使用lsblk命令，查看分区情况：</p>
+<div class="hljs"><pre><code class="hljs angelscript">[<span class="hljs-symbol">root@</span>node1 ceph]# lsblk                                                  
+NAME            MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda               <span class="hljs-number">8</span>:<span class="hljs-number">0</span>    <span class="hljs-number">0</span>  <span class="hljs-number">100</span>G  <span class="hljs-number">0</span> disk 
+├─sda1            <span class="hljs-number">8</span>:<span class="hljs-number">1</span>    <span class="hljs-number">0</span>    <span class="hljs-number">1</span>G  <span class="hljs-number">0</span> part /boot
+└─sda2            <span class="hljs-number">8</span>:<span class="hljs-number">2</span>    <span class="hljs-number">0</span>   <span class="hljs-number">99</span>G  <span class="hljs-number">0</span> part 
+  ├─centos-root <span class="hljs-number">253</span>:<span class="hljs-number">0</span>    <span class="hljs-number">0</span>   <span class="hljs-number">50</span>G  <span class="hljs-number">0</span> lvm  /
+  ├─centos-swap <span class="hljs-number">253</span>:<span class="hljs-number">1</span>    <span class="hljs-number">0</span>    <span class="hljs-number">2</span>G  <span class="hljs-number">0</span> lvm  [SWAP]
+  └─centos-home <span class="hljs-number">253</span>:<span class="hljs-number">2</span>    <span class="hljs-number">0</span>   <span class="hljs-number">47</span>G  <span class="hljs-number">0</span> lvm  /home
+sdb               <span class="hljs-number">8</span>:<span class="hljs-number">16</span>   <span class="hljs-number">0</span>   <span class="hljs-number">20</span>G  <span class="hljs-number">0</span> disk 
+├─sdb1            <span class="hljs-number">8</span>:<span class="hljs-number">17</span>   <span class="hljs-number">0</span>    <span class="hljs-number">5</span>G  <span class="hljs-number">0</span> part 
+├─sdb2            <span class="hljs-number">8</span>:<span class="hljs-number">18</span>   <span class="hljs-number">0</span>    <span class="hljs-number">5</span>G  <span class="hljs-number">0</span> part 
+└─sdb3            <span class="hljs-number">8</span>:<span class="hljs-number">19</span>   <span class="hljs-number">0</span>    <span class="hljs-number">5</span>G  <span class="hljs-number">0</span> part 
+sdc               <span class="hljs-number">8</span>:<span class="hljs-number">32</span>   <span class="hljs-number">0</span>   <span class="hljs-number">20</span>G  <span class="hljs-number">0</span> disk 
+sdd               <span class="hljs-number">8</span>:<span class="hljs-number">48</span>   <span class="hljs-number">0</span>   <span class="hljs-number">20</span>G  <span class="hljs-number">0</span> disk 
+└─sdd1  ##创建的分区<span class="hljs-number">8</span>:<span class="hljs-number">49</span>   <span class="hljs-number">0</span>   <span class="hljs-number">20</span>G  <span class="hljs-number">0</span> part 
+sr0              <span class="hljs-number">11</span>:<span class="hljs-number">0</span>    <span class="hljs-number">1</span> <span class="hljs-number">10.3</span>G  <span class="hljs-number">0</span> rom  /mnt/cdrom
+loop0             <span class="hljs-number">7</span>:<span class="hljs-number">0</span>    <span class="hljs-number">0</span>  <span class="hljs-number">2.7</span>G  <span class="hljs-number">0</span> loop /media/cdrom</code></pre></div>
+
+<p>接下来使用命令对分区进行格式化，创建一个目录叫/opt/osd1，挂载分区到目录，最后</p>
+<p> 将该目录的权限提升到777。</p>
+<div class="hljs"><pre><code class="hljs routeros">[root@node1 ceph]# mkfs.xfs /dev/sdd1
+<span class="hljs-attribute">meta-data</span>=/dev/sdd1              <span class="hljs-attribute">isize</span>=512    <span class="hljs-attribute">agcount</span>=4, <span class="hljs-attribute">agsize</span>=1310592 blks
+         =                       <span class="hljs-attribute">sectsz</span>=512   <span class="hljs-attribute">attr</span>=2, <span class="hljs-attribute">projid32bit</span>=1
+         =                       <span class="hljs-attribute">crc</span>=1        <span class="hljs-attribute">finobt</span>=0, <span class="hljs-attribute">sparse</span>=0
+data     =                       <span class="hljs-attribute">bsize</span>=4096   <span class="hljs-attribute">blocks</span>=5242368, <span class="hljs-attribute">imaxpct</span>=25
+         =                       <span class="hljs-attribute">sunit</span>=0      <span class="hljs-attribute">swidth</span>=0 blks
+naming   =version 2              <span class="hljs-attribute">bsize</span>=4096   <span class="hljs-attribute">ascii-ci</span>=0 <span class="hljs-attribute">ftype</span>=1
+log      =internal log           <span class="hljs-attribute">bsize</span>=4096   <span class="hljs-attribute">blocks</span>=2560, <span class="hljs-attribute">version</span>=2
+         =                       <span class="hljs-attribute">sectsz</span>=512   <span class="hljs-attribute">sunit</span>=0 blks, <span class="hljs-attribute">lazy-count</span>=1
+realtime =none                   <span class="hljs-attribute">extsz</span>=4096   <span class="hljs-attribute">blocks</span>=0, <span class="hljs-attribute">rtextents</span>=0</code></pre></div>
+
+<div class="hljs"><pre><code class="hljs angelscript">[<span class="hljs-symbol">root@</span>node1 ceph]# mkdir /opt/osd1
+[<span class="hljs-symbol">root@</span>node1 ceph]# mount /dev/sdd1 /opt/osd1
+[<span class="hljs-symbol">root@</span>node1 ceph]# df -h
+文件系统                 容量  已用  可用 已用% 挂载点
+devtmpfs                 <span class="hljs-number">898</span>M     <span class="hljs-number">0</span>  <span class="hljs-number">898</span>M    <span class="hljs-number">0</span>% /dev
+tmpfs                    <span class="hljs-number">910</span>M     <span class="hljs-number">0</span>  <span class="hljs-number">910</span>M    <span class="hljs-number">0</span>% /dev/shm
+tmpfs                    <span class="hljs-number">910</span>M  <span class="hljs-number">9.8</span>M  <span class="hljs-number">900</span>M    <span class="hljs-number">2</span>% /run
+tmpfs                    <span class="hljs-number">910</span>M     <span class="hljs-number">0</span>  <span class="hljs-number">910</span>M    <span class="hljs-number">0</span>% /sys/fs/cgroup
+/dev/mapper/centos-root   <span class="hljs-number">50</span>G  <span class="hljs-number">5.3</span>G   <span class="hljs-number">45</span>G   <span class="hljs-number">11</span>% /
+/dev/sr0                  <span class="hljs-number">11</span>G   <span class="hljs-number">11</span>G     <span class="hljs-number">0</span>  <span class="hljs-number">100</span>% /mnt/cdrom
+/dev/loop0               <span class="hljs-number">2.7</span>G  <span class="hljs-number">2.7</span>G     <span class="hljs-number">0</span>  <span class="hljs-number">100</span>% /media/cdrom
+/dev/mapper/centos-home   <span class="hljs-number">47</span>G   <span class="hljs-number">33</span>M   <span class="hljs-number">47</span>G    <span class="hljs-number">1</span>% /home
+/dev/sda1               <span class="hljs-number">1014</span>M  <span class="hljs-number">150</span>M  <span class="hljs-number">865</span>M   <span class="hljs-number">15</span>% /boot
+overlay                   <span class="hljs-number">50</span>G  <span class="hljs-number">5.3</span>G   <span class="hljs-number">45</span>G   <span class="hljs-number">11</span>% /var/lib/docker/overlay2/<span class="hljs-number">09</span>ad5cd00825e0cfd09690b6b5d64034055924b3ab1a83be414f67f748cd08ac/merged
+shm                       <span class="hljs-number">64</span>M     <span class="hljs-number">0</span>   <span class="hljs-number">64</span>M    <span class="hljs-number">0</span>% /var/lib/docker/containers/<span class="hljs-number">994</span>a0e297cae8d2b517a13d69b9d8c19265cee622d49211f231ea9286526b523/shm
+tmpfs                    <span class="hljs-number">182</span>M     <span class="hljs-number">0</span>  <span class="hljs-number">182</span>M    <span class="hljs-number">0</span>% /run/user/<span class="hljs-number">0</span>
+/dev/sdd1                 <span class="hljs-number">20</span>G   <span class="hljs-number">33</span>M   <span class="hljs-number">20</span>G    <span class="hljs-number">1</span>% /opt/osd1
+[<span class="hljs-symbol">root@</span>node1 ceph]# chmod <span class="hljs-number">777</span> /opt/osd1</code></pre></div>
+
+<p><strong>另外两个节点做相同操作</strong></p>
+<h2 id="激活OSD"><a href="#激活OSD" class="headerlink" title="激活OSD"></a>激活OSD</h2><h3 id="初始化上面创建的osd"><a href="#初始化上面创建的osd" class="headerlink" title="初始化上面创建的osd"></a>初始化上面创建的osd</h3><p>在node1节点运行命令</p>
+<div class="hljs"><pre><code class="hljs typescript">[root<span class="hljs-meta">@node1</span> ceph]# ceph-deploy osd prepare node1:<span class="hljs-regexp">/opt/</span>osd1 node2:<span class="hljs-regexp">/opt/</span>osd1 node3:<span class="hljs-regexp">/opt/</span>osd1</code></pre></div>
+
+<h3 id="激活OSD节点"><a href="#激活OSD节点" class="headerlink" title="激活OSD节点"></a>激活OSD节点</h3><div class="hljs"><pre><code class="hljs typescript">[root<span class="hljs-meta">@node1</span> ceph]# ceph-deploy osd activate node1:<span class="hljs-regexp">/opt/</span>osd1  node2:<span class="hljs-regexp">/opt/</span>osd1  node3:<span class="hljs-regexp">/opt/</span>osd1</code></pre></div>
+
+<h2 id="检查ceph集群状态"><a href="#检查ceph集群状态" class="headerlink" title="检查ceph集群状态"></a>检查ceph集群状态</h2><div class="hljs"><pre><code class="hljs angelscript">[<span class="hljs-symbol">root@</span>node1 ceph]# ceph -s
+    cluster <span class="hljs-number">13</span>d859cc-a311<span class="hljs-number">-4152</span><span class="hljs-number">-9</span>ba1-a2542b7a2773
+     health HEALTH_OK   ####显示状态为正常
+     monmap e1: <span class="hljs-number">1</span> mons at &#123;node1=<span class="hljs-number">10.10</span><span class="hljs-number">.10</span><span class="hljs-number">.11</span>:<span class="hljs-number">6789</span>/<span class="hljs-number">0</span>&#125;
+            election epoch <span class="hljs-number">1</span>, quorum <span class="hljs-number">0</span> node1
+     osdmap e13: <span class="hljs-number">3</span> osds: <span class="hljs-number">3</span> up, <span class="hljs-number">3</span> <span class="hljs-keyword">in</span>
+      pgmap v24: <span class="hljs-number">64</span> pgs, <span class="hljs-number">1</span> pools, <span class="hljs-number">0</span> bytes data, <span class="hljs-number">0</span> objects
+            <span class="hljs-number">15533</span> MB used, <span class="hljs-number">45870</span> MB / <span class="hljs-number">61404</span> MB avail
+                  <span class="hljs-number">64</span> active+clean</code></pre></div>
+
+<p>开放权限给其他节点，进行<strong>灾备处理</strong>。</p>
+<div class="hljs"><pre><code class="hljs angelscript">[<span class="hljs-symbol">root@</span>node1 ceph]# ceph-deploy admin node&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>&#125;</code></pre></div>
+
+<h2 id="Ceph集群运维"><a href="#Ceph集群运维" class="headerlink" title="Ceph集群运维"></a>Ceph集群运维</h2><p>检查ceph安装状态</p>
+<p>观察集群的健康状况</p>
+<p>检查ceph monitor仲裁状态</p>
+<p>导出ceph monitor 信息</p>
+<p>检查集群使用状态</p>
+<p>检查ceph monitor; osd和PG(配置组)状态</p>
+<div class="hljs"><pre><code class="hljs angelscript">[<span class="hljs-symbol">root@</span>node1 ceph]# ceph mon stat
+e1: <span class="hljs-number">1</span> mons at &#123;node1=<span class="hljs-number">10.10</span><span class="hljs-number">.10</span><span class="hljs-number">.11</span>:<span class="hljs-number">6789</span>/<span class="hljs-number">0</span>&#125;, election epoch <span class="hljs-number">1</span>, quorum <span class="hljs-number">0</span> node1
+[<span class="hljs-symbol">root@</span>node1 ceph]# ceph osd stat
+     osdmap e13: <span class="hljs-number">3</span> osds: <span class="hljs-number">3</span> up, <span class="hljs-number">3</span> <span class="hljs-keyword">in</span>
+[<span class="hljs-symbol">root@</span>node1 ceph]# ceph pg stat
+v24: <span class="hljs-number">64</span> pgs: <span class="hljs-number">64</span> active+clean; <span class="hljs-number">0</span> bytes data, <span class="hljs-number">15533</span> MB used, <span class="hljs-number">45870</span> MB / <span class="hljs-number">61404</span> MB avail</code></pre></div>
+
+<p>列表PG</p>
+<p>列表ceph存储池</p>
+<p>检查osd的crush</p>
+<p>列表群的认证秘钥</p>
+<h2 id="Ceph集群的使用"><a href="#Ceph集群的使用" class="headerlink" title="Ceph集群的使用"></a>Ceph集群的使用</h2><p><code>rbd</code> 命令可用于创建、罗列、内省和删除块设备映像，也可克隆映像、创建快照、回滚快照、查看快照等等。 <code>rbd</code> 命令用法详情见 <a target="_blank" rel="noopener" href="http://docs.ceph.org.cn/man/8/rbd/">RBD – 管理 RADOS 块设备映像</a>。</p>
+<p>由于提供的主机有限, 这里利用node3作为ceph-client</p>
+<p>ceph-client做相同的准备工作(如果是一个新主机的话, 这里不用重复做了)</p>
+<p>在ceph-node1上，用  ceph-deploy工具把Ceph 配置文件和  ceph.client.admin.keyring拷贝到ceph-client。ceph-deploy工具会把密钥环复制到/etc/ceph目录，要确保此密钥环文件有读权限（如sudo chmod +r /etc/ceph/ceph.client.admin.keyring）。&lt;—–(所以这里不用执行下面这些命令了)</p>
+<div class="hljs"><pre><code class="hljs apache"><span class="hljs-attribute">ceph</span>-deploy install node<span class="hljs-number">3</span></code></pre></div>
+
+<div class="hljs"><pre><code class="hljs apache"><span class="hljs-attribute">ceph</span>-deploy admin node<span class="hljs-number">3</span></code></pre></div>
+
+
+
+<p>ceph客户端的使用</p>
+<p>在ceph-client节点创建块设备, <strong>名字叫foo</strong></p>
+<div class="hljs"><pre><code class="hljs angelscript">[<span class="hljs-symbol">root@</span>node3 ~]# rbd create foo --size <span class="hljs-number">1028</span> -m <span class="hljs-number">10.10</span><span class="hljs-number">.10</span><span class="hljs-number">.11</span> -k /etc/ceph/ceph.client.admin.keyring</code></pre></div>
+
+<blockquote>
+<p>-m: monitor</p>
+<p>-k: keyring </p>
+</blockquote>
+<p>映射</p>
+<div class="hljs"><pre><code class="hljs angelscript">[<span class="hljs-symbol">root@</span>node3 ~]# rbd map foo --name client.admin -m <span class="hljs-number">10.10</span><span class="hljs-number">.10</span><span class="hljs-number">.11</span> -k /etc/ceph/ceph.client.admin.keyring 
+
+/dev/rbd0</code></pre></div>
+
+<div class="hljs"><pre><code class="hljs angelscript">[<span class="hljs-symbol">root@</span>node3 ~]# lsblk
+NAME            MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda               <span class="hljs-number">8</span>:<span class="hljs-number">0</span>    <span class="hljs-number">0</span>  <span class="hljs-number">100</span>G  <span class="hljs-number">0</span> disk 
+├─sda1            <span class="hljs-number">8</span>:<span class="hljs-number">1</span>    <span class="hljs-number">0</span>    <span class="hljs-number">1</span>G  <span class="hljs-number">0</span> part /boot
+└─sda2            <span class="hljs-number">8</span>:<span class="hljs-number">2</span>    <span class="hljs-number">0</span>   <span class="hljs-number">99</span>G  <span class="hljs-number">0</span> part 
+  ├─centos-root <span class="hljs-number">253</span>:<span class="hljs-number">0</span>    <span class="hljs-number">0</span>   <span class="hljs-number">50</span>G  <span class="hljs-number">0</span> lvm  /
+  ├─centos-swap <span class="hljs-number">253</span>:<span class="hljs-number">1</span>    <span class="hljs-number">0</span>    <span class="hljs-number">2</span>G  <span class="hljs-number">0</span> lvm  [SWAP]
+  └─centos-home <span class="hljs-number">253</span>:<span class="hljs-number">2</span>    <span class="hljs-number">0</span>   <span class="hljs-number">47</span>G  <span class="hljs-number">0</span> lvm  /home
+sdb               <span class="hljs-number">8</span>:<span class="hljs-number">16</span>   <span class="hljs-number">0</span>   <span class="hljs-number">20</span>G  <span class="hljs-number">0</span> disk 
+sdc               <span class="hljs-number">8</span>:<span class="hljs-number">32</span>   <span class="hljs-number">0</span>   <span class="hljs-number">20</span>G  <span class="hljs-number">0</span> disk 
+└─sdc1            <span class="hljs-number">8</span>:<span class="hljs-number">33</span>   <span class="hljs-number">0</span>   <span class="hljs-number">20</span>G  <span class="hljs-number">0</span> part /opt/osd1
+sr0              <span class="hljs-number">11</span>:<span class="hljs-number">0</span>    <span class="hljs-number">1</span> <span class="hljs-number">10.3</span>G  <span class="hljs-number">0</span> rom  /mnt/cdrom
+rbd0  ##映射成功   <span class="hljs-number">252</span>:<span class="hljs-number">0</span>    <span class="hljs-number">0</span>    <span class="hljs-number">1</span>G  <span class="hljs-number">0</span> disk</code></pre></div>
+
+<p>格式化&amp;挂载</p>
+<div class="hljs"><pre><code class="hljs angelscript">[<span class="hljs-symbol">root@</span>node3 ~]# mount /dev/rbd0 /mnt
+[<span class="hljs-symbol">root@</span>node3 ~]# df -h
+文件系统                 容量  已用  可用 已用% 挂载点
+devtmpfs                 <span class="hljs-number">898</span>M     <span class="hljs-number">0</span>  <span class="hljs-number">898</span>M    <span class="hljs-number">0</span>% /dev
+tmpfs                    <span class="hljs-number">910</span>M     <span class="hljs-number">0</span>  <span class="hljs-number">910</span>M    <span class="hljs-number">0</span>% /dev/shm
+tmpfs                    <span class="hljs-number">910</span>M  <span class="hljs-number">9.6</span>M  <span class="hljs-number">901</span>M    <span class="hljs-number">2</span>% /run
+tmpfs                    <span class="hljs-number">910</span>M     <span class="hljs-number">0</span>  <span class="hljs-number">910</span>M    <span class="hljs-number">0</span>% /sys/fs/cgroup
+/dev/mapper/centos-root   <span class="hljs-number">50</span>G  <span class="hljs-number">1.8</span>G   <span class="hljs-number">49</span>G    <span class="hljs-number">4</span>% /
+/dev/sda1               <span class="hljs-number">1014</span>M  <span class="hljs-number">150</span>M  <span class="hljs-number">865</span>M   <span class="hljs-number">15</span>% /boot
+/dev/mapper/centos-home   <span class="hljs-number">47</span>G   <span class="hljs-number">33</span>M   <span class="hljs-number">47</span>G    <span class="hljs-number">1</span>% /home
+tmpfs                    <span class="hljs-number">182</span>M     <span class="hljs-number">0</span>  <span class="hljs-number">182</span>M    <span class="hljs-number">0</span>% /run/user/<span class="hljs-number">0</span>
+/dev/sdc1                 <span class="hljs-number">20</span>G  <span class="hljs-number">5.1</span>G   <span class="hljs-number">15</span>G   <span class="hljs-number">26</span>% /opt/osd1
+/dev/rbd0               <span class="hljs-number">1018</span>M   <span class="hljs-number">33</span>M  <span class="hljs-number">986</span>M    <span class="hljs-number">4</span>% /mnt   ## 挂载成功</code></pre></div>
+
+<p>创建块设备的顺序是，在ceph-client节点上使用rbd create命令创建一个块设备image，然后用rbd map命令把image映射为块设备，最后对映射出来的/dev/rbd0格式化并挂载。就可以当成普通了块设备使用了。</p>
+<p>调整ceph块设备映像的大小</p>
+<div class="hljs"><pre><code class="hljs nginx"><span class="hljs-attribute">rdb</span> <span class="hljs-literal">info</span> foo</code></pre></div>
+
+<div class="hljs"><pre><code class="hljs gradle">rdb resize --<span class="hljs-keyword">size</span> <span class="hljs-number">2048</span> foo
+resizefs <span class="hljs-regexp">/dev/</span>rdb0</code></pre></div>
+
+<div class="hljs"><pre><code class="hljs ebnf"><span class="hljs-attribute">df -h</span></code></pre></div>
+
+<p>卸载块设备, 删除块设备</p>
+<div class="hljs"><pre><code class="hljs properties"><span class="hljs-attr">umount</span> <span class="hljs-string">/mnt</span>
+<span class="hljs-attr">rbd</span> <span class="hljs-string">rm foo</span></code></pre></div>
+
+<h2 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h2><h2 id="错误记录"><a href="#错误记录" class="headerlink" title="错误记录"></a>错误记录</h2><p>操作: 初始化生成ceph集群</p>
+<p>错误:</p>
+<div class="hljs"><pre><code class="hljs markdown">[root@xserver1 ceph]# ceph-deploy new node1
+[<span class="hljs-string">ceph_deploy.conf</span>][<span class="hljs-symbol">DEBUG </span>] found configuration file at: /root/.cephdeploy.conf
+[<span class="hljs-string">ceph_deploy.cli</span>][<span class="hljs-symbol">INFO  </span>] Invoked (1.5.25): /usr/bin/ceph-deploy new node1
+[<span class="hljs-string">ceph_deploy.new</span>][<span class="hljs-symbol">DEBUG </span>] Creating new cluster named ceph
+[<span class="hljs-string">ceph_deploy.new</span>][<span class="hljs-symbol">INFO  </span>] making sure passwordless SSH succeeds
+[<span class="hljs-string">ceph_deploy</span>][<span class="hljs-symbol">ERROR </span>] Traceback (most recent call last):
+[<span class="hljs-string">ceph_deploy</span>][<span class="hljs-symbol">ERROR </span>]   File &quot;/usr/lib/python2.7/site-packages/ceph<span class="hljs-emphasis">_deploy/util/decorators.py&quot;, line 69, in newfunc</span>
+<span class="hljs-emphasis">[<span class="hljs-string">ceph_deploy</span>][<span class="hljs-symbol">ERROR </span>]     return f(*a, <span class="hljs-strong">**kw)</span></span>
+<span class="hljs-emphasis"><span class="hljs-strong">[<span class="hljs-string">ceph_deploy</span>][<span class="hljs-symbol">ERROR </span>]   File &quot;/usr/lib/python2.7/site-packages/ceph<span class="hljs-emphasis">_deploy/cli.py&quot;, line 162, in _</span>main</span></span>
+<span class="hljs-emphasis"><span class="hljs-strong">[<span class="hljs-string">ceph_deploy</span>][<span class="hljs-symbol">ERROR </span>]     return args.func(args)</span></span>
+<span class="hljs-emphasis"><span class="hljs-strong">[<span class="hljs-string">ceph_deploy</span>][<span class="hljs-symbol">ERROR </span>]   File &quot;/usr/lib/python2.7/site-packages/ceph<span class="hljs-emphasis">_deploy/new.py&quot;, line 141, in new</span></span></span>
+<span class="hljs-emphasis"><span class="hljs-strong"><span class="hljs-emphasis">[<span class="hljs-string">ceph_deploy</span>][<span class="hljs-symbol">ERROR </span>]     ssh_</span>copy<span class="hljs-emphasis">_keys(host, args.username)</span></span></span>
+<span class="hljs-emphasis"><span class="hljs-strong"><span class="hljs-emphasis">[<span class="hljs-string">ceph_deploy</span>][<span class="hljs-symbol">ERROR </span>]   File &quot;/usr/lib/python2.7/site-packages/ceph_</span>deploy/new.py&quot;, line 35, in ssh<span class="hljs-emphasis">_copy_</span>keys</span></span>
+<span class="hljs-emphasis"><span class="hljs-strong">[<span class="hljs-string">ceph_deploy</span>][<span class="hljs-symbol">ERROR </span>]     if ssh.can<span class="hljs-emphasis">_connect_</span>passwordless(hostname):</span></span>
+<span class="hljs-emphasis"><span class="hljs-strong">[<span class="hljs-string">ceph_deploy</span>][<span class="hljs-symbol">ERROR </span>]   File &quot;/usr/lib/python2.7/site-packages/ceph<span class="hljs-emphasis">_deploy/util/ssh.py&quot;, line 15, in can_</span>connect<span class="hljs-emphasis">_passwordless</span></span></span>
+<span class="hljs-emphasis"><span class="hljs-strong"><span class="hljs-emphasis">[<span class="hljs-string">ceph_deploy</span>][<span class="hljs-symbol">ERROR </span>]     if not remoto.connection.needs_</span>ssh(hostname):</span></span>
+<span class="hljs-emphasis"><span class="hljs-strong">[<span class="hljs-string">ceph_deploy</span>][<span class="hljs-symbol">ERROR </span>] AttributeError: &#x27;module&#x27; object has no attribute &#x27;needs<span class="hljs-emphasis">_ssh&#x27;</span></span></span>
+<span class="hljs-emphasis"><span class="hljs-strong"><span class="hljs-emphasis">[<span class="hljs-string">ceph_deploy</span>][<span class="hljs-symbol">ERROR </span>] </span></span></span></code></pre></div>
+
+<p>解决:</p>
+<p>升级python的remote库</p>
+<div class="hljs"><pre><code class="hljs sql">pip <span class="hljs-keyword">install</span> <span class="hljs-comment">--upgrade remoto</span></code></pre></div>
+
+<p>查阅的文章:</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://pypi.org/project/remoto/">https://pypi.org/project/remoto/</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://bugzilla.redhat.com/show_bug.cgi?id=1662496">https://bugzilla.redhat.com/show_bug.cgi?id=1662496</a></p>
+</li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%AD%E7%BA%A7/">云计算中级</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Linux/">Linux</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Centos/">Centos</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%A7%81%E6%9C%89%E4%BA%91/">私有云</a>
+                    
+                      <a class="hover-with-bg" href="/tags/openstack/">openstack</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8/">分布式存储</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Ceph/">Ceph</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/08/16/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8%E7%9A%84%E4%B8%89%E7%A7%8D%E7%B1%BB%E5%9E%8B/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">分布式存储的三种类型</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/08/06/ZooKeeper%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/">
+                        <span class="hidden-mobile">ZooKeeper集群部署</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+    <!-- APlayer 音乐播放器 -->
+    <div id="aplayer"></div>
+    <script defer src="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.js" ></script>
+<link  rel="stylesheet" href="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.css" />
+<script type="text/javascript">
+  var oldLoadAp = window.onload;
+  window.onload = function () {
+    oldLoadAp && oldLoadAp();
+
+    new APlayer({
+      container: document.getElementById('aplayer'),
+      fixed: true,
+      autoplay: 'false' === 'true',
+      loop: 'all',
+      order: 'random',
+      theme: '#b7daff',
+      preload: 'none',
+      audio: [{"name":"万有引力","artist":"F_yy","url":"/song/万有引力-F_yy.mp3","cover":"/img/songbg.jpg"},{"name":" Dancin (Krono Remix).mp3","artist":"Aaron Smith _ Luvli ","url":"/song/Aaron Smith _ Luvli - Dancin (Krono Remix).mp3","cover":"/img/songbg.jpg"},{"name":" Ｋ.Ｉ.Ｓ.Ｓ (V0).mp3","artist":"bl00dwave ","url":"/song/bl00dwave - Ｋ.Ｉ.Ｓ.Ｓ (V0).mp3","cover":"/img/songbg.jpg"},{"name":" Asgard.mp3","artist":"Electus ","url":"/song/Electus - Asgard.mp3","cover":"/img/songbg.jpg"},{"name":" Love Story (V0).mp3","artist":"Taylor Swift ","url":"/song/Taylor Swift - Love Story (V0).mp3","cover":"/img/songbg.jpg"},{"name":" Seasons In The Sun (V0).mp3","artist":"Westlife ","url":"http://img.ljh666.xyz/Westlife%20-%20Seasons%20In%20The%20Sun%20%28V0%29.mp3","cover":"/img/songbg.jpg"},{"name":" 只要为你活一天 (V0).mp3","artist":"刘家昌 ","url":"/song/刘家昌 - 只要为你活一天 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 虐心 (V0).mp3","artist":"徐良 _ 孙羽幽 ","url":"/song/徐良 _ 孙羽幽 - 虐心 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 客官不可以 (V0).mp3","artist":"徐良 _ 小凌 ","url":"/song/徐良 _ 小凌 - 客官不可以 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 他的猫 (V0).mp3","artist":"徐良 _ 杨曦 ","url":"/song/徐良 _ 杨曦 - 他的猫 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 口是心非 (V0).mp3","artist":"杨小壮 _ 鹏鹏 ","url":"/song/杨小壮 _ 鹏鹏 - 口是心非 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 你走demo (V0).mp3","artist":"松紧先生（李宗锦） ","url":"/song/松紧先生（李宗锦） - 你走demo (V0).mp3","cover":"/img/songbg.jpg"}]
+    });
+  }
+</script>
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+    </div>
+    
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+    
+  <!-- 备案信息 -->
+  <div class="beian">
+    <a href="http://beian.miit.gov.cn/" target="_blank"
+       rel="nofollow noopener">浙ICP备20007029号</a>
+    
+      <a
+        href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=123456"
+        rel="nofollow noopener"
+        class="beian-police"
+        target="_blank"
+      >
+        <span class="beian-police-sep">&nbsp;|&nbsp;</span>
+        
+          <img src="/img/police_beian.png" srcset="/img/loading.gif" alt="police-icon" />
+        
+        <span>浙公安ICP备</span>
+      </a>
+     
+  </div>
+
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '#post-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "构建ceph分布式存储系统&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script>
+      !function (e, t, a) {
+        function r() {
+          for (var e = 0; e < s.length; e++) s[e].alpha <= 0 ? (t.body.removeChild(s[e].el), s.splice(e, 1)) : (s[e].y--, s[e].scale += .004, s[e].alpha -= .013, s[e].el.style.cssText = "left:" + s[e].x + "px;top:" + s[e].y + "px;opacity:" + s[e].alpha + ";transform:scale(" + s[e].scale + "," + s[e].scale + ") rotate(45deg);background:" + s[e].color + ";z-index:99999");
+          requestAnimationFrame(r)
+        }
+
+        function n() {
+          var t = "function" == typeof e.onclick && e.onclick;
+          e.onclick = function (e) {
+            t && t(), o(e)
+          }
+        }
+
+        function o(e) {
+          var a = t.createElement("div");
+          a.className = "heart", s.push({
+            el: a,
+            x: e.clientX - 5,
+            y: e.clientY - 5,
+            scale: 1,
+            alpha: 1,
+            color: c()
+          }), t.body.appendChild(a)
+        }
+
+        function i(e) {
+          var a = t.createElement("style");
+          a.type = "text/css";
+          try {
+            a.appendChild(t.createTextNode(e))
+          } catch (t) {
+            a.styleSheet.cssText = e
+          }
+          t.getElementsByTagName("head")[0].appendChild(a)
+        }
+
+        function c() {
+          return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+        }
+
+        var s = [];
+        e.requestAnimationFrame = e.requestAnimationFrame || e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (e) {
+          setTimeout(e, 1e3 / 60)
+        }, i(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}"), n(), r()
+      }(window, document);
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
