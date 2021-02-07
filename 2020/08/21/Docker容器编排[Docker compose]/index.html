@@ -1,317 +1,99 @@
+
 <!DOCTYPE html>
-
-
-
-  
-
-
-<html class="theme-next muse use-motion" lang="zh-CN">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<meta name="theme-color" content="#222">
-
-
-
-
-
-
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
-
-
-
-
-
-
-
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
-
-
-
-
-
-  <meta name="keywords" content="云计算中级,Linux,Centos,Docker,Docker-Compose,容器编排," />
-
-
-
-
-
-
-
-
-
-
-<meta name="description" content="Docker容器编排[Docker compose]介绍Docker-Compose是一个容器编排的工具，适用于所有环境：生产、开发、测试以及CI工作流程   安装Docker-compose 工作流程要求:  ①构建一个基于Python3.4的镜像。②把当前目录添加到镜像中的&#x2F;code路径下。③把工作路径设置成&#x2F;code。④安装Python依赖。⑤设置容器的默认命令为pythonapp.py。">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Docker容器编排[Docker compose]">
-<meta property="og:url" content="http://www.ljh.xyz/2020/08/21/Docker%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92[Docker%20compose]/index.html">
-<meta property="og:site_name" content="Hello">
-<meta property="og:description" content="Docker容器编排[Docker compose]介绍Docker-Compose是一个容器编排的工具，适用于所有环境：生产、开发、测试以及CI工作流程   安装Docker-compose 工作流程要求:  ①构建一个基于Python3.4的镜像。②把当前目录添加到镜像中的&#x2F;code路径下。③把工作路径设置成&#x2F;code。④安装Python依赖。⑤设置容器的默认命令为pythonapp.py。">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://img.ljh666.xyz/img/20200820231726.png">
-<meta property="og:image" content="http://img.ljh666.xyz/img/20200820231754.png">
-<meta property="og:image" content="http://img.ljh666.xyz/img/20200821005135.png">
-<meta property="og:image" content="http://img.ljh666.xyz/img/20200821005855.png">
-<meta property="og:image" content="http://img.ljh666.xyz/img/20200821010117.png">
-<meta property="article:published_time" content="2020-08-20T16:01:18.000Z">
-<meta property="article:modified_time" content="2020-10-28T03:50:38.000Z">
-<meta property="article:author" content="John Doe">
-<meta property="article:tag" content="云计算中级">
-<meta property="article:tag" content="Linux">
-<meta property="article:tag" content="Centos">
-<meta property="article:tag" content="Docker">
-<meta property="article:tag" content="Docker-Compose">
-<meta property="article:tag" content="容器编排">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://img.ljh666.xyz/img/20200820231726.png">
-
-
-
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '',
-    scheme: 'Muse',
-    version: '5.1.4',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: true,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    duoshuo: {
-      userId: '0',
-      author: 'Author'
-    },
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-
-  <link rel="canonical" href="http://www.ljh.xyz/2020/08/21/Docker容器编排[Docker compose]/"/>
-
-
-
-
-
-  <title>Docker容器编排[Docker compose] | Hello</title>
-  
-
-
-
-
-
-
-
-
-<meta name="generator" content="Hexo 5.0.2"></head>
-
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
-
-  
-  
+<html lang="zh-CN">
+    <head>
+        <title>Docker容器编排[Docker compose]</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=2.0">
+<link rel="stylesheet", href="/./css/style.css">
+<link rel="shortcut icon", href="/./favicon.ico">
+<link rel="apple-touch-icon", href="/./apple-touch-icon.png">
+
+        
     
-  
+    <link rel='stylesheet' href="/./css/dracula.css">
 
-  <div class="container sidebar-position-left page-post-detail">
-    <div class="headband"></div>
+    <meta name="generator" content="Hexo 5.0.2"></head>
+    <body>
+        <header class="al_header al_pos_fixed">
+    <div class="al_header_container dis_flex_jcenter">
+        <div class="al_header_container_left">
+            <div class="al_header_site_title">
+                <a href="/">Hello</a>
+            </div>
+        </div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta ">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">Hello</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+        <div class="dis_flex_jcenter">
+            <div class="al_header_setting">
+                <svg class="al_header_icon">
+                    <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-menu"></use>
+                </svg>
+            </div>
+        </div>
     </div>
-      
-        <p class="site-subtitle">LJH</p>
-      
-  </div>
+</header>
 
-  <div class="site-nav-toggle">
-    <button>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
-  </div>
+        <div class="al_sidebar">
+
+    <div class="al_sidebar_overlay al_full_cover"></div>
+
+    <div class="al_pos_fixed al_sidebar_cnt">
+        <div class="dis_flex_acenter al_sidebar_header">
+            <h3>Hello</h3>
+            <div class="al_sidebar_close al_header_setting">
+                <svg class="al_header_icon">
+                    <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-close"></use>
+                </svg>
+            </div>
+        </div>
+
+        <div class="al_sidebar_author_cnt">
+
+            <div class="al_sidebar_author_info">
+                <h4>John Doe</h4>
+                <img class="al_sidebar_avatar" src="https://yourAvatorURL">
+                <p></p>
+            </div>
+
+            
+        </div>
+    </div>
 </div>
 
-<nav class="site-nav">
-  
-
-  
-    <ul id="menu" class="menu">
-      
         
-        <li class="menu-item menu-item-home">
-          <a href="/%20" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
-            
-            Home
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives/%20" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
-            
-            Archives
-          </a>
-        </li>
-      
+    <div class="dis_flex_center al_lightbox_cnt al_full_cover">
+        <img class="al_lightbox_img"/>
+    </div>
+    <div class="al_page_background dis_flex_center al_full_cover"></div>
+    <div class="al_page_container">
+        <div class="al_pos_ab al_fake_background"></div>
+        <div class="al_main_container al_shadow al_main_page_container">
+            <article class="al_article">
+                <header>
+                    <h1 class="al_page_title">
+                        Docker容器编排[Docker compose]
+                    </h1>
+                    <div class="al_page_info dis_flex">
+                        <div class="al_page_content_info">
+                            August 20, 2020 04:08 PM
+                        </div>
 
-      
-    </ul>
-  
+                        
 
-  
-</nav>
+                        
+                        <span class="tags"></span>
+                    </div>
+                </header>
 
+                
+                    <div class="al_page_content_outline">
+                        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Docker%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92-Docker-compose"><span class="toc-text">Docker容器编排[Docker compose]</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85Docker-compose"><span class="toc-text">安装Docker-compose</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8compose"><span class="toc-text">使用compose</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E5%86%99%E5%AE%9E%E9%AA%8C%E6%96%87%E4%BB%B6"><span class="toc-text">编写实验文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1"><span class="toc-text">启动服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86%E6%95%B0%E6%8D%AE%E6%8C%81%E4%B9%85%E5%8C%96"><span class="toc-text">将数据持久化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9D%9F"><span class="toc-text">结束</span></a></li></ol></li></ol>
+                    </div>
+                
 
-
- </div>
-    </header>
-
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          <div id="content" class="content">
-            
-
-  <div id="posts" class="posts-expand">
-    
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.ljh.xyz/2020/08/21/Docker%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92%5BDocker%20compose%5D/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hello">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">Docker容器编排[Docker compose]</h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-08-21T00:01:18+08:00">
-                2020-08-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <h1 id="Docker容器编排-Docker-compose"><a href="#Docker容器编排-Docker-compose" class="headerlink" title="Docker容器编排[Docker compose]"></a>Docker容器编排[Docker compose]</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>Docker-Compose是一个容器编排的工具，适用于所有环境：生产、开发、测试以及CI工作流程</p>
+                
+                <section id="post-body">
+                    <h1 id="Docker容器编排-Docker-compose"><a href="#Docker容器编排-Docker-compose" class="headerlink" title="Docker容器编排[Docker compose]"></a>Docker容器编排[Docker compose]</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>Docker-Compose是一个容器编排的工具，适用于所有环境：生产、开发、测试以及CI工作流程</p>
 <p><img src="http://img.ljh666.xyz/img/20200820231726.png"></p>
 <p><img src="http://img.ljh666.xyz/img/20200820231754.png"></p>
 <h2 id="安装Docker-compose"><a href="#安装Docker-compose" class="headerlink" title="安装Docker-compose"></a>安装Docker-compose</h2><blockquote>
@@ -377,384 +159,61 @@
 <p>直接刷新网页</p>
 <p><img src="http://img.ljh666.xyz/img/20200821010117.png"></p>
 <h2 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h2>
-      
-    </div>
-    
-    
-    
+                </section>
 
-    
+                
+                
+                
 
-    
-
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%AD%E7%BA%A7/" rel="tag"># 云计算中级</a>
-          
-            <a href="/tags/Linux/" rel="tag"># Linux</a>
-          
-            <a href="/tags/Centos/" rel="tag"># Centos</a>
-          
-            <a href="/tags/Docker/" rel="tag"># Docker</a>
-          
-            <a href="/tags/Docker-Compose/" rel="tag"># Docker-Compose</a>
-          
-            <a href="/tags/%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92/" rel="tag"># 容器编排</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2020/08/20/%E9%85%8D%E7%BD%AE%E5%9B%BD%E5%86%85yum%E6%BA%90/" rel="next" title="配置国内的yum源">
-                <i class="fa fa-chevron-left"></i> 配置国内的yum源
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/08/23/%E8%A7%86%E9%A2%91%E6%B5%8B%E8%AF%95/" rel="prev" title="视频测试">
-                视频测试 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
-  </div>
-
-
-          </div>
-          
-
-
-          
-
-  
-
-
-
-        </div>
-        
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
-
-  <aside id="sidebar" class="sidebar">
-    
-    <div class="sidebar-inner">
-
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Table of Contents
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Overview
-          </li>
-        </ul>
-      
-
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <p class="site-author-name" itemprop="name"></p>
-              <p class="site-description motion-element" itemprop="description"></p>
-          </div>
-
-          <nav class="site-state motion-element">
 
             
-              <div class="site-state-item site-state-posts">
-              
-                <a href="/archives/%20%7C%7C%20archive">
-              
-                  <span class="site-state-item-count">21</span>
-                  <span class="site-state-item-name">posts</span>
+            <nav class="dis_flex al_post_nav">
+                <a class="al_post_nav_item dis_flex_acenter" href="/2020/08/23/%E8%A7%86%E9%A2%91%E6%B5%8B%E8%AF%95/">
+                    
+                        <svg class="al_arrow">
+                            <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-arrow-left"></use>
+                        </svg>
+                        <span class="al_text_ellipsis al_post_nav_desc">视频测试</span>
+                    
                 </a>
-              </div>
-            
-
-            
-
-            
-              
-              
-              <div class="site-state-item site-state-tags">
-                
-                  <span class="site-state-item-count">24</span>
-                  <span class="site-state-item-name">tags</span>
-                
-              </div>
-            
-
-          </nav>
-
-          
-
-          
-
-          
-          
-
-          
-          
-
-          
-
+                <a class="al_post_nav_item dis_flex_acenter" href="/2020/08/20/%E9%85%8D%E7%BD%AE%E5%9B%BD%E5%86%85yum%E6%BA%90/">
+                    
+                        <span class="al_text_ellipsis al_post_nav_desc">配置国内的yum源</span>
+                        <svg class="al_arrow">
+                            <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-arrow-right"></use>
+                        </svg>
+                    
+                </a>
+            </nav>
         </div>
-      </section>
-
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Docker%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92-Docker-compose"><span class="nav-number">1.</span> <span class="nav-text">Docker容器编排[Docker compose]</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Docker-compose"><span class="nav-number">1.2.</span> <span class="nav-text">安装Docker-compose</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8compose"><span class="nav-number">1.3.</span> <span class="nav-text">使用compose</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E5%AE%9E%E9%AA%8C%E6%96%87%E4%BB%B6"><span class="nav-number">1.3.1.</span> <span class="nav-text">编写实验文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.3.2.</span> <span class="nav-text">启动服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%86%E6%95%B0%E6%8D%AE%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-number">1.3.3.</span> <span class="nav-text">将数据持久化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E6%9D%9F"><span class="nav-number">1.4.</span> <span class="nav-text">结束</span></a></li></ol></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
-      
-
-      
-
     </div>
-  </aside>
 
 
-        
-      </div>
-    </main>
+        <div class="al_index_footer dis_flex_center">
+    <div class="al_index_footer_item al_index_footer_title">
+        John Doe
+    </div>
 
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
-  <span class="with-love">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">John Doe</span>
+    
+    
 
-  
+    <div class="al_index_footer_item al_index_footer_extra">
+        Created By 
+        <a target="_blank" rel="noopener" href="https://github.com/iGuan7u/Acetolog">AcetoLog</a>
+         · Power By 
+        <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>
+    </div>
+
+    <div class="al_index_footer_item al_index_footer_extra_right">
+        All Right Reserved
+    </div>
 </div>
 
-
-  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
-
-
-
-  <span class="post-meta-divider">|</span>
-
-
-
-  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
-
-
-
-
+        <script type="text/javascript" async="async" src="/javascripts/acelog.js"></script>
         
-
-
-
-
-
-
-
         
-      </div>
-    </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
         
-      </div>
-    
-
-    
-
-  </div>
-
-  
-
-<script type="text/javascript">
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
-  }
-</script>
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-  
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
-
-
-
-  
-  
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
-
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
-
-
-
-  
-
-
-  
-
-
-
-
-	
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-  
-
-  
-
-  
-
-  
-
-</body>
+        
+    </body>
 </html>
+        

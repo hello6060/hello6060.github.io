@@ -1,316 +1,99 @@
+
 <!DOCTYPE html>
-
-
-
-  
-
-
-<html class="theme-next muse use-motion" lang="zh-CN">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<meta name="theme-color" content="#222">
-
-
-
-
-
-
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
-
-
-
-
-
-
-
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
-
-
-
-
-
-  <meta name="keywords" content="云计算中级,Linux,Centos," />
-
-
-
-
-
-
-
-
-
-
-<meta name="description" content="用KVM部署虚拟机知识扫盲 KVM（Kernel-basedVirtualMachine）是一个开源软件，基于内核的虚拟化技术，实际是嵌入系统的一个虚拟化模块，通过优化内核来使用虚拟技术，该内核模块使得Linux变成了一个Hypervisor，虚拟机使用Linux自身的调度器进行管理。但是，KVM本身不执行任何硬件模拟，需要客户空间程序通过&#x2F;dev&#x2F;kvm接口设置一个客户机虚拟服务器的地址空间，向">
-<meta property="og:type" content="article">
-<meta property="og:title" content="用KVM部署虚拟机">
-<meta property="og:url" content="http://www.ljh.xyz/2020/08/04/%E7%94%A8KVM%E9%83%A8%E7%BD%B2%E8%99%9A%E6%8B%9F%E6%9C%BA/index.html">
-<meta property="og:site_name" content="Hello">
-<meta property="og:description" content="用KVM部署虚拟机知识扫盲 KVM（Kernel-basedVirtualMachine）是一个开源软件，基于内核的虚拟化技术，实际是嵌入系统的一个虚拟化模块，通过优化内核来使用虚拟技术，该内核模块使得Linux变成了一个Hypervisor，虚拟机使用Linux自身的调度器进行管理。但是，KVM本身不执行任何硬件模拟，需要客户空间程序通过&#x2F;dev&#x2F;kvm接口设置一个客户机虚拟服务器的地址空间，向">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://img.ljh666.xyz/img/20200804145837.png">
-<meta property="og:image" content="http://img.ljh666.xyz/img/20200804145932.png">
-<meta property="og:image" content="http://img.ljh666.xyz/img/20200804151151.png">
-<meta property="og:image" content="http://img.ljh666.xyz/img/20200804151312.png">
-<meta property="og:image" content="http://img.ljh666.xyz/img/20200804151417.png">
-<meta property="og:image" content="http://img.ljh666.xyz/img/20200804155821.png">
-<meta property="og:image" content="http://img.ljh666.xyz/img/image-20200804155932078.png">
-<meta property="article:published_time" content="2020-08-04T08:31:18.000Z">
-<meta property="article:modified_time" content="2020-08-17T09:00:28.000Z">
-<meta property="article:author" content="John Doe">
-<meta property="article:tag" content="云计算中级">
-<meta property="article:tag" content="Linux">
-<meta property="article:tag" content="Centos">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://img.ljh666.xyz/img/20200804145837.png">
-
-
-
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '',
-    scheme: 'Muse',
-    version: '5.1.4',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: true,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    duoshuo: {
-      userId: '0',
-      author: 'Author'
-    },
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-
-  <link rel="canonical" href="http://www.ljh.xyz/2020/08/04/用KVM部署虚拟机/"/>
-
-
-
-
-
-  <title>用KVM部署虚拟机 | Hello</title>
-  
-
-
-
-
-
-
-
-
-<meta name="generator" content="Hexo 5.0.2"></head>
-
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
-
-  
-  
+<html lang="zh-CN">
+    <head>
+        <title>用KVM部署虚拟机</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=2.0">
+<link rel="stylesheet", href="/./css/style.css">
+<link rel="shortcut icon", href="/./favicon.ico">
+<link rel="apple-touch-icon", href="/./apple-touch-icon.png">
+
+        
     
-  
+    <link rel='stylesheet' href="/./css/dracula.css">
 
-  <div class="container sidebar-position-left page-post-detail">
-    <div class="headband"></div>
+    <meta name="generator" content="Hexo 5.0.2"></head>
+    <body>
+        <header class="al_header al_pos_fixed">
+    <div class="al_header_container dis_flex_jcenter">
+        <div class="al_header_container_left">
+            <div class="al_header_site_title">
+                <a href="/">Hello</a>
+            </div>
+        </div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta ">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">Hello</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+        <div class="dis_flex_jcenter">
+            <div class="al_header_setting">
+                <svg class="al_header_icon">
+                    <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-menu"></use>
+                </svg>
+            </div>
+        </div>
     </div>
-      
-        <p class="site-subtitle">LJH</p>
-      
-  </div>
+</header>
 
-  <div class="site-nav-toggle">
-    <button>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
-  </div>
+        <div class="al_sidebar">
+
+    <div class="al_sidebar_overlay al_full_cover"></div>
+
+    <div class="al_pos_fixed al_sidebar_cnt">
+        <div class="dis_flex_acenter al_sidebar_header">
+            <h3>Hello</h3>
+            <div class="al_sidebar_close al_header_setting">
+                <svg class="al_header_icon">
+                    <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-close"></use>
+                </svg>
+            </div>
+        </div>
+
+        <div class="al_sidebar_author_cnt">
+
+            <div class="al_sidebar_author_info">
+                <h4>John Doe</h4>
+                <img class="al_sidebar_avatar" src="https://yourAvatorURL">
+                <p></p>
+            </div>
+
+            
+        </div>
+    </div>
 </div>
 
-<nav class="site-nav">
-  
-
-  
-    <ul id="menu" class="menu">
-      
         
-        <li class="menu-item menu-item-home">
-          <a href="/%20" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
-            
-            Home
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives/%20" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
-            
-            Archives
-          </a>
-        </li>
-      
+    <div class="dis_flex_center al_lightbox_cnt al_full_cover">
+        <img class="al_lightbox_img"/>
+    </div>
+    <div class="al_page_background dis_flex_center al_full_cover"></div>
+    <div class="al_page_container">
+        <div class="al_pos_ab al_fake_background"></div>
+        <div class="al_main_container al_shadow al_main_page_container">
+            <article class="al_article">
+                <header>
+                    <h1 class="al_page_title">
+                        用KVM部署虚拟机
+                    </h1>
+                    <div class="al_page_info dis_flex">
+                        <div class="al_page_content_info">
+                            August 04, 2020 08:08 AM
+                        </div>
 
-      
-    </ul>
-  
+                        
 
-  
-</nav>
+                        
+                        <span class="tags"></span>
+                    </div>
+                </header>
 
+                
+                    <div class="al_page_content_outline">
+                        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%94%A8KVM%E9%83%A8%E7%BD%B2%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="toc-text">用KVM部署虚拟机</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E6%89%AB%E7%9B%B2"><span class="toc-text">知识扫盲</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-text">参考文献</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="toc-text">准备工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E9%83%A8%E7%BD%B2%E7%8E%AF%E5%A2%83"><span class="toc-text">配置部署环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%B7%A5%E5%85%B7"><span class="toc-text">安装工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%8E%AF%E5%A2%83"><span class="toc-text">虚拟机环境</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B%E9%85%8D%E7%BD%AE%E7%BD%91%E6%A1%A5"><span class="toc-text">开始配置网桥</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%B5%84%E6%BA%90"><span class="toc-text">准备虚拟机资源</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA-%E5%AE%89%E8%A3%85%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="toc-text">创建|安装虚拟机</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="toc-text">创建虚拟机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="toc-text">连接虚拟机</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%AE%A1%E7%90%86"><span class="toc-text">虚拟机管理</span></a></li></ol></li></ol>
+                    </div>
+                
 
-
- </div>
-    </header>
-
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          <div id="content" class="content">
-            
-
-  <div id="posts" class="posts-expand">
-    
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.ljh.xyz/2020/08/04/%E7%94%A8KVM%E9%83%A8%E7%BD%B2%E8%99%9A%E6%8B%9F%E6%9C%BA/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hello">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">用KVM部署虚拟机</h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-08-04T16:31:18+08:00">
-                2020-08-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <h1 id="用KVM部署虚拟机"><a href="#用KVM部署虚拟机" class="headerlink" title="用KVM部署虚拟机"></a>用KVM部署虚拟机</h1><h2 id="知识扫盲"><a href="#知识扫盲" class="headerlink" title="知识扫盲"></a>知识扫盲</h2><blockquote>
+                
+                <section id="post-body">
+                    <h1 id="用KVM部署虚拟机"><a href="#用KVM部署虚拟机" class="headerlink" title="用KVM部署虚拟机"></a>用KVM部署虚拟机</h1><h2 id="知识扫盲"><a href="#知识扫盲" class="headerlink" title="知识扫盲"></a>知识扫盲</h2><blockquote>
 <p>KVM（Kernel-basedVirtualMachine）是一个开源软件，基于内核的虚拟化技术，实际是嵌入系统的一个虚拟化模块，通过优化内核来使用虚拟技术，该内核模块使得Linux变成了一个Hypervisor，虚拟机使用Linux自身的调度器进行管理。但是，KVM本身不执行任何硬件模拟，需要客户空间程序通过/dev/kvm接口设置一个客户机虚拟服务器的地址空间，向它提供模拟的I/O，并将它的视频显示映射回宿主的显示屏。目前这个应用程序是QEMU。</p>
 </blockquote>
 <blockquote>
@@ -401,378 +184,61 @@
 <p>至此, KVM的部署与虚拟机的配置已完成</p>
 <p>干杯~🍻</p>
 
-      
-    </div>
-    
-    
-    
+                </section>
 
-    
+                
+                
+                
 
-    
-
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%AD%E7%BA%A7/" rel="tag"># 云计算中级</a>
-          
-            <a href="/tags/Linux/" rel="tag"># Linux</a>
-          
-            <a href="/tags/Centos/" rel="tag"># Centos</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2020/08/02/%E9%85%8D%E7%BD%AE%E4%B8%BB%E4%BB%8EDNS%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="next" title="配置主从DNS服务器">
-                <i class="fa fa-chevron-left"></i> 配置主从DNS服务器
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/08/06/ZooKeeper%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/" rel="prev" title="ZooKeeper集群部署">
-                ZooKeeper集群部署 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
-  </div>
-
-
-          </div>
-          
-
-
-          
-
-  
-
-
-
-        </div>
-        
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
-
-  <aside id="sidebar" class="sidebar">
-    
-    <div class="sidebar-inner">
-
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Table of Contents
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Overview
-          </li>
-        </ul>
-      
-
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <p class="site-author-name" itemprop="name"></p>
-              <p class="site-description motion-element" itemprop="description"></p>
-          </div>
-
-          <nav class="site-state motion-element">
 
             
-              <div class="site-state-item site-state-posts">
-              
-                <a href="/archives/%20%7C%7C%20archive">
-              
-                  <span class="site-state-item-count">21</span>
-                  <span class="site-state-item-name">posts</span>
+            <nav class="dis_flex al_post_nav">
+                <a class="al_post_nav_item dis_flex_acenter" href="/2020/08/06/ZooKeeper%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/">
+                    
+                        <svg class="al_arrow">
+                            <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-arrow-left"></use>
+                        </svg>
+                        <span class="al_text_ellipsis al_post_nav_desc">ZooKeeper集群部署</span>
+                    
                 </a>
-              </div>
-            
-
-            
-
-            
-              
-              
-              <div class="site-state-item site-state-tags">
-                
-                  <span class="site-state-item-count">24</span>
-                  <span class="site-state-item-name">tags</span>
-                
-              </div>
-            
-
-          </nav>
-
-          
-
-          
-
-          
-          
-
-          
-          
-
-          
-
+                <a class="al_post_nav_item dis_flex_acenter" href="/2020/08/02/%E9%85%8D%E7%BD%AE%E4%B8%BB%E4%BB%8EDNS%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+                    
+                        <span class="al_text_ellipsis al_post_nav_desc">配置主从DNS服务器</span>
+                        <svg class="al_arrow">
+                            <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-arrow-right"></use>
+                        </svg>
+                    
+                </a>
+            </nav>
         </div>
-      </section>
-
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%A8KVM%E9%83%A8%E7%BD%B2%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="nav-number">1.</span> <span class="nav-text">用KVM部署虚拟机</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9F%A5%E8%AF%86%E6%89%AB%E7%9B%B2"><span class="nav-number">1.1.</span> <span class="nav-text">知识扫盲</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">1.2.</span> <span class="nav-text">参考文献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.3.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E9%83%A8%E7%BD%B2%E7%8E%AF%E5%A2%83"><span class="nav-number">1.4.</span> <span class="nav-text">配置部署环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%B7%A5%E5%85%B7"><span class="nav-number">1.5.</span> <span class="nav-text">安装工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%8E%AF%E5%A2%83"><span class="nav-number">1.6.</span> <span class="nav-text">虚拟机环境</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E9%85%8D%E7%BD%AE%E7%BD%91%E6%A1%A5"><span class="nav-number">1.6.1.</span> <span class="nav-text">开始配置网桥</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%B5%84%E6%BA%90"><span class="nav-number">1.6.2.</span> <span class="nav-text">准备虚拟机资源</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-%E5%AE%89%E8%A3%85%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="nav-number">1.7.</span> <span class="nav-text">创建|安装虚拟机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="nav-number">1.7.1.</span> <span class="nav-text">创建虚拟机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="nav-number">1.7.2.</span> <span class="nav-text">连接虚拟机</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%AE%A1%E7%90%86"><span class="nav-number">1.8.</span> <span class="nav-text">虚拟机管理</span></a></li></ol></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
-      
-
-      
-
     </div>
-  </aside>
 
 
-        
-      </div>
-    </main>
+        <div class="al_index_footer dis_flex_center">
+    <div class="al_index_footer_item al_index_footer_title">
+        John Doe
+    </div>
 
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
-  <span class="with-love">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">John Doe</span>
+    
+    
 
-  
+    <div class="al_index_footer_item al_index_footer_extra">
+        Created By 
+        <a target="_blank" rel="noopener" href="https://github.com/iGuan7u/Acetolog">AcetoLog</a>
+         · Power By 
+        <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>
+    </div>
+
+    <div class="al_index_footer_item al_index_footer_extra_right">
+        All Right Reserved
+    </div>
 </div>
 
-
-  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
-
-
-
-  <span class="post-meta-divider">|</span>
-
-
-
-  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
-
-
-
-
+        <script type="text/javascript" async="async" src="/javascripts/acelog.js"></script>
         
-
-
-
-
-
-
-
         
-      </div>
-    </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
         
-      </div>
-    
-
-    
-
-  </div>
-
-  
-
-<script type="text/javascript">
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
-  }
-</script>
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-  
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
-
-
-
-  
-  
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
-
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
-
-
-
-  
-
-
-  
-
-
-
-
-	
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-  
-
-  
-
-  
-
-  
-
-</body>
+        
+    </body>
 </html>
+        
