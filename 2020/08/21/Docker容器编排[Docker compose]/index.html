@@ -1,99 +1,106 @@
-
 <!DOCTYPE html>
-<html lang="zh-CN">
-    <head>
-        <title>Docker容器编排[Docker compose]</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=2.0">
-<link rel="stylesheet", href="/./css/style.css">
-<link rel="shortcut icon", href="/./favicon.ico">
-<link rel="apple-touch-icon", href="/./apple-touch-icon.png">
+<html>
+<head>
+  <meta charset="utf-8">
+  
 
-        
-    
-    <link rel='stylesheet' href="/./css/dracula.css">
+  
+  <title>Docker容器编排[Docker compose] | Hello</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Docker容器编排[Docker compose]介绍Docker-Compose是一个容器编排的工具，适用于所有环境：生产、开发、测试以及CI工作流程   安装Docker-compose 工作流程要求:  ①构建一个基于Python3.4的镜像。②把当前目录添加到镜像中的&#x2F;code路径下。③把工作路径设置成&#x2F;code。④安装Python依赖。⑤设置容器的默认命令为pythonapp.py。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker容器编排[Docker compose]">
+<meta property="og:url" content="http://www.ljh.xyz/2020/08/21/Docker%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92[Docker%20compose]/index.html">
+<meta property="og:site_name" content="Hello">
+<meta property="og:description" content="Docker容器编排[Docker compose]介绍Docker-Compose是一个容器编排的工具，适用于所有环境：生产、开发、测试以及CI工作流程   安装Docker-compose 工作流程要求:  ①构建一个基于Python3.4的镜像。②把当前目录添加到镜像中的&#x2F;code路径下。③把工作路径设置成&#x2F;code。④安装Python依赖。⑤设置容器的默认命令为pythonapp.py。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://img.ljh666.xyz/img/20200820231726.png">
+<meta property="og:image" content="http://img.ljh666.xyz/img/20200820231754.png">
+<meta property="og:image" content="http://img.ljh666.xyz/img/20200821005135.png">
+<meta property="og:image" content="http://img.ljh666.xyz/img/20200821005855.png">
+<meta property="og:image" content="http://img.ljh666.xyz/img/20200821010117.png">
+<meta property="article:published_time" content="2020-08-20T16:01:18.000Z">
+<meta property="article:modified_time" content="2020-10-28T03:50:38.000Z">
+<meta property="article:author" content="LJH">
+<meta property="article:tag" content="云计算中级">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Centos">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="Docker-Compose">
+<meta property="article:tag" content="容器编排">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://img.ljh666.xyz/img/20200820231726.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hello" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
 
-    <meta name="generator" content="Hexo 5.0.2"></head>
-    <body>
-        <header class="al_header al_pos_fixed">
-    <div class="al_header_container dis_flex_jcenter">
-        <div class="al_header_container_left">
-            <div class="al_header_site_title">
-                <a href="/">Hello</a>
-            </div>
-        </div>
+<meta name="generator" content="Hexo 5.0.2"></head>
 
-        <div class="dis_flex_jcenter">
-            <div class="al_header_setting">
-                <svg class="al_header_icon">
-                    <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-menu"></use>
-                </svg>
-            </div>
-        </div>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hello</a>
+      </h1>
+      
     </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://www.ljh.xyz"></form>
+      </div>
+    </div>
+  </div>
 </header>
-
-        <div class="al_sidebar">
-
-    <div class="al_sidebar_overlay al_full_cover"></div>
-
-    <div class="al_pos_fixed al_sidebar_cnt">
-        <div class="dis_flex_acenter al_sidebar_header">
-            <h3>Hello</h3>
-            <div class="al_sidebar_close al_header_setting">
-                <svg class="al_header_icon">
-                    <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-close"></use>
-                </svg>
-            </div>
-        </div>
-
-        <div class="al_sidebar_author_cnt">
-
-            <div class="al_sidebar_author_info">
-                <h4>LJH</h4>
-                <img class="al_sidebar_avatar" src="img/1.png">
-                <p></p>
-            </div>
-
-            
-        </div>
-    </div>
-</div>
-
+      <div class="outer">
+        <section id="main"><article id="post-Docker容器编排[Docker compose]" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/08/21/Docker%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92%5BDocker%20compose%5D/" class="article-date">
+  <time datetime="2020-08-20T16:01:18.000Z" itemprop="datePublished">2020-08-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
         
-    <div class="dis_flex_center al_lightbox_cnt al_full_cover">
-        <img class="al_lightbox_img"/>
-    </div>
-    <div class="al_page_background dis_flex_center al_full_cover"></div>
-    <div class="al_page_container">
-        <div class="al_pos_ab al_fake_background"></div>
-        <div class="al_main_container al_shadow al_main_page_container">
-            <article class="al_article">
-                <header>
-                    <h1 class="al_page_title">
-                        Docker容器编排[Docker compose]
-                    </h1>
-                    <div class="al_page_info dis_flex">
-                        <div class="al_page_content_info">
-                            August 20, 2020 04:08 PM
-                        </div>
+  
+    <h1 class="article-title" itemprop="name">
+      Docker容器编排[Docker compose]
+    </h1>
+  
 
-                        
-
-                        
-                        <span class="tags"></span>
-                    </div>
-                </header>
-
-                
-                    <div class="al_page_content_outline">
-                        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Docker%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92-Docker-compose"><span class="toc-text">Docker容器编排[Docker compose]</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85Docker-compose"><span class="toc-text">安装Docker-compose</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8compose"><span class="toc-text">使用compose</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E5%86%99%E5%AE%9E%E9%AA%8C%E6%96%87%E4%BB%B6"><span class="toc-text">编写实验文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1"><span class="toc-text">启动服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86%E6%95%B0%E6%8D%AE%E6%8C%81%E4%B9%85%E5%8C%96"><span class="toc-text">将数据持久化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9D%9F"><span class="toc-text">结束</span></a></li></ol></li></ol>
-                    </div>
-                
-
-                
-                <section id="post-body">
-                    <h1 id="Docker容器编排-Docker-compose"><a href="#Docker容器编排-Docker-compose" class="headerlink" title="Docker容器编排[Docker compose]"></a>Docker容器编排[Docker compose]</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>Docker-Compose是一个容器编排的工具，适用于所有环境：生产、开发、测试以及CI工作流程</p>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Docker容器编排-Docker-compose"><a href="#Docker容器编排-Docker-compose" class="headerlink" title="Docker容器编排[Docker compose]"></a>Docker容器编排[Docker compose]</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>Docker-Compose是一个容器编排的工具，适用于所有环境：生产、开发、测试以及CI工作流程</p>
 <p><img src="http://img.ljh666.xyz/img/20200820231726.png"></p>
 <p><img src="http://img.ljh666.xyz/img/20200820231754.png"></p>
 <h2 id="安装Docker-compose"><a href="#安装Docker-compose" class="headerlink" title="安装Docker-compose"></a>安装Docker-compose</h2><blockquote>
@@ -159,61 +166,146 @@
 <p>直接刷新网页</p>
 <p><img src="http://img.ljh666.xyz/img/20200821010117.png"></p>
 <h2 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h2>
-                </section>
-
-                
-                
-                
-
-
-            
-            <nav class="dis_flex al_post_nav">
-                <a class="al_post_nav_item dis_flex_acenter" href="/2020/08/23/%E8%A7%86%E9%A2%91%E6%B5%8B%E8%AF%95/">
-                    
-                        <svg class="al_arrow">
-                            <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-arrow-left"></use>
-                        </svg>
-                        <span class="al_text_ellipsis al_post_nav_desc">视频测试</span>
-                    
-                </a>
-                <a class="al_post_nav_item dis_flex_acenter" href="/2020/08/20/%E9%85%8D%E7%BD%AE%E5%9B%BD%E5%86%85yum%E6%BA%90/">
-                    
-                        <span class="al_text_ellipsis al_post_nav_desc">配置国内的yum源</span>
-                        <svg class="al_arrow">
-                            <use xmlns="http://www.w3.org/2000/svg" xlink:href="/assets/svg_icons.svg#svg-arrow-right"></use>
-                        </svg>
-                    
-                </a>
-            </nav>
-        </div>
+      
     </div>
+    <footer class="article-footer">
+      <a data-url="http://www.ljh.xyz/2020/08/21/Docker%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92[Docker%20compose]/" data-id="ckky5vm7m0002ywu1g5tfaiju" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Centos/" rel="tag">Centos</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker-Compose/" rel="tag">Docker-Compose</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%AD%E7%BA%A7/" rel="tag">云计算中级</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92/" rel="tag">容器编排</a></li></ul>
 
-
-        <div class="al_index_footer dis_flex_center">
-    <div class="al_index_footer_item al_index_footer_title">
-        LJH
-    </div>
-
+    </footer>
+  </div>
+  
     
+<nav id="article-nav">
+  
+    <a href="/2020/08/23/%E8%A7%86%E9%A2%91%E6%B5%8B%E8%AF%95/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          视频测试
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/08/20/%E9%85%8D%E7%BD%AE%E5%9B%BD%E5%86%85yum%E6%BA%90/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">配置国内的yum源</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
     
 
-    <div class="al_index_footer_item al_index_footer_extra">
-        Created By 
-        <a target="_blank" rel="noopener" href="https://github.com/iGuan7u/Acetolog">AcetoLog</a>
-         · Power By 
-        <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Blog/" rel="tag">Blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CTF/" rel="tag">CTF</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Centos/" rel="tag">Centos</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ceph/" rel="tag">Ceph</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker-Compose/" rel="tag">Docker-Compose</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LNMP/" rel="tag">LNMP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openssl/" rel="tag">openssl</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openstack/" rel="tag">openstack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/" rel="tag">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wordpress/" rel="tag">wordpress</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/yum%E6%BA%90/" rel="tag">yum源</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%AD%E7%BA%A7/" rel="tag">云计算中级</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97%E5%88%9D%E7%BA%A7/" rel="tag">云计算初级</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8/" rel="tag">分布式存储</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2/" rel="tag">博客</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%91%BD%E4%BB%A4%E8%A7%A3%E6%9E%90/" rel="tag">命令解析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92/" rel="tag">容器编排</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AF%86%E9%92%A5/" rel="tag">密钥</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%A7%81%E6%9C%89%E4%BA%91/" rel="tag">私有云</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%A7%86%E9%A2%91/" rel="tag">视频</a></li></ul>
     </div>
+  </div>
 
-    <div class="al_index_footer_item al_index_footer_extra_right">
-        All Right Reserved
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Blog/" style="font-size: 12.5px;">Blog</a> <a href="/tags/CTF/" style="font-size: 10px;">CTF</a> <a href="/tags/Centos/" style="font-size: 20px;">Centos</a> <a href="/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Docker-Compose/" style="font-size: 10px;">Docker-Compose</a> <a href="/tags/LNMP/" style="font-size: 10px;">LNMP</a> <a href="/tags/Linux/" style="font-size: 17.5px;">Linux</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/docker/" style="font-size: 12.5px;">docker</a> <a href="/tags/openssl/" style="font-size: 10px;">openssl</a> <a href="/tags/openstack/" style="font-size: 12.5px;">openstack</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/wordpress/" style="font-size: 10px;">wordpress</a> <a href="/tags/yum%E6%BA%90/" style="font-size: 10px;">yum源</a> <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%AD%E7%BA%A7/" style="font-size: 15px;">云计算中级</a> <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97%E5%88%9D%E7%BA%A7/" style="font-size: 10px;">云计算初级</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8/" style="font-size: 12.5px;">分布式存储</a> <a href="/tags/%E5%8D%9A%E5%AE%A2/" style="font-size: 10px;">博客</a> <a href="/tags/%E5%91%BD%E4%BB%A4%E8%A7%A3%E6%9E%90/" style="font-size: 10px;">命令解析</a> <a href="/tags/%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92/" style="font-size: 10px;">容器编排</a> <a href="/tags/%E5%AF%86%E9%92%A5/" style="font-size: 10px;">密钥</a> <a href="/tags/%E7%A7%81%E6%9C%89%E4%BA%91/" style="font-size: 12.5px;">私有云</a> <a href="/tags/%E8%A7%86%E9%A2%91/" style="font-size: 10px;">视频</a>
     </div>
-</div>
+  </div>
 
-        <script type="text/javascript" async="async" src="/javascripts/acelog.js"></script>
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
         
+          <li>
+            <a href="/2020/11/01/%E7%94%A8Python%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%A4%E4%BA%92%E5%BC%8FSSH%E5%AE%A2%E6%88%B7%E7%AB%AF/">用Python写一个简单的交互式SSH客户端</a>
+          </li>
         
+          <li>
+            <a href="/2020/09/21/LNMP%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E7%9A%84%E9%83%A8%E7%BD%B2/">LNMP搭建与个人博客的部署</a>
+          </li>
         
+          <li>
+            <a href="/2020/08/23/%E8%A7%86%E9%A2%91%E6%B5%8B%E8%AF%95/">视频测试</a>
+          </li>
         
-    </body>
+          <li>
+            <a href="/2020/08/21/Docker%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92%5BDocker%20compose%5D/">Docker容器编排[Docker compose]</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/20/%E9%85%8D%E7%BD%AE%E5%9B%BD%E5%86%85yum%E6%BA%90/">配置国内的yum源</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2021 LJH<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
 </html>
-        
