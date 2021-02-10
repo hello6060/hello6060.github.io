@@ -1,414 +1,241 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <meta charset="utf-8">
+  
 
-	<head>
-		
-<title>安装samba的注意事项-欢迎</title>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
+  
+  <title>安装samba的注意事项 | Hello</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="安装samba的注意事项组成Samba运行的有两个服务，一个是SMB，另一个是NMB；SMB是Samba 的核心启动服务，主要负责建立 Linux Samba服务器与Samba客户机之间的对话， 验证用户身份并提供对文件和打印系统的访问，只有SMB服务启动，才能实现文件的共享，监听139 TCP端口；而NMB服务是负责解析用的，类似与DNS实现的功能，NMB可以把Linux系统共享的工作组名称与其">
+<meta property="og:type" content="article">
+<meta property="og:title" content="安装samba的注意事项">
+<meta property="og:url" content="http://www.ljh.xyz/2020/07/31/%E5%AE%89%E8%A3%85samba%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/index.html">
+<meta property="og:site_name" content="Hello">
+<meta property="og:description" content="安装samba的注意事项组成Samba运行的有两个服务，一个是SMB，另一个是NMB；SMB是Samba 的核心启动服务，主要负责建立 Linux Samba服务器与Samba客户机之间的对话， 验证用户身份并提供对文件和打印系统的访问，只有SMB服务启动，才能实现文件的共享，监听139 TCP端口；而NMB服务是负责解析用的，类似与DNS实现的功能，NMB可以把Linux系统共享的工作组名称与其">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-07-31T15:24:18.000Z">
+<meta property="article:modified_time" content="2020-08-17T09:00:28.000Z">
+<meta property="article:author" content="LJH">
+<meta property="article:tag" content="云计算中级">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Centos">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hello" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
 
+<meta name="generator" content="Hexo 5.0.2"></head>
 
-<meta name="keywords" content="云计算中级,Linux,Centos,">
-<meta name="description" content="">
-
-
-<script src="/js/jquery.min.js"></script>
-
-
-	<meta name="generator" content="Hexo 5.0.2"></head>
-
-	<body>
-		
-<link rel="stylesheet" href="/css/page.css">
-
-
-<link rel="stylesheet" href="/css/page_cente.css">
-
-
-<link rel="stylesheet" href="/css/atom-one-dark.css">
-
-
-<link rel="stylesheet" href="/css/header.css">
-
-	<div class="header">
-		<div class="header-top">
-			<div class="h-left">
-				<a href="/">
-					<img src="/image/logo.png" alt="Quiet">
-				</a>
-			</div>
-			<div class="h-right">
-				<ul>
-					
-						
-								<li>
-									<a href="/">
-										HOME
-									</a>
-									<span class="dot"></span>
-								</li>
-								
-									
-						
-								<li>
-									<a href="/archives">
-										ARCHIVE
-									</a>
-									<span class="dot"></span>
-								</li>
-								
-									
-						
-								<li>
-									<a href="/categories">
-										CATEGORIES
-									</a>
-									<span class="dot"></span>
-								</li>
-								
-									
-						
-								<li>
-									<a href="/tags">
-										TAGS
-									</a>
-									<span class="dot"></span>
-								</li>
-								
-									
-						
-								<li>
-									<a href="/links">
-										LINKS
-									</a>
-									<span class="dot"></span>
-								</li>
-								
-									
-						
-								<li>
-									<a href="/about">
-										ABOUT
-									</a>
-									<span class="dot"></span>
-								</li>
-								
-									
-				</ul>
-			</div>
-			<div class="h-right-close">
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-					<path fill="none" d="M0 0h24v24H0z" />
-					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
-				</svg>
-			</div>
-		</div>
-	</div>
-	<div class="sidebar">
-    <div class="topo">
-        <h2>LJH</h2>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hello</a>
+      </h1>
+      
     </div>
-    <ul>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
         
-        <li>
-            <a href="/">HOME</a>
-        </li>
+          <a class="main-nav-link" href="/">Home</a>
         
-        <li>
-            <a href="/archives">ARCHIVE</a>
-        </li>
+          <a class="main-nav-link" href="/archives">Archives</a>
         
-        <li>
-            <a href="/categories">CATEGORIES</a>
-        </li>
+      </nav>
+      <nav id="sub-nav">
         
-        <li>
-            <a href="/tags">TAGS</a>
-        </li>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <li>
-            <a href="/links">LINKS</a>
-        </li>
-        
-        <li>
-            <a href="/about">ABOUT</a>
-        </li>
-        
-    </ul>
-    <div class="my_foot">
-        
-        <a target="_blank" rel="noopener" href="https://github.com/qiaobug">
-            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
-        </a>
-        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://www.ljh.xyz"></form>
+      </div>
     </div>
-</div>
-<div class='shelter'
-    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
-</div>
-<style>
-    .sidebar {
-        width: 0;
-        height: 100%;
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        background: #fff;
-        z-index: 999;
-        text-align: center;
-        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
-    }
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-安装samba的注意事项" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/07/31/%E5%AE%89%E8%A3%85samba%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/" class="article-date">
+  <time datetime="2020-07-31T15:24:18.000Z" itemprop="datePublished">2020-07-31</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      安装samba的注意事项
+    </h1>
+  
 
-    .topo {
-        width: 100%;
-        height: 200px;
-        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
-        background-size: 100% 100%;
-        position: relative;
-        display: flex;
-        align-items: flex-end
-    }
-
-    .topo h2 {
-        color: #fff;
-        z-index: 1;
-        position: relative;
-        margin: 0 0 10px 10px;
-        font-size: 1.2em;
-        box-sizing: border-box
-    }
-
-    .topo:before {
-        content: '';
-        background-image: url(/image/pattern.png);
-        background-repeat: repeat;
-        height: 100%;
-        left: 0;
-        position: absolute;
-        top: 0;
-        width: 100%;
-        z-index: 1
-    }
-
-    .sidebar ul {
-        width: 100%;
-        margin-top: 50px
-    }
-
-    .sidebar ul li {
-        height: 50px;
-        list-style: none;
-        font-size: 1.2em;
-        text-align: right;
-        margin-right: 10px
-    }
-
-    .sidebar ul li a {
-        display: grid;
-        color: #5d606a;
-        text-overflow: ellipsis;
-        width: 100%;
-        text-decoration: none
-    }
-
-    .my_foot {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 10px;
-        position: absolute;
-        bottom: 0
-    }
-
-    .my_foot a {
-        text-decoration: none;
-        margin-right: 10px;
-        display: inline-block
-    }
-
-    .my_foot a img {
-        width: 30px;
-        height: 30px
-    }
-</style>
-
-<script>
-    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
-</script>
-		<script>
-			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
-		</script>
-<div class="header-bg bg-content-img">
-    <div class="bg-content">
-        <ul class="tag">
-            
-            
-            <li><a href="/tags/云计算中级">云计算中级</a></li>
-            
-            <li><a href="/tags/Linux">Linux</a></li>
-            
-            <li><a href="/tags/Centos">Centos</a></li>
-            
-            
-        </ul>
-        <h1>安装samba的注意事项</h1>
-        <div class="article-info">
-            <div class="article-author">
-                
-                <svg t="1604839279282" class="icon" viewBox="0 0 1024 1024" version="1.1"
-                    xmlns="http://www.w3.org/2000/svg" p-id="2901" width="20" height="20">
-                    <path
-                        d="M513 956.3c-247.7 0-448-200.3-448-448S265.3 66.2 513 66.2s448 200.3 448 448-200.3 442.1-448 442.1z m0-830.9c-212.2 0-388.8 170.7-388.8 388.8C124.2 726.3 294.9 903 513 903c212.2 0 388.8-170.7 388.8-388.8S725.2 125.4 513 125.4z m0 430.2c-94.2 0-170.7-76.5-170.7-170.7S418.8 207.8 513 207.8s170.7 76.5 170.7 170.7S607.2 555.6 513 555.6z m0-289.1c-64.6 0-112 52.8-112 112s47.4 117.9 112 117.9 112-52.8 112-112-47.4-117.9-112-117.9z m0 689.8c-135.7 0-259-58.7-341.9-158.9l-11.8-17.8 11.8-17.8c76.5-117.9 206.2-188.5 347.8-188.5 135.7 0 265 64.6 341.9 182.6l11.8 17.8-11.8 17.8C778 897.1 648.7 956.3 513 956.3zM230.3 773.2C300.9 849.7 406.9 897 513 897c112 0 218.1-47.4 288.6-129.8-70.5-88.2-170.7-135.6-282.7-135.6s-218.1 53.3-288.6 141.6z"
-                        p-id="2902" fill="#ffffff"></path>
-                </svg>
-                
-                <span> <a href="">LJH</a></span>
-                <p>2020-07-31 23:24:18</p>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="article-content">
-    <div id="article" class="content">
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
         <h2 id="安装samba的注意事项"><a href="#安装samba的注意事项" class="headerlink" title="安装samba的注意事项"></a>安装samba的注意事项</h2><p>组成Samba运行的有两个服务，一个是SMB，另一个是NMB；SMB是Samba 的核心启动服务，主要负责建立 Linux Samba服务器与Samba客户机之间的对话， 验证用户身份并提供对文件和打印系统的访问，只有SMB服务启动，才能实现文件的共享，监听139 TCP端口；而NMB服务是负责解析用的，类似与DNS实现的功能，NMB可以把Linux系统共享的工作组名称与其IP对应起来，如果NMB服务没有启动，就只能通过IP来访问共享文件，监听137和138 UDP端口。</p>
 <p>安装命令</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install samba samba-client</span><br></pre></td></tr></table></figure>
 
 
+      
     </div>
-</div>
-<style>
-    #noneimg img {
-        display: none;
-        z-index: 109;
-        width: 600px !important;
-        border-radius: 0px;
-        position: fixed;
-        box-shadow: 0 0 0px #c3c3c300 !important;
-        left: 0;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        margin: auto !important;
-    }
+    <footer class="article-footer">
+      <a data-url="http://www.ljh.xyz/2020/07/31/%E5%AE%89%E8%A3%85samba%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/" data-id="ckkzd08ho000g7ou11j1icdaz" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Centos/" rel="tag">Centos</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%AD%E7%BA%A7/" rel="tag">云计算中级</a></li></ul>
 
-    @media screen and (max-width:600px) {
-        #noneimg img {
-            width: 88%
-        }
-    }
-</style>
-<script>
-    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
-</script>
-<div class="Last-Next">
+    </footer>
+  </div>
+  
     
-    <a href="/2020/07/31/%E6%90%AD%E5%BB%BADNS%E6%9C%8D%E5%8A%A1%E5%99%A8/">
-        <div class="last">
-            <span>上一篇</span>
-            <p>搭建DNS服务器</p>
-        </div>
+<nav id="article-nav">
+  
+    <a href="/2020/07/31/Nginx%20%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%87%8D%E5%90%AF%E4%B8%8E%E5%85%B3%E9%97%AD%E5%91%BD%E5%90%8D/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Nginx 服务器重启与关闭命令
+        
+      </div>
     </a>
-    
-
-    
-    <a href="/2020/07/31/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%88%B6%E4%BD%9CRAID%E7%A3%81%E7%9B%98%E9%98%B5%E5%88%97%E5%B9%B6%E7%AE%A1%E7%90%86/">
-        <div class="next">
-            <span>下一篇</span>
-            <p>服务器制作RAID磁盘阵列与管理</p>
-        </div>
+  
+  
+    <a href="/2020/07/31/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%88%B6%E4%BD%9CRAID%E7%A3%81%E7%9B%98%E9%98%B5%E5%88%97%E5%B9%B6%E7%AE%A1%E7%90%86/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">服务器制作RAID磁盘阵列与管理</div>
     </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
     
-</div>
-		
-<link rel="stylesheet" href="/css/food.css">
 
-<div class="footer">
-	<div class="Copyright">
-		©2021 By LJH. 主题：<a
-			style="text-decoration: none;display: contents; color: #898F9F;"
-			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
-	</div>
-	<div class="contact">
-		
-		<a target="_blank" rel="noopener" href="https://github.com/qiaobug">
-			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
-		</a>
-		
-	</div>
-</div>
-
-<script src="/js/jquery.min.js"></script>
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Blog/" rel="tag">Blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CTF/" rel="tag">CTF</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Centos/" rel="tag">Centos</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ceph/" rel="tag">Ceph</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker-Compose/" rel="tag">Docker-Compose</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LNMP/" rel="tag">LNMP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openssl/" rel="tag">openssl</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openstack/" rel="tag">openstack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/" rel="tag">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wordpress/" rel="tag">wordpress</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/yum%E6%BA%90/" rel="tag">yum源</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%AD%E7%BA%A7/" rel="tag">云计算中级</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97%E5%88%9D%E7%BA%A7/" rel="tag">云计算初级</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8/" rel="tag">分布式存储</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2/" rel="tag">博客</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%91%BD%E4%BB%A4%E8%A7%A3%E6%9E%90/" rel="tag">命令解析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92/" rel="tag">容器编排</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AF%86%E9%92%A5/" rel="tag">密钥</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%A7%81%E6%9C%89%E4%BA%91/" rel="tag">私有云</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%A7%86%E9%A2%91/" rel="tag">视频</a></li></ul>
+    </div>
+  </div>
 
 
-<script src="/js/gotop.js"></script>
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Blog/" style="font-size: 12.5px;">Blog</a> <a href="/tags/CTF/" style="font-size: 10px;">CTF</a> <a href="/tags/Centos/" style="font-size: 20px;">Centos</a> <a href="/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Docker-Compose/" style="font-size: 10px;">Docker-Compose</a> <a href="/tags/LNMP/" style="font-size: 10px;">LNMP</a> <a href="/tags/Linux/" style="font-size: 17.5px;">Linux</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/docker/" style="font-size: 12.5px;">docker</a> <a href="/tags/openssl/" style="font-size: 10px;">openssl</a> <a href="/tags/openstack/" style="font-size: 12.5px;">openstack</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/wordpress/" style="font-size: 10px;">wordpress</a> <a href="/tags/yum%E6%BA%90/" style="font-size: 10px;">yum源</a> <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%AD%E7%BA%A7/" style="font-size: 15px;">云计算中级</a> <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97%E5%88%9D%E7%BA%A7/" style="font-size: 10px;">云计算初级</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8/" style="font-size: 12.5px;">分布式存储</a> <a href="/tags/%E5%8D%9A%E5%AE%A2/" style="font-size: 10px;">博客</a> <a href="/tags/%E5%91%BD%E4%BB%A4%E8%A7%A3%E6%9E%90/" style="font-size: 10px;">命令解析</a> <a href="/tags/%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92/" style="font-size: 10px;">容器编排</a> <a href="/tags/%E5%AF%86%E9%92%A5/" style="font-size: 10px;">密钥</a> <a href="/tags/%E7%A7%81%E6%9C%89%E4%BA%91/" style="font-size: 12.5px;">私有云</a> <a href="/tags/%E8%A7%86%E9%A2%91/" style="font-size: 10px;">视频</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li></ul>
+    </div>
+  </div>
 
 
-<style type="text/css">
-    @media screen and (min-width: 600px) {
-        .goTop>span {
-            display: block;
-            border-radius: 50%;
-            width: 66px;
-            height: 66px;
-            cursor: pointer;
-            opacity: 0.8;
-            background: rgba(18, 24, 58, 0.06);
-            text-align: center;
-            border: 1px solid rgba(18, 24, 58, 0.06);
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/11/01/%E7%94%A8Python%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%A4%E4%BA%92%E5%BC%8FSSH%E5%AE%A2%E6%88%B7%E7%AB%AF/">用Python写一个简单的交互式SSH客户端</a>
+          </li>
+        
+          <li>
+            <a href="/2020/09/21/LNMP%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E7%9A%84%E9%83%A8%E7%BD%B2/">LNMP搭建与个人博客的部署</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/23/%E8%A7%86%E9%A2%91%E6%B5%8B%E8%AF%95/">视频测试</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/21/Docker%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92%5BDocker%20compose%5D/">Docker容器编排[Docker compose]</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/20/%E9%85%8D%E7%BD%AE%E5%9B%BD%E5%86%85yum%E6%BA%90/">配置国内的yum源</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
 
-            transition: border .5s;
-            -moz-transition: border .5s;
-            /* Firefox 4 */
-            -webkit-transition: border .5s;
-            /* Safari 和 Chrome */
-            -o-transition: border .5s;
-            /* Opera */
-        }
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2021 LJH<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
 
-        .goTop>span:hover {
-            border: 1px solid #6680B3;
-        }
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 
-        .goTop {
-            position: fixed;
-            right: 30px;
-            bottom: 80px;
-        }
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
 
-        .goTop>span>svg {
-            width: 30px;
-            height: 30px;
-            margin-top: 17.5px;
-            opacity: 0.7;
-        }
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
 
-    }
 
-    @media screen and (max-width: 600px) {
-        .goTop {
-            display: none;
-        }
-    }
-</style>
-<div class="goTop" id="js-go_top">
-    <span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-            <g>
-                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
-            </g>
-        </svg>
-    </span>
-</div>
-<script>
-    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
-</script>
-<script>
-	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
-</script>
-	</body>
 
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
 </html>
