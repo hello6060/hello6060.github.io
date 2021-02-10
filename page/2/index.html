@@ -431,50 +431,6 @@ nginx -s reopen ：重新打开日志文件nginx -t -c /path/to/nginx.conf 测�
     
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
-        <a href="/2020/07/31/%E5%AE%89%E8%A3%85samba%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/">安装samba的注意事项</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/07/31/%E5%AE%89%E8%A3%85samba%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/">
-          
-          
-            
-          
-          安装samba的注意事项组成Samba运行的有两个服务，一个是SMB，另一个是NMB；SMB是Samba 的核心启动服务，主要负责建立 Linux Samba服务器与Samba客户机之间的对话， 验证用户身份并提供对文件和打印系统的访问，只有SMB服务启动，才能实现文件的共享，监听139 TCP端口；而NMB服务是负责解析用的，类似与DNS实现的功能，NMB可以把Linux系统共享的工作组名称与其
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-07-31 23:24" pubdate>
-              2020-07-31
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%AD%E7%BA%A7/">云计算中级</a>
-            
-              <a href="/tags/Linux/">Linux</a>
-            
-              <a href="/tags/Centos/">Centos</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
         <a href="/2020/07/31/%E6%90%AD%E5%BB%BADNS%E6%9C%8D%E5%8A%A1%E5%99%A8/">搭建DNS服务器</a>
       </h1>
 
@@ -537,6 +493,50 @@ Linux系统上的/proc目录是一种文件系统，即proc文件系统。与其
 
 
 base源：解决rpm依赖性关系epel源：Extr
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-07-31 23:24" pubdate>
+              2020-07-31
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%AD%E7%BA%A7/">云计算中级</a>
+            
+              <a href="/tags/Linux/">Linux</a>
+            
+              <a href="/tags/Centos/">Centos</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2020/07/31/%E5%AE%89%E8%A3%85samba%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/">安装samba的注意事项</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/07/31/%E5%AE%89%E8%A3%85samba%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/">
+          
+          
+            
+          
+          安装samba的注意事项组成Samba运行的有两个服务，一个是SMB，另一个是NMB；SMB是Samba 的核心启动服务，主要负责建立 Linux Samba服务器与Samba客户机之间的对话， 验证用户身份并提供对文件和打印系统的访问，只有SMB服务启动，才能实现文件的共享，监听139 TCP端口；而NMB服务是负责解析用的，类似与DNS实现的功能，NMB可以把Linux系统共享的工作组名称与其
         </a>
       </p>
 
@@ -709,29 +709,6 @@ yum -y
   </div>
 </div>
   
-
-  
-    <!-- APlayer 音乐播放器 -->
-    <div id="aplayer"></div>
-    <script defer src="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.js" ></script>
-<link  rel="stylesheet" href="https://cdn.staticfile.org/aplayer/1.10.1/APlayer.min.css" />
-<script type="text/javascript">
-  var oldLoadAp = window.onload;
-  window.onload = function () {
-    oldLoadAp && oldLoadAp();
-
-    new APlayer({
-      container: document.getElementById('aplayer'),
-      fixed: true,
-      autoplay: 'false' === 'true',
-      loop: 'all',
-      order: 'list',
-      theme: '#b7daff',
-      preload: 'none',
-      audio: [{"name":"万有引力","artist":"F_yy","url":"/song/万有引力-F_yy.mp3","cover":"/img/songbg.jpg"},{"name":" Dancin (Krono Remix).mp3","artist":"Aaron Smith _ Luvli ","url":"/song/Aaron Smith _ Luvli - Dancin (Krono Remix).mp3","cover":"/img/songbg.jpg"},{"name":" Ｋ.Ｉ.Ｓ.Ｓ (V0).mp3","artist":"bl00dwave ","url":"/song/bl00dwave - Ｋ.Ｉ.Ｓ.Ｓ (V0).mp3","cover":"/img/songbg.jpg"},{"name":" Asgard.mp3","artist":"Electus ","url":"/song/Electus - Asgard.mp3","cover":"/img/songbg.jpg"},{"name":" Love Story (V0).mp3","artist":"Taylor Swift ","url":"/song/Taylor Swift - Love Story (V0).mp3","cover":"/img/songbg.jpg"},{"name":" Seasons In The Sun (V0).mp3","artist":"Westlife ","url":"http://img.ljh666.xyz/Westlife%20-%20Seasons%20In%20The%20Sun%20%28V0%29.mp3","cover":"/img/songbg.jpg"},{"name":" 只要为你活一天 (V0).mp3","artist":"刘家昌 ","url":"/song/刘家昌 - 只要为你活一天 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 虐心 (V0).mp3","artist":"徐良 _ 孙羽幽 ","url":"/song/徐良 _ 孙羽幽 - 虐心 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 客官不可以 (V0).mp3","artist":"徐良 _ 小凌 ","url":"/song/徐良 _ 小凌 - 客官不可以 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 他的猫 (V0).mp3","artist":"徐良 _ 杨曦 ","url":"/song/徐良 _ 杨曦 - 他的猫 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 口是心非 (V0).mp3","artist":"杨小壮 _ 鹏鹏 ","url":"/song/杨小壮 _ 鹏鹏 - 口是心非 (V0).mp3","cover":"/img/songbg.jpg"},{"name":" 你走demo (V0).mp3","artist":"松紧先生（李宗锦） ","url":"/song/松紧先生（李宗锦） - 你走demo (V0).mp3","cover":"/img/songbg.jpg"}]
-    });
-  }
-</script>
 
   
 

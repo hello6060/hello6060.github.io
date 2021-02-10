@@ -127,6 +127,37 @@
   
   
   <entry>
+    <title>openssl生成CA证书</title>
+    <link href="/2020/08/18/%E7%94%9F%E6%88%90CA%E8%AF%81%E4%B9%A6/"/>
+    <url>/2020/08/18/%E7%94%9F%E6%88%90CA%E8%AF%81%E4%B9%A6/</url>
+    
+    <content type="html"><![CDATA[<h1 id="生成CA证书"><a href="#生成CA证书" class="headerlink" title="生成CA证书"></a>生成CA证书</h1><h2 id="申请证书"><a href="#申请证书" class="headerlink" title="申请证书"></a>申请证书</h2><p>SSL常用于身份验证、数据加密等应用中，要使用SSL，我们密码有自己的证书。数字证书一般要向专业的认证公司(如VeriSign)申请，并且都是收费的，某些情况下，我们只是想使用加密的数据通信，而不在乎认证，这时就可以自己制作一个证书，自己制作一个证书，有两种方式，一种是Self Signed,另一种是自己制作一个CA，然后由这个CA,来发布我们需要的证书。下面分别介绍这两个方法。</p><p>这里只记录其中一个方法</p><pre><code class="hljs stata">生成自己的<span class="hljs-keyword">CA</span> (Certificate Authority)<span class="hljs-keyword">CA</span>是证书的发布者，<span class="hljs-keyword">CA</span>可以发布其他人的证书，把<span class="hljs-keyword">CA</span>的证书加入系统信任的根证书后，由<span class="hljs-keyword">CA</span>发布的证书也被系统所信任，所以，<span class="hljs-keyword">CA</span>的key是必须小心保护的，一般都要加密保护，并且限制为root权限读写。＃生成<span class="hljs-keyword">CA</span>的key#openssl genrsa -des3 -<span class="hljs-keyword">out</span> <span class="hljs-keyword">ca</span>.key 4096#生成<span class="hljs-keyword">CA</span>的证书#openssl req -new -x509 -days 365 -key <span class="hljs-keyword">ca</span>.key -<span class="hljs-keyword">out</span> <span class="hljs-keyword">ca</span>.crt#生成我们的key和CSR这两步与上面Self Signed中是一样的#openssl genrsa -des3 -<span class="hljs-keyword">out</span> myserver.key 4096#openssl req -new -key myserver.key -<span class="hljs-keyword">out</span> myserver.csr#使用<span class="hljs-keyword">ca</span>的证书和key，生成我们的证书#这里的set_serial指明了证书的序号，如果证书过期了(365天后)，#或者证书key泄漏了，需要重新发证的时候，就要加1#openssl x509 -req -days 365 -<span class="hljs-keyword">in</span> myserver.csr -<span class="hljs-keyword">CA</span> <span class="hljs-keyword">ca</span>.crt -CAkey <span class="hljs-keyword">ca</span>.key -set_serial 01 -<span class="hljs-keyword">out</span> myserver.crt</code></pre><p>查看证书</p><pre><code class="hljs vala"><span class="hljs-meta">#查看KEY信息</span><span class="hljs-meta">#openssl rsa -noout -text -in myserver.key</span><span class="hljs-meta">#查看CSR信息</span><span class="hljs-meta">#openssl req -noout -text -in myserver.csr</span><span class="hljs-meta">#查看证书信息</span><span class="hljs-meta">#openssl x509 -noout -text -in ca.crt</span><span class="hljs-meta">#验证证书</span><span class="hljs-meta">#会提示self signed</span><span class="hljs-meta">#openssl verify selfsign.crt</span><span class="hljs-meta">#因为myserver.crt是幅ca.crt发布的，所以会验证成功</span><span class="hljs-meta">#openssl verify -CAfile ca.crt myserver.crt</span>去掉key的密码保护<span class="hljs-meta">#有时候每次都要输入密码太繁琐了,可以把Key的保护密码去掉</span><span class="hljs-meta">#openssl rsa -in myserver.key -out server.key.insecure</span></code></pre><h2 id="key、csr、crt-区别"><a href="#key、csr、crt-区别" class="headerlink" title="key、csr、crt 区别"></a>key、csr、crt 区别</h2><p>key通常指私钥<br>CSR 是Certificate Signing Request的缩写，即证书签名申请，这不是证书，这是要求CA给证书签名的一种正是申请，该申请包含申请证书的实体的公钥及该实体店某些信息。该数据将成为证书的一部分。CSR始终使用它携带的公钥所对应的私钥进行签名。<br>CRT 即 certificate的缩写，即证书<br>TLS：传输层安全协议 Transport Layer Security的缩写<br>SSL：安全套接字层 Secure Socket Layer的缩写<br>X.509 是一种证书格式.对X.509证书来说，认证者总是CA或由CA指定的人，一份X.509证书是一些标准字段的集合，这些字段包含有关用户或设备及其相应公钥的信息。</p><p>X.509的证书文件，一般以.crt结尾，根据该文件的内容编码格式，可以分为以下二种格式：</p><p>PEM - Privacy Enhanced Mail,打开看文本格式,以”—–BEGIN…”开头, “—–END…”结尾,内容是BASE64编码</p>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>云计算中级</tag>
+      
+      <tag>Linux</tag>
+      
+      <tag>Centos</tag>
+      
+      <tag>命令解析</tag>
+      
+      <tag>openssl</tag>
+      
+      <tag>密钥</tag>
+      
+      <tag>docker</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>安装Docker</title>
     <link href="/2020/08/18/%E5%AE%89%E8%A3%85Docker/"/>
     <url>/2020/08/18/%E5%AE%89%E8%A3%85Docker/</url>
@@ -144,37 +175,6 @@
       <tag>Centos</tag>
       
       <tag>docker</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>openssl生成CA证书</title>
-    <link href="/2020/08/18/%E7%94%9F%E6%88%90CA%E8%AF%81%E4%B9%A6/"/>
-    <url>/2020/08/18/%E7%94%9F%E6%88%90CA%E8%AF%81%E4%B9%A6/</url>
-    
-    <content type="html"><![CDATA[<h1 id="生成CA证书"><a href="#生成CA证书" class="headerlink" title="生成CA证书"></a>生成CA证书</h1><h2 id="申请证书"><a href="#申请证书" class="headerlink" title="申请证书"></a>申请证书</h2><p>SSL常用于身份验证、数据加密等应用中，要使用SSL，我们密码有自己的证书。数字证书一般要向专业的认证公司(如VeriSign)申请，并且都是收费的，某些情况下，我们只是想使用加密的数据通信，而不在乎认证，这时就可以自己制作一个证书，自己制作一个证书，有两种方式，一种是Self Signed,另一种是自己制作一个CA，然后由这个CA,来发布我们需要的证书。下面分别介绍这两个方法。</p><p>这里只记录其中一个方法</p><pre><code class="hljs stata">生成自己的<span class="hljs-keyword">CA</span> (Certificate Authority)<span class="hljs-keyword">CA</span>是证书的发布者，<span class="hljs-keyword">CA</span>可以发布其他人的证书，把<span class="hljs-keyword">CA</span>的证书加入系统信任的根证书后，由<span class="hljs-keyword">CA</span>发布的证书也被系统所信任，所以，<span class="hljs-keyword">CA</span>的key是必须小心保护的，一般都要加密保护，并且限制为root权限读写。＃生成<span class="hljs-keyword">CA</span>的key#openssl genrsa -des3 -<span class="hljs-keyword">out</span> <span class="hljs-keyword">ca</span>.key 4096#生成<span class="hljs-keyword">CA</span>的证书#openssl req -new -x509 -days 365 -key <span class="hljs-keyword">ca</span>.key -<span class="hljs-keyword">out</span> <span class="hljs-keyword">ca</span>.crt#生成我们的key和CSR这两步与上面Self Signed中是一样的#openssl genrsa -des3 -<span class="hljs-keyword">out</span> myserver.key 4096#openssl req -new -key myserver.key -<span class="hljs-keyword">out</span> myserver.csr#使用<span class="hljs-keyword">ca</span>的证书和key，生成我们的证书#这里的set_serial指明了证书的序号，如果证书过期了(365天后)，#或者证书key泄漏了，需要重新发证的时候，就要加1#openssl x509 -req -days 365 -<span class="hljs-keyword">in</span> myserver.csr -<span class="hljs-keyword">CA</span> <span class="hljs-keyword">ca</span>.crt -CAkey <span class="hljs-keyword">ca</span>.key -set_serial 01 -<span class="hljs-keyword">out</span> myserver.crt</code></pre><p>查看证书</p><pre><code class="hljs vala"><span class="hljs-meta">#查看KEY信息</span><span class="hljs-meta">#openssl rsa -noout -text -in myserver.key</span><span class="hljs-meta">#查看CSR信息</span><span class="hljs-meta">#openssl req -noout -text -in myserver.csr</span><span class="hljs-meta">#查看证书信息</span><span class="hljs-meta">#openssl x509 -noout -text -in ca.crt</span><span class="hljs-meta">#验证证书</span><span class="hljs-meta">#会提示self signed</span><span class="hljs-meta">#openssl verify selfsign.crt</span><span class="hljs-meta">#因为myserver.crt是幅ca.crt发布的，所以会验证成功</span><span class="hljs-meta">#openssl verify -CAfile ca.crt myserver.crt</span>去掉key的密码保护<span class="hljs-meta">#有时候每次都要输入密码太繁琐了,可以把Key的保护密码去掉</span><span class="hljs-meta">#openssl rsa -in myserver.key -out server.key.insecure</span></code></pre><h2 id="key、csr、crt-区别"><a href="#key、csr、crt-区别" class="headerlink" title="key、csr、crt 区别"></a>key、csr、crt 区别</h2><p>key通常指私钥<br>CSR 是Certificate Signing Request的缩写，即证书签名申请，这不是证书，这是要求CA给证书签名的一种正是申请，该申请包含申请证书的实体的公钥及该实体店某些信息。该数据将成为证书的一部分。CSR始终使用它携带的公钥所对应的私钥进行签名。<br>CRT 即 certificate的缩写，即证书<br>TLS：传输层安全协议 Transport Layer Security的缩写<br>SSL：安全套接字层 Secure Socket Layer的缩写<br>X.509 是一种证书格式.对X.509证书来说，认证者总是CA或由CA指定的人，一份X.509证书是一些标准字段的集合，这些字段包含有关用户或设备及其相应公钥的信息。</p><p>X.509的证书文件，一般以.crt结尾，根据该文件的内容编码格式，可以分为以下二种格式：</p><p>PEM - Privacy Enhanced Mail,打开看文本格式,以”—–BEGIN…”开头, “—–END…”结尾,内容是BASE64编码</p>]]></content>
-    
-    
-    
-    <tags>
-      
-      <tag>云计算中级</tag>
-      
-      <tag>Linux</tag>
-      
-      <tag>Centos</tag>
-      
-      <tag>docker</tag>
-      
-      <tag>命令解析</tag>
-      
-      <tag>openssl</tag>
-      
-      <tag>密钥</tag>
       
     </tags>
     
@@ -381,29 +381,6 @@
   
   
   <entry>
-    <title>安装samba的注意事项</title>
-    <link href="/2020/07/31/%E5%AE%89%E8%A3%85samba%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/"/>
-    <url>/2020/07/31/%E5%AE%89%E8%A3%85samba%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/</url>
-    
-    <content type="html"><![CDATA[<h2 id="安装samba的注意事项"><a href="#安装samba的注意事项" class="headerlink" title="安装samba的注意事项"></a>安装samba的注意事项</h2><p>组成Samba运行的有两个服务，一个是SMB，另一个是NMB；SMB是Samba 的核心启动服务，主要负责建立 Linux Samba服务器与Samba客户机之间的对话， 验证用户身份并提供对文件和打印系统的访问，只有SMB服务启动，才能实现文件的共享，监听139 TCP端口；而NMB服务是负责解析用的，类似与DNS实现的功能，NMB可以把Linux系统共享的工作组名称与其IP对应起来，如果NMB服务没有启动，就只能通过IP来访问共享文件，监听137和138 UDP端口。</p><p>安装命令</p><pre><code class="hljs sql">yum <span class="hljs-keyword">install</span> samba samba-<span class="hljs-keyword">client</span></code></pre>]]></content>
-    
-    
-    
-    <tags>
-      
-      <tag>云计算中级</tag>
-      
-      <tag>Linux</tag>
-      
-      <tag>Centos</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>搭建DNS服务器</title>
     <link href="/2020/07/31/%E6%90%AD%E5%BB%BADNS%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
     <url>/2020/07/31/%E6%90%AD%E5%BB%BADNS%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
@@ -432,6 +409,29 @@
     <url>/2020/07/31/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%88%B6%E4%BD%9CRAID%E7%A3%81%E7%9B%98%E9%98%B5%E5%88%97%E5%B9%B6%E7%AE%A1%E7%90%86/</url>
     
     <content type="html"><![CDATA[<h1 id="服务器制作RAID磁盘阵列与管理"><a href="#服务器制作RAID磁盘阵列与管理" class="headerlink" title="服务器制作RAID磁盘阵列与管理"></a>服务器制作RAID磁盘阵列与管理</h1><h2 id="知识扫盲"><a href="#知识扫盲" class="headerlink" title="知识扫盲"></a>知识扫盲</h2><blockquote><p>Linux系统上的/proc目录是一种文件系统，即proc文件系统。与其它常见的文件系统不同的是，/proc是一种伪文件系统（也即虚拟文件系统），存储的是当前内核运行状态的一系列特殊文件，用户可以通过这些文件查看有关系统硬件及当前正在运行进程的信息，甚至可以通过更改其中某些文件来改变内核的运行状态。</p></blockquote><blockquote><p>base源：解决rpm依赖性关系<br>epel源：Extra Packages for Enterprise Linux的缩写，包含许多基源没有软件，仍然保留base源的好处</p></blockquote><blockquote><p>当系统中不存在配置文件/etc/mdadm.conf、/etc/mdadm/mdadm.conf时，系统启动时，md驱动会自动查找分区为FD格式的磁盘。所以一般会使用fdisk工具将hd磁盘和sd磁盘分区，再设置为FD的磁盘分区。因此假如直接使用/dev/sda、/dev/sdb创建RAID，系统重启后，不会重组该RAID。</p></blockquote><h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><h3 id="硬件"><a href="#硬件" class="headerlink" title="硬件"></a>硬件</h3><p>添加4块20G硬盘</p><h3 id="软件"><a href="#软件" class="headerlink" title="软件"></a>软件</h3><p>配置阿里base源与epel源</p><p>下载mdadm工具</p><h3 id="校验"><a href="#校验" class="headerlink" title="校验"></a>校验</h3><pre><code class="hljs ebnf"><span class="hljs-attribute">lsblk</span></code></pre><h2 id="配置Raid-0阵列"><a href="#配置Raid-0阵列" class="headerlink" title="配置Raid 0阵列"></a>配置Raid 0阵列</h2><h3 id="创建阵列"><a href="#创建阵列" class="headerlink" title="创建阵列"></a>创建阵列</h3><p>命令解析：</p><ul><li><p>-C v：创建设备，并显示信息。</p></li><li><p>-l 0：RAID的等级为RAID0。</p></li><li><p>-n 2：使用两块硬盘创建RAID。</p></li></ul><pre><code class="hljs awk">mdadm -C -v <span class="hljs-regexp">/dev/m</span>d0 -l <span class="hljs-number">0</span> -n <span class="hljs-number">2</span> <span class="hljs-regexp">/dev/</span>sdb <span class="hljs-regexp">/dev/</span>sdc</code></pre><pre><code class="hljs awk">cat <span class="hljs-regexp">/proc/m</span>dstatmdadm -Dsmdadm -D <span class="hljs-regexp">/dev/m</span>d0mdadm -Ds&gt;&gt;<span class="hljs-regexp">/etc/m</span>dadm.conf  <span class="hljs-comment">#系统重启后需要读取的Raid配置文件来加载Raid阵列</span>mkfs.xfs <span class="hljs-regexp">/dev/m</span>d0mkdir /raid0mount <span class="hljs-regexp">/dev/m</span>d0 /raid0df -Th /raid0                <span class="hljs-comment"># 参数T显示文件系统格式</span>blkid <span class="hljs-regexp">/dev/m</span>d0echo <span class="hljs-string">&quot;UUID=8eafdcb6-d46a-430a-8004-d58a68dc0751/raid0 xfs defaults 0 0&quot;</span>&gt;&gt;<span class="hljs-regexp">/etc/</span>fstab</code></pre><h3 id="删除阵列"><a href="#删除阵列" class="headerlink" title="删除阵列"></a>删除阵列</h3><pre><code class="hljs apache"><span class="hljs-attribute">umount</span> /raid<span class="hljs-number">0</span><span class="hljs-attribute">mdadm</span> -S /dev/md<span class="hljs-number">0</span><span class="hljs-attribute">rm</span> -rf  /etc/mdadm.conf<span class="hljs-attribute">rm</span> -rf /raid<span class="hljs-number">0</span><span class="hljs-attribute">mdadm</span> --zero-superblock /dev/sdb<span class="hljs-attribute">mdadm</span> --zero-superblock /dev/sdc<span class="hljs-attribute">vim</span> /etc/fstab<span class="hljs-attribute">UUID</span>=<span class="hljs-number">8</span>eafdcb<span class="hljs-number">6</span>-d<span class="hljs-number">46</span>a-<span class="hljs-number">430</span>a-<span class="hljs-number">8004</span>-d<span class="hljs-number">58</span>a<span class="hljs-number">68</span>dc<span class="hljs-number">0751</span>/raid<span class="hljs-number">0</span> xfs defaults <span class="hljs-number">0</span> <span class="hljs-number">0</span> #删除此行</code></pre><h2 id="配置Raid-5阵列"><a href="#配置Raid-5阵列" class="headerlink" title="配置Raid 5阵列"></a>配置Raid 5阵列</h2><h3 id="创建阵列-1"><a href="#创建阵列-1" class="headerlink" title="创建阵列"></a>创建阵列</h3><ul><li>–spare-devices=1 设置Raid 5中备有磁盘数目为1</li></ul><pre><code class="hljs awk">mdadm -Cv <span class="hljs-regexp">/dev/m</span>d5 -l <span class="hljs-number">5</span> -n <span class="hljs-number">3</span> <span class="hljs-regexp">/dev/</span>sdb <span class="hljs-regexp">/dev/</span>sdc <span class="hljs-regexp">/dev/</span>sdd --spare-devices=<span class="hljs-number">1</span> <span class="hljs-regexp">/dev/</span>sde</code></pre><pre><code class="hljs awk">mdadm -D <span class="hljs-regexp">/dev/m</span>d5mdadm -Ds&gt;&gt;<span class="hljs-regexp">/etc/m</span>dadm.conf  <span class="hljs-comment">#系统重启后需要读取的Raid配置文件来加载Raid阵列</span></code></pre><p>模拟故障</p><pre><code class="hljs awk">mdadm -f <span class="hljs-regexp">/dev/m</span>d5 <span class="hljs-regexp">/dev/</span>sdb        <span class="hljs-comment"># 强制制造故障</span>mdadm -D <span class="hljs-regexp">/dev/m</span>d5mdadm -r <span class="hljs-regexp">/dev/m</span>d5 <span class="hljs-regexp">/dev/</span>sdb        <span class="hljs-comment"># 移除故障的硬盘</span>mdadm --add <span class="hljs-regexp">/dev/m</span>d5 <span class="hljs-regexp">/dev/</span>sdb    <span class="hljs-comment"># 添加新的硬盘</span>mdadm -D <span class="hljs-regexp">/dev/m</span>d5</code></pre><pre><code class="hljs awk">mkfs.xfs <span class="hljs-regexp">/dev/m</span>d5mount <span class="hljs-regexp">/dev/m</span>d5 /mntdf -h</code></pre><h3 id="删除阵列-1"><a href="#删除阵列-1" class="headerlink" title="删除阵列"></a>删除阵列</h3><pre><code class="hljs awk">umount <span class="hljs-regexp">/dev/m</span>d5df -hmdadm -S <span class="hljs-regexp">/dev/m</span>d5rm -rf  <span class="hljs-regexp">/etc/m</span>dadm.confrm -rf /raid5mdadm -zero-superblock <span class="hljs-regexp">/dev/</span>sdbmdadm -zero-superblock <span class="hljs-regexp">/dev/</span>sdcmdadm -zero-superblock <span class="hljs-regexp">/dev/</span>sdemdadm -zero-superblock <span class="hljs-regexp">/dev/</span>sddvim <span class="hljs-regexp">/etc/</span>fstabUUID=<span class="hljs-number">8</span>eafdcb6-d46a-<span class="hljs-number">430</span>a-<span class="hljs-number">8004</span>-d58a68dc0751/raid0 xfs defaults <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-comment">#删除此行</span></code></pre>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>云计算中级</tag>
+      
+      <tag>Linux</tag>
+      
+      <tag>Centos</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>安装samba的注意事项</title>
+    <link href="/2020/07/31/%E5%AE%89%E8%A3%85samba%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/"/>
+    <url>/2020/07/31/%E5%AE%89%E8%A3%85samba%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/</url>
+    
+    <content type="html"><![CDATA[<h2 id="安装samba的注意事项"><a href="#安装samba的注意事项" class="headerlink" title="安装samba的注意事项"></a>安装samba的注意事项</h2><p>组成Samba运行的有两个服务，一个是SMB，另一个是NMB；SMB是Samba 的核心启动服务，主要负责建立 Linux Samba服务器与Samba客户机之间的对话， 验证用户身份并提供对文件和打印系统的访问，只有SMB服务启动，才能实现文件的共享，监听139 TCP端口；而NMB服务是负责解析用的，类似与DNS实现的功能，NMB可以把Linux系统共享的工作组名称与其IP对应起来，如果NMB服务没有启动，就只能通过IP来访问共享文件，监听137和138 UDP端口。</p><p>安装命令</p><pre><code class="hljs sql">yum <span class="hljs-keyword">install</span> samba samba-<span class="hljs-keyword">client</span></code></pre>]]></content>
     
     
     
