@@ -137,7 +137,7 @@
 </nav>
 
     <div class="banner intro-2" id="background" parallax=true
-         style="background: url('http://img.ljh666.xyz/img/Appearance.png') no-repeat center center;
+         style="background: url('http://img.ljh666.xyz/wallhaven-x1vvrl_1920x1080.png') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -431,16 +431,20 @@ nginx -s reopen ：重新打开日志文件nginx -t -c /path/to/nginx.conf 测�
     
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
-        <a href="/2020/07/31/%E5%AE%89%E8%A3%85samba%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/">安装samba的注意事项</a>
+        <a href="/2020/07/31/%E6%90%AD%E5%BB%BADNS%E6%9C%8D%E5%8A%A1%E5%99%A8/">搭建DNS服务器</a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/2020/07/31/%E5%AE%89%E8%A3%85samba%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/">
+        <a href="/2020/07/31/%E6%90%AD%E5%BB%BADNS%E6%9C%8D%E5%8A%A1%E5%99%A8/">
           
           
             
           
-          安装samba的注意事项组成Samba运行的有两个服务，一个是SMB，另一个是NMB；SMB是Samba 的核心启动服务，主要负责建立 Linux Samba服务器与Samba客户机之间的对话， 验证用户身份并提供对文件和打印系统的访问，只有SMB服务启动，才能实现文件的共享，监听139 TCP端口；而NMB服务是负责解析用的，类似与DNS实现的功能，NMB可以把Linux系统共享的工作组名称与其
+          搭建DNS服务器知识扫盲
+其中bind-chroot和bind-utils是bind的相关包。
+
+
+bind-chroot是bind的一个功能,使bind可以在一个chroot的模式下运行.也就是说,bind运行时的/(根)目录,并不是系统真正的/(根)目录,只是系统中的一个子目录而已.这样做的目的是为了提高安全性.因为在chroot的模式下,bind可以访问的范围仅限于这个子目录的范围里,无法进
         </a>
       </p>
 
@@ -475,20 +479,16 @@ nginx -s reopen ：重新打开日志文件nginx -t -c /path/to/nginx.conf 测�
     
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
-        <a href="/2020/07/31/%E6%90%AD%E5%BB%BADNS%E6%9C%8D%E5%8A%A1%E5%99%A8/">搭建DNS服务器</a>
+        <a href="/2020/07/31/%E5%AE%89%E8%A3%85samba%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/">安装samba的注意事项</a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/2020/07/31/%E6%90%AD%E5%BB%BADNS%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+        <a href="/2020/07/31/%E5%AE%89%E8%A3%85samba%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/">
           
           
             
           
-          搭建DNS服务器知识扫盲
-其中bind-chroot和bind-utils是bind的相关包。
-
-
-bind-chroot是bind的一个功能,使bind可以在一个chroot的模式下运行.也就是说,bind运行时的/(根)目录,并不是系统真正的/(根)目录,只是系统中的一个子目录而已.这样做的目的是为了提高安全性.因为在chroot的模式下,bind可以访问的范围仅限于这个子目录的范围里,无法进
+          安装samba的注意事项组成Samba运行的有两个服务，一个是SMB，另一个是NMB；SMB是Samba 的核心启动服务，主要负责建立 Linux Samba服务器与Samba客户机之间的对话， 验证用户身份并提供对文件和打印系统的访问，只有SMB服务启动，才能实现文件的共享，监听139 TCP端口；而NMB服务是负责解析用的，类似与DNS实现的功能，NMB可以把Linux系统共享的工作组名称与其
         </a>
       </p>
 
