@@ -176,58 +176,6 @@
     
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
-        <a href="/2020/08/18/%E7%94%9F%E6%88%90CA%E8%AF%81%E4%B9%A6/">openssl生成CA证书</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/08/18/%E7%94%9F%E6%88%90CA%E8%AF%81%E4%B9%A6/">
-          
-          
-            
-          
-          生成CA证书申请证书SSL常用于身份验证、数据加密等应用中，要使用SSL，我们密码有自己的证书。数字证书一般要向专业的认证公司(如VeriSign)申请，并且都是收费的，某些情况下，我们只是想使用加密的数据通信，而不在乎认证，这时就可以自己制作一个证书，自己制作一个证书，有两种方式，一种是Self Signed,另一种是自己制作一个CA，然后由这个CA,来发布我们需要的证书。下面分别介绍这两个方法
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-08-18 13:01" pubdate>
-              2020-08-18
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%AD%E7%BA%A7/">云计算中级</a>
-            
-              <a href="/tags/Linux/">Linux</a>
-            
-              <a href="/tags/Centos/">Centos</a>
-            
-              <a href="/tags/docker/">docker</a>
-            
-              <a href="/tags/%E5%91%BD%E4%BB%A4%E8%A7%A3%E6%9E%90/">命令解析</a>
-            
-              <a href="/tags/openssl/">openssl</a>
-            
-              <a href="/tags/%E5%AF%86%E9%92%A5/">密钥</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
         <a href="/2020/08/16/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8%E7%9A%84%E4%B8%89%E7%A7%8D%E7%B1%BB%E5%9E%8B/">分布式存储的三种类型</a>
       </h1>
 
@@ -682,6 +630,50 @@ nginx -s reopen ：重新打开日志文件nginx -t -c /path/to/nginx.conf 测�
 
 
 bind-chroot是bind的一个功能,使bind可以在一个chroot的模式下运行.也就是说,bind运行时的/(根)目录,并不是系统真正的/(根)目录,只是系统中的一个子目录而已.这样做的目的是为了提高安全性.因为在chroot的模式下,bind可以访问的范围仅限于这个子目录的范围里,无法进
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-07-31 23:24" pubdate>
+              2020-07-31
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%AD%E7%BA%A7/">云计算中级</a>
+            
+              <a href="/tags/Linux/">Linux</a>
+            
+              <a href="/tags/Centos/">Centos</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2020/07/31/%E5%AE%89%E8%A3%85samba%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/">安装samba的注意事项</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/07/31/%E5%AE%89%E8%A3%85samba%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/">
+          
+          
+            
+          
+          安装samba的注意事项组成Samba运行的有两个服务，一个是SMB，另一个是NMB；SMB是Samba 的核心启动服务，主要负责建立 Linux Samba服务器与Samba客户机之间的对话， 验证用户身份并提供对文件和打印系统的访问，只有SMB服务启动，才能实现文件的共享，监听139 TCP端口；而NMB服务是负责解析用的，类似与DNS实现的功能，NMB可以把Linux系统共享的工作组名称与其
         </a>
       </p>
 
